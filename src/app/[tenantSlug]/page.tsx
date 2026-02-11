@@ -66,7 +66,7 @@ export default async function TenantPublicPage({ params }: { params: Promise<{ t
             className="bg-green-900 fixed bottom-5 right-5 p-4 rounded-full text-white shadow-lg"
             style={{ backgroundColor: tenant.colorPrimary }}
         >
-            Falar com o Buffet
+            Falar com a Loja
         </a>
         </main>
     );

@@ -1,6 +1,6 @@
-import mongoose, { Schema, model, models } from 'mongoose';
+import { Schema, model, models } from 'mongoose';
 
-// 1. TENANT (O Cliente - Ex: Buffet do Zé)
+// 1. TENANT (O Cliente - Ex: Loja do Zé)
 const TenantSchema = new Schema({
     name: { type: String, required: true },
     slug: { type: String, required: true, unique: true },

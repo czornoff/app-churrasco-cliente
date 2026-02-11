@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-
 import { ITenant} from "@/interfaces/tenant";
 import { ActionState } from "@/types/action-state";
 import { useActionState } from "react";
@@ -68,7 +67,7 @@ export default function EditTenantForm(
                             <CardHeader><CardTitle>Identidade Visual</CardTitle></CardHeader>
                             <CardContent className="grid gap-4 md:grid-cols-2">
                                 <div className="space-y-2">
-                                    <Label>Nome do Buffet</Label>
+                                    <Label>Nome da Loja</Label>
                                     <Input name="name" defaultValue={tenant.name} />
                                     {state?.errors?.name && <p className="text-xs text-red-500 font-medium">{state.errors.name[0]}</p>}
                                 </div>

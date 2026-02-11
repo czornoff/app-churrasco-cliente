@@ -1,21 +1,58 @@
-import mongoose, { Schema, model, models } from 'mongoose';
+import mongoose, { Schema, model, models, Model } from "mongoose";
 
 const UserSchema = new Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }, // Em produção, usaremos hash (bcrypt)
-  image: { type: String }, // Foto do perfil
-  
-  // O "role" define o que o usuário pode fazer
-  role: { 
-    type: String, 
-    enum: ['SUPERADMIN', 'TENANT_OWNER', 'END_USER'], 
-    default: 'END_USER' 
-  },
+    nome: { 
+        type: String, 
+        required: true,
+        default: "Novo Usuário" 
+    },
+    email: { 
+        type: String, 
+        unique: true, 
+        required: true,
+        lowercase: true 
+    },
+    googleId: { 
+        type: String, 
+        unique: true,
+        sparse: true // Permite que usuários sem Google ID (login manual) coexistam
+    },
+    password: { 
+        type: String,
+        select: false // Evita que a senha seja retornada em buscas comuns por segurança
+    },
+    role: { 
+        type: String, 
+        enum: ['SUPERADMIN', 'TENANT_OWNER', 'END_USER'],
+        default: 'END_USER' 
+    },
+    status: { 
+        type: String, 
+        enum: ['active', 'inactive', 'banned'], 
+        default: 'active' 
+    },
+    avatar: { 
+        type: String, 
+        default: 'https://ui-avatars.com/api/?name=User&background=random' 
+    },
+    tenantId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tenant', // Certifique-se de que o model da Loja se chama 'Tenant'
+        required: false // IMPORTANTE: false para o login social não travar
+    },
+    // Campos adicionais com valores padrão para evitar erros de undefined
+    whatsApp: { type: String },
+    UF: { type: String, maxLength: 2 },
+    cidade: { type: String },
+    genero: { 
+        type: String, 
+        enum: ['masculino', 'feminino', 'outros', 'undefined'], 
+        default: 'undefined' 
+    },
+    birthday: { type: Date }
+}, { 
+    timestamps: true // Cria automaticamente createdAt e updatedAt
+});
 
-  // Se o usuário for um TENANT_OWNER, aqui guardamos o ID do buffet dele
-  tenantId: { type: Schema.Types.ObjectId, ref: 'Tenant', default: null },
-
-}, { timestamps: true });
-
-export const User = models.User || model('User', UserSchema);
+// Exporta o model, prevenindo erro de re-compilação no Next.js
+export const User = (models.User as Model<unknown>) || model<unknown>("User", UserSchema);
