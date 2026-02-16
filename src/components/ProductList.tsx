@@ -27,56 +27,58 @@ export async function ProductList({ tenantId }: { tenantId: string }) {
 
     // Função auxiliar para renderizar cada seção
     const renderSection = (title: string, items: IProductItem[], categoryKey: string) => {
-    if (!items || items.length === 0) return null;
+        if (!items || items.length === 0) return null;
 
         return (
-        <div className="mt-6">
-            <h3 className="text-sm font-bold uppercase text-slate-400 mb-3 tracking-wider">{title}</h3>
-            <div className="grid gap-3">
-            {items.map((item) => (
-                <div key={item._id.toString()} className="flex items-center justify-between p-3 bg-white border rounded-lg hover:shadow-sm transition-shadow">
-                    <div className="flex items-center gap-4">
-                        <div className="relative h-12 w-12 rounded bg-slate-100 overflow-hidden border">
-                            {item.imageUrl ? (
-                                <Image src={item.imageUrl} alt={item.nome} fill className="object-cover" />
-                            ) : (
-                                <Package className="h-6 w-6 m-auto mt-3 text-slate-300" />
-                            )}
+            <div className="mt-6">
+                <h3 className="text-sm font-bold uppercase text-slate-400 mb-3 tracking-wider">{title}</h3>
+                <div className="grid gap-3">
+                    {items.map((item) => (
+                        <div key={item._id.toString()} className="flex items-center justify-between p-3 bg-white dark:bg-zinc-800 border rounded-lg hover:shadow-sm transition-shadow">
+                            <div className="flex items-center gap-4">
+                                <div className="relative h-12 w-12 rounded bg-slate-100 overflow-hidden border">
+                                    <Image
+                                        unoptimized
+                                        src={((item.imageUrl && !item.imageUrl.includes('mandebem.com') && !item.imageUrl.includes('placeholder')) ? item.imageUrl.trim() : null) || `https://ui-avatars.com/api/?name=${encodeURIComponent(item.nome || "Produto")}&background=random&size=128`}
+                                        alt={item.nome}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </div>
+                                <div>
+                                    <p className="font-medium text-slate-800">{item.nome}</p>
+                                    <p className="text-xs text-slate-400">
+                                        R$ {item.preco.toFixed(2)} | {item.gramasEmbalagem || item.mlEmbalagem || 0}{item.mlEmbalagem ? 'ml' : 'g'}/embalagem
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-2">
+                                <button className="p-2 text-slate-600 hover:text-blue-600 transition-colors">
+                                    <Link href={`/admin/tenants/${tenantId}/produtos/${item._id}?category=${categoryKey}`}>
+                                        <Edit size={18} />
+                                    </Link>
+                                </button>
+                                <DeleteProductButton
+                                    tenantId={tenantId}
+                                    category={categoryKey}
+                                    productId={item._id.toString()}
+                                />
+                            </div>
                         </div>
-                        <div>
-                            <p className="font-medium text-slate-800">{item.nome}</p>
-                            <p className="text-xs text-slate-400">
-                                R$ {item.preco.toFixed(2)} | {item.gramasEmbalagem || item.mlEmbalagem || 0}{item.mlEmbalagem ? 'ml' : 'g'}/embalagem
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div className="flex gap-2">
-                        <button className="p-2 text-slate-600 hover:text-blue-600 transition-colors">
-                            <Link href={`/admin/tenants/${tenantId}/produtos/${item._id}?category=${categoryKey}`}>
-                                <Edit size={18} />
-                            </Link>
-                        </button>
-                            <DeleteProductButton 
-                                tenantId={tenantId} 
-                                category={categoryKey} 
-                                productId={item._id.toString()} 
-                            />
-                    </div>
+                    ))}
                 </div>
-            ))}
             </div>
-        </div>
         );
     };
 
     return (
-    <div className="pb-10">
-        {renderSection("🔥 Carnes", cardapio.carnes || [], "carnes")}
-        {renderSection("🍹 Bebidas", cardapio.bebidas || [], "bebidas")}
-        {renderSection("🥗 Acompanhamentos", cardapio.acompanhamentos || [], "acompanhamentos")}
-        {renderSection("🍰 Sobremesas", cardapio.sobremesas || [], "sobremesas")}
-        {renderSection("➕ Adicionais", cardapio.adicionais || [], "adicionais")}
-    </div>
-);
+        <div className="pb-10">
+            {renderSection("🔥 Carnes", (cardapio.carnes || []) as IProductItem[], "carnes")}
+            {renderSection("🍹 Bebidas", (cardapio.bebidas || []) as IProductItem[], "bebidas")}
+            {renderSection("🥗 Acompanhamentos", (cardapio.acompanhamentos || []) as IProductItem[], "acompanhamentos")}
+            {renderSection("🍰 Sobremesas", (cardapio.sobremesas || []) as IProductItem[], "sobremesas")}
+            {renderSection("➕ Adicionais", (cardapio.adicionais || []) as IProductItem[], "adicionais")}
+        </div>
+    );
 }

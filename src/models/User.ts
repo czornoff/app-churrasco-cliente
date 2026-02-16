@@ -1,58 +1,74 @@
-import mongoose, { Schema, model, models, Model } from "mongoose";
+import mongoose, { Schema, model, models, Model, Document } from "mongoose";
 
-const UserSchema = new Schema({
-    nome: { 
-        type: String, 
-        required: true,
-        default: "Novo Usuário" 
-    },
-    email: { 
-        type: String, 
-        unique: true, 
-        required: true,
-        lowercase: true 
-    },
-    googleId: { 
-        type: String, 
-        unique: true,
-        sparse: true // Permite que usuários sem Google ID (login manual) coexistam
-    },
-    password: { 
+export interface IUser extends Document {
+    nome: string;
+    email: string;
+    googleId?: string;
+    password?: string;
+    role: 'SUPERADMIN' | 'TENANT_OWNER' | 'END_USER';
+    status: 'active' | 'inactive' | 'banned';
+    avatar: string;
+    tenantId?: mongoose.Types.ObjectId;
+    whatsApp?: string;
+    UF?: string;
+    cidade?: string;
+    genero: 'masculino' | 'feminino' | 'outros' | 'undefined';
+    birthday?: Date;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const UserSchema = new Schema<IUser>({
+    nome: {
         type: String,
-        select: false // Evita que a senha seja retornada em buscas comuns por segurança
+        required: true,
+        default: "Novo Usuário"
     },
-    role: { 
-        type: String, 
+    email: {
+        type: String,
+        unique: true,
+        required: true,
+        lowercase: true
+    },
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true
+    },
+    password: {
+        type: String,
+        select: false
+    },
+    role: {
+        type: String,
         enum: ['SUPERADMIN', 'TENANT_OWNER', 'END_USER'],
-        default: 'END_USER' 
+        default: 'END_USER'
     },
-    status: { 
-        type: String, 
-        enum: ['active', 'inactive', 'banned'], 
-        default: 'active' 
+    status: {
+        type: String,
+        enum: ['active', 'inactive', 'banned'],
+        default: 'active'
     },
-    avatar: { 
-        type: String, 
-        default: 'https://ui-avatars.com/api/?name=User&background=random' 
+    avatar: {
+        type: String,
+        default: 'https://ui-avatars.com/api/?name=User&background=random'
     },
     tenantId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Tenant', // Certifique-se de que o model da Loja se chama 'Tenant'
-        required: false // IMPORTANTE: false para o login social não travar
+        ref: 'Tenant',
+        required: false
     },
-    // Campos adicionais com valores padrão para evitar erros de undefined
     whatsApp: { type: String },
     UF: { type: String, maxLength: 2 },
     cidade: { type: String },
-    genero: { 
-        type: String, 
-        enum: ['masculino', 'feminino', 'outros', 'undefined'], 
-        default: 'undefined' 
+    genero: {
+        type: String,
+        enum: ['masculino', 'feminino', 'outros', 'undefined'],
+        default: 'undefined'
     },
     birthday: { type: Date }
-}, { 
-    timestamps: true // Cria automaticamente createdAt e updatedAt
+}, {
+    timestamps: true
 });
 
-// Exporta o model, prevenindo erro de re-compilação no Next.js
-export const User = (models.User as Model<unknown>) || model<unknown>("User", UserSchema);
+export const User = (models.User as Model<IUser>) || model<IUser>("User", UserSchema);

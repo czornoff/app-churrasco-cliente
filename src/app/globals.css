@@ -124,3 +124,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom mobile-only class for navigation */
+@layer utilities {
+  .mobile-only {
+    display: block;
+  }
+  
+  @media (min-width: 768px) {
+    .mobile-only {
+      display: none !important;
+    }
+  }
+}

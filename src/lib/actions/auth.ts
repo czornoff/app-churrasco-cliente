@@ -6,16 +6,18 @@ import bcrypt from "bcrypt";
 
 export async function registerUserAction(formData: FormData) {
     try {
-        const nome = formData.get("nome") as string;
-        const email = formData.get("email") as string;
+        const nome = (formData.get("nome") as string)?.trim();
+        const email = (formData.get("email") as string)?.toLowerCase()?.trim();
         const password = formData.get("password") as string;
 
         if (!email) throw new Error("Email é obrigatório");
+        if (!nome) throw new Error("Nome é obrigatório");
+        if (!password || password.length < 6) throw new Error("Senha deve ter ao menos 6 caracteres");
 
         await connectDB();
 
         // 1. Verificar se o e-mail já existe
-        const existingUser = await User.findOne({ email: email.toLowerCase() });
+        const existingUser = await User.findOne({ email });
         if (existingUser) {
             throw new Error("Este e-mail já está cadastrado.");
         }
@@ -23,13 +25,14 @@ export async function registerUserAction(formData: FormData) {
         // 2. Criptografar a senha
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // 3. Criar o usuário (Seguindo seu Model)
+        // 3. Criar o usuário (Inicialmente INATIVO conforme regra)
         await User.create({
             nome,
             email,
             password: hashedPassword,
             role: 'TENANT_OWNER',
-            status: 'active',
+            status: 'inactive', // Trava de segurança
+            avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&background=random`
         });
 
         return { success: true };

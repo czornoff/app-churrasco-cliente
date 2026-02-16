@@ -12,7 +12,7 @@ export async function saveProductAction(formData: FormData) {
     const tenantId = formData.get("tenantId") as string;
     const category = formData.get("category") as string;
     const productId = formData.get("productId") as string; // Adicione este campo no seu form de produto
-    
+
     // Mapeamento rigoroso para os arrays do seu CardapioSchema
     const categoryMap: Record<string, string> = {
         carnes: "carnes",
@@ -30,10 +30,18 @@ export async function saveProductAction(formData: FormData) {
     }
 
     // Montagem do objeto conforme os campos do seu ProductForm
+    const nome = formData.get("nome") as string;
+    const rawImageUrl = formData.get("imageUrl") as string || "";
+
+    // Lógica agressiva de fallback: se for mandebem.com ou placeholder ou vazio, gera UI-Avatar
+    const imageUrl = (rawImageUrl && !rawImageUrl.includes('mandebem.com') && !rawImageUrl.includes('placeholder'))
+        ? rawImageUrl.trim()
+        : `https://ui-avatars.com/api/?name=${encodeURIComponent(nome || "Produto")}&background=random&size=512`;
+
     const productData = {
-        nome: formData.get("nome") as string,
+        nome,
         preco: Number(formData.get("preco")) || 0,
-        imageUrl: formData.get("imageUrl") as string || "",
+        imageUrl,
         gramasPorAdulto: Number(formData.get("gramasPorAdulto")) || 0,
         gramasEmbalagem: Number(formData.get("gramasEmbalagem")) || 0,
         mlPorAdulto: Number(formData.get("mlPorAdulto")) || 0,
@@ -47,13 +55,13 @@ export async function saveProductAction(formData: FormData) {
             // 1. Precisamos descobrir onde o produto estava antes (categoria antiga)
             // O banco já sabe disso, mas o jeito mais fácil é comparar o que veio no form
             // com o que você enviou via query string ou campo hidden.
-            
+
             // Vamos buscar o cardápio para validar a categoria atual
             const currentCardapio = await Cardapio.findOne({ tenantId });
-            
+
             // Encontrar em qual categoria o produto existe atualmente
             const categories = ["carnes", "bebidas", "acompanhamentos", "sobremesas", "adicionais"];
-            const oldCategory = categories.find(cat => 
+            const oldCategory = categories.find(cat =>
                 currentCardapio[cat].some((p: any) => p._id.toString() === productId)
             );
 
@@ -61,7 +69,7 @@ export async function saveProductAction(formData: FormData) {
                 // --- TROCA DE CATEGORIA ---
                 // 1. Pega os dados do item antigo
                 const oldItem = currentCardapio[oldCategory].find((p: any) => p._id.toString() === productId);
-                
+
                 // 2. Remove do array antigo
                 await Cardapio.updateOne(
                     { tenantId },
@@ -105,7 +113,7 @@ export async function saveProductAction(formData: FormData) {
 
 export async function deleteProductAction(tenantId: string, category: string, productId: string) {
     await connectDB();
-    
+
     try {
         await Cardapio.findOneAndUpdate(
             { tenantId },
@@ -113,7 +121,7 @@ export async function deleteProductAction(tenantId: string, category: string, pr
         );
 
         // Caminho absoluto é mais garantido para atualizar a tela na hora
-        revalidatePath(`/admin/tenants/${tenantId}`); 
+        revalidatePath(`/admin/tenants/${tenantId}`);
         return { success: true };
     } catch (error) {
         console.error("Erro ao deletar:", error);

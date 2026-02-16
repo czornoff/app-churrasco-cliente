@@ -1,98 +1,79 @@
-import { getServerSession } from "next-auth"; // Busca a sessão no servidor
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { ReactNode } from "react";
-import Link from "next/link";
-import { Users, UserCircle, UserCog, LayoutDashboard, ChevronRight } from "lucide-react";
+import { LayoutDashboard, UserCircle } from "lucide-react";
 import { AdminBreadcrumbs } from "@/components/AdminBreadcrumbs";
 import Image from "next/image";
 import { LogoutButton } from "@/components/LogoutButton";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { SidebarContent } from "@/components/SidebarContent";
+import { MobileNav } from "@/components/MobileNav";
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
-    const session = await getServerSession(); // Pega nome, email e imagem do Google
+    const session = await getServerSession(authOptions);
 
     return (
-        <div className="flex min-h-screen">
-            {/* Sidebar Fixa */}
-            <aside className="w-64 bg-slate-900 text-white p-6 hidden md:flex flex-col">
-                <div className="mb-10">
-                    <h2 className="text-xl font-bold text-orange-500 flex items-center gap-2">
-                        <span className="bg-orange-500 w-2 h-6 rounded-full"></span>
-                        MandeBem
-                    </h2>
-                    <p className="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Admin Panel</p>
-                </div>
-
-                <nav className="space-y-2 flex-1">
-                    <p className="text-xs font-semibold text-slate-500 px-2 pb-2 uppercase">Menu Principal</p>
-                    
-                    <Link href="/admin/tenants" className="flex items-center justify-between group px-3 py-2 rounded-lg hover:bg-slate-800 transition-colors">
-                        <div className="flex items-center gap-3 text-slate-300 group-hover:text-white">
-                            <Users size={18} />
-                            <span>Gerenciar Clientes</span>
-                        </div>
-                        <ChevronRight size={14} className="text-slate-600 group-hover:text-white" />
-                    </Link>
-
-                    <Link href="/admin/users" className="flex items-center justify-between group px-3 py-2 rounded-lg hover:bg-slate-800 transition-colors">
-                        <div className="flex items-center gap-3 text-slate-300 group-hover:text-white">
-                            <UserCog size={18} />
-                            <span>Gerenciar Usuários</span>
-                        </div>
-                        <ChevronRight size={14} className="text-slate-600 group-hover:text-white" />
-                    </Link>
-
-                    {/* NOVO LINK: MEU PERFIL */}
-                    <Link href="/admin/perfil" className="flex items-center justify-between group px-3 py-2 rounded-lg hover:bg-slate-800 transition-colors">
-                        <div className="flex items-center gap-3 text-slate-300 group-hover:text-white">
-                            <UserCircle size={18} />
-                            <span>Meu Perfil</span>
-                        </div>
-                        <ChevronRight size={14} className="text-slate-600 group-hover:text-white" />
-                    </Link>
-                </nav>
-
-                {/* Footer da Sidebar com info rápida */}
-                <div className="mt-auto pt-6 border-t border-slate-800">
-                    <p className="text-[10px] text-slate-500 text-center italic">
-                        v1.0.4 - 2026
-                    </p>
-                </div>
+        <div className="flex min-h-screen bg-neutral-50 dark:bg-zinc-950 transition-colors duration-300">
+            {/* Aside Sidebar (Desktop Only - Sticky to avoid overlaps) */}
+            <aside className="sticky top-0 h-screen w-72 hidden md:block z-50 border-r border-neutral-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-y-auto">
+                <SidebarContent />
             </aside>
 
-            {/* Conteúdo Principal */}
-            <main className="flex-1 bg-slate-50 flex flex-col">
-                <header className="h-16 bg-white border-b flex items-center justify-between px-8">
-                    <span className="font-medium text-slate-600 flex gap-2"><LayoutDashboard /> Painel de Controle</span>
-                    <div className="flex items-center gap-6">
-                        {/* Bloco do Usuário */}
-                            {session?.user && (
-                                <div className="flex items-center gap-3 border-r pr-6 border-slate-200">
-                                    <div className="text-right hidden sm:block">
-                                        <p className="text-sm font-bold text-slate-800 leading-tight">
-                                            {session.user.name}
-                                        </p>
-                                        <p className="text-[10px] text-slate-500 uppercase font-semibold">
-                                            Administrador
-                                        </p>
-                                    </div>
-                                    {session.user.image ? (
+            {/* Main Content Area */}
+            <main className="flex-1 min-h-screen flex flex-col relative overflow-x-hidden">
+                {/* Fixed Header with Glassmorphism */}
+                <header className="fixed top-0 right-0 z-40 left-0 md:left-72 h-16 md:h-20 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-neutral-200/50 dark:border-zinc-800/50 flex items-center justify-between px-4 md:px-10 transition-colors duration-300">
+                    <div className="flex items-center gap-4">
+                        {/* Mobile Navigator (Strictly small screens) */}
+                        <MobileNav />
+
+                        {/* Breadcrumbs always visible */}
+                        <AdminBreadcrumbs />
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        <ThemeToggle />
+
+                        <div className="h-6 w-px bg-neutral-200 dark:bg-zinc-800 mx-2"></div>
+
+                        {/* User Profile Summary */}
+                        {session?.user && (
+                            <div className="flex items-center gap-3">
+                                <div className="text-right hidden lg:block">
+                                    <p className="text-xs font-black text-neutral-900 dark:text-white mb-0.5 tracking-tight truncate max-w-[150px]">
+                                        {session.user.name}
+                                    </p>
+                                    <p className="text-[9px] text-neutral-400 dark:text-zinc-500 uppercase font-black tracking-widest">
+                                        Super-Admin
+                                    </p>
+                                </div>
+                                {session.user.image ? (
+                                    <div className="relative w-8 h-8 md:w-10 md:h-10">
                                         <Image
-                                            className="w-9 h-9 rounded-full ring-2 ring-orange-100 shadow-sm"
-                                            src={session.user.image} 
-                                            alt="Avatar" 
-                                            width={100}
-                                            height={100}
+                                            className="rounded-full ring-2 ring-neutral-100 dark:ring-zinc-800 shadow-sm object-cover"
+                                            src={session.user.image}
+                                            alt="Avatar"
+                                            fill
+                                            sizes="(max-width: 768px) 32px, 40px"
                                             priority
                                         />
-                                    ) : (
-                                        <UserCircle className="text-slate-400 w-9 h-9" />
-                                    )}
-                                </div>
-                            )}
-                        <LogoutButton />
+                                    </div>
+                                ) : (
+                                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-neutral-100 dark:bg-zinc-800 flex items-center justify-center border border-neutral-200 dark:border-zinc-700">
+                                        <UserCircle className="text-neutral-400 dark:text-zinc-600 w-6 h-6" />
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        <div className="ml-2">
+                            <LogoutButton />
+                        </div>
                     </div>
                 </header>
-                <div className="p-8 flex-1">
-                    <AdminBreadcrumbs />
+
+                {/* Dashboard / Content Area - Added padding top to compensate for fixed header */}
+                <div className="p-4 md:p-10 pt-20 md:pt-30 flex-1 flex flex-col animate-in fade-in slide-in-from-bottom-2 duration-700">
                     {children}
                 </div>
             </main>

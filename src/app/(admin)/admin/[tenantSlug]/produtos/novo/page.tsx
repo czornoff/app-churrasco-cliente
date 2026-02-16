@@ -2,11 +2,11 @@ import { getTenantBySlug } from "@/lib/actions/tenant"; // Exemplo do caminho da
 import { ProductForm } from "@/components/ProductForm";
 import { notFound } from "next/navigation";
 
-export default async function NewProductPage({ 
-    params 
-    }: { 
-    params: Promise<{ tenantSlug: string }> 
-    }) {
+export default async function NewProductPage({
+    params
+}: {
+    params: Promise<{ tenantSlug: string }>
+}) {
     // 1. Aguarda as params (Obrigatório no Next 15)
     const { tenantSlug } = await params;
 
@@ -21,11 +21,11 @@ export default async function NewProductPage({
     return (
         <div className="max-w-4xl mx-auto py-10 px-4">
             <div className="mb-8">
-                <h1 className="text-2xl font-bold text-slate-900">
+                <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">
                     Novo Item para {tenant.name}
                 </h1>
-                <p className="text-slate-500">
-                    Cadastre as opções de carnes, bebidas ou acompanhamentos de sua loja.
+                <p className="text-slate-500 dark:text-slate-200 text-sm">
+                    Cadastre as opções de carnes, bebidas ou acompanhamentos do estabelecimento.
                 </p>
             </div>
 

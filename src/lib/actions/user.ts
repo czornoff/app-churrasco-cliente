@@ -11,17 +11,26 @@ export async function updateProfileAction(formData: FormData) {
 
     await connectDB();
 
+    const nome = formData.get("nome") as string;
     const updateData = {
-        nome: formData.get("nome") as string,
+        nome,
         whatsApp: formData.get("whatsApp") as string,
         UF: formData.get("UF") as string,
         cidade: formData.get("cidade") as string,
         genero: formData.get("genero") as string,
     };
 
+    const avatar = (() => {
+        const currentAvatar = formData.get("avatar")?.toString().trim() || "";
+        const isPlaceholder = !currentAvatar || currentAvatar.includes('ui-avatars.com') || currentAvatar.includes('placeholder') || currentAvatar.includes('mandebem.com');
+        return isPlaceholder
+            ? `https://ui-avatars.com/api/?name=${encodeURIComponent(nome || 'User')}&background=random`
+            : currentAvatar;
+    })();
+
     await User.findOneAndUpdate(
         { email: session.user.email },
-        { $set: updateData }
+        { $set: { ...updateData, avatar } }
     );
 
     revalidatePath("/admin/perfil");
@@ -31,8 +40,18 @@ export async function updateProfileAction(formData: FormData) {
 export async function updateFullUserAction(userId: string, formData: FormData) {
     await connectDB();
 
+    const nome = formData.get("nome") as string;
+    const avatar = (() => {
+        const currentAvatar = formData.get("avatar")?.toString().trim() || "";
+        const isPlaceholder = !currentAvatar || currentAvatar.includes('ui-avatars.com') || currentAvatar.includes('placeholder') || currentAvatar.includes('mandebem.com');
+        return isPlaceholder
+            ? `https://ui-avatars.com/api/?name=${encodeURIComponent(nome || "User")}&background=random`
+            : currentAvatar;
+    })();
+
     const data = {
-        nome: formData.get("nome") as string,
+        nome,
+        avatar,
         email: (formData.get("email") as string).toLowerCase(),
         role: formData.get("role") as string,
         status: formData.get("status") as string,
@@ -40,10 +59,8 @@ export async function updateFullUserAction(userId: string, formData: FormData) {
         UF: formData.get("UF") as string,
         cidade: formData.get("cidade") as string,
         genero: formData.get("genero") as string,
-        avatar: formData.get("avatar") as string,
         birthday: formData.get("birthday") ? new Date(formData.get("birthday") as string) : undefined,
-        // Se tenantId for vazio, enviamos null
-        tenantId: formData.get("tenantId") || null,
+        tenantId: (formData.get("tenantId") === "none" || !formData.get("tenantId")) ? null : formData.get("tenantId"),
     };
 
     try {
@@ -58,7 +75,7 @@ export async function updateFullUserAction(userId: string, formData: FormData) {
 
 export async function deleteUserAction(userId: string) {
     await connectDB();
-    
+
     try {
         await User.findByIdAndDelete(userId);
         revalidatePath("/admin/users");

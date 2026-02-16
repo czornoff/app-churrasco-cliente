@@ -31,7 +31,7 @@ export function DeleteUserButton({ userId, userName }: { userId: string, userNam
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:text-red-600 hover:bg-red-50">
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:text-red-600 hover:bg-red-50 text-slate-500">
                     <Trash2 size={14} />
                 </Button>
             </AlertDialogTrigger>
@@ -39,13 +39,13 @@ export function DeleteUserButton({ userId, userName }: { userId: string, userNam
                 <AlertDialogHeader>
                     <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Esta ação não pode ser desfeita. Isso excluirá permanentemente a conta de 
+                        Esta ação não pode ser desfeita. Isso excluirá permanentemente a conta de
                         <span className="font-bold text-slate-900"> {userName}</span> e removerá os dados de nossos servidores.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel disabled={loading}>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction 
+                    <AlertDialogAction
                         onClick={handleDelete}
                         className="bg-red-600 hover:bg-red-700"
                         disabled={loading}
