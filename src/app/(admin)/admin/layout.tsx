@@ -8,6 +8,7 @@ import { LogoutButton } from "@/components/LogoutButton";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { SidebarContent } from "@/components/SidebarContent";
 import { MobileNav } from "@/components/MobileNav";
+import { TenantSelector } from "@/components/TenantSelector";
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
     const session = await getServerSession(authOptions);
@@ -34,6 +35,18 @@ export default async function AdminLayout({ children }: { children: ReactNode })
                     <div className="flex items-center gap-3">
                         <ThemeToggle />
 
+                        {/* Tenant Selector - para usuários com múltiplos acessos */}
+                        {session?.user?.tenantIds && session.user.tenantIds.length > 1 && (
+                            <>
+                                <div className="h-6 w-px bg-neutral-200 dark:bg-zinc-800 mx-2"></div>
+                                <TenantSelector 
+                                    tenantIds={session.user.tenantIds} 
+                                    currentTenantId={session.user.tenantId}
+                                    role={session.user.role}
+                                />
+                            </>
+                        )}
+
                         <div className="h-6 w-px bg-neutral-200 dark:bg-zinc-800 mx-2"></div>
 
                         {/* User Profile Summary */}
@@ -44,7 +57,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
                                         {session.user.name}
                                     </p>
                                     <p className="text-[9px] text-neutral-400 dark:text-zinc-500 uppercase font-black tracking-widest">
-                                        Super-Admin
+                                        {session.user.role === 'SUPERADMIN' ? 'Administrador' : (session.user.role === 'TENANT_OWNER' ? 'Admin de Estabelecimento' : 'Usuário')}
                                     </p>
                                 </div>
                                 {session.user.image ? (

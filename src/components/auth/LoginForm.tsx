@@ -11,6 +11,7 @@ export function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const error = searchParams.get("error");
+    const callbackUrl = searchParams.get("callbackUrl") || "/admin";
 
     const [view, setView] = useState<'login' | 'register'>('login');
     const [loading, setLoading] = useState(false);
@@ -47,6 +48,7 @@ export function LoginForm() {
             email,
             password,
             redirect: false,
+            callbackUrl: callbackUrl,
         });
 
         setLoading(false);
@@ -54,15 +56,15 @@ export function LoginForm() {
         if (result?.error) {
             if (result.error === "InactiveAccount") {
                 toast.error("Conta aguardando aprovação.");
-                router.push("/login?error=InactiveAccount");
-            } else {
+            } else if (result.error === "CredentialsSignin") {
                 toast.error("E-mail ou senha inválidos.");
-                router.push("/login?error=CredentialsSignin");
+            } else {
+                toast.error("Erro ao fazer login.");
             }
-        } else {
+        } else if (result?.ok) {
             toast.success("Bem-vindo!");
-            router.push("/admin");
-            router.refresh();
+            // NextAuth vai redirecionar automaticamente para callbackUrl
+            router.push(result.url || callbackUrl);
         }
     }
 
@@ -82,7 +84,7 @@ export function LoginForm() {
             <div className="space-y-6">
                 <button
                     type="button"
-                    onClick={() => signIn("google", { callbackUrl: "/admin" })}
+                    onClick={() => signIn("google", { callbackUrl: callbackUrl })}
                     disabled={loading}
                     className="w-full flex items-center justify-center gap-3 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 hover:bg-neutral-50 dark:hover:bg-zinc-700 text-neutral-700 dark:text-zinc-200 font-bold py-4 px-4 rounded-2xl transition-all shadow-sm active:scale-[0.98] border-b-4 active:border-b-0 active:translate-y-[2px] p-3 rounded-sm"
                 >

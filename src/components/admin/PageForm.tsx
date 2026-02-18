@@ -11,7 +11,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { ArrowLeft, Save, Plus, Trash2, GripVertical } from 'lucide-react';
 import Link from 'next/link';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import DynamicRichTextEditor from '@/components/DynamicRichTextEditor';
 
 interface ICard {
     titulo: string;
@@ -26,7 +27,7 @@ interface PageFormProps {
         _id?: string;
         titulo: string;
         texto: string;
-        tipo: 'texto' | 'cards';
+        tipo: 'texto' | 'cards' | 'ambos';
         emoji: string;
         ativo: boolean;
         slug: string;
@@ -58,7 +59,7 @@ export function PageForm({ initialData, isEditing = false }: PageFormProps) {
     };
 
     const handleTypeChange = (value: string) => {
-        setFormData(prev => ({ ...prev, tipo: value as 'texto' | 'cards' }));
+        setFormData(prev => ({ ...prev, tipo: value as 'texto' | 'cards' | 'ambos' }));
     };
 
     // Cards Management
@@ -181,41 +182,33 @@ export function PageForm({ initialData, isEditing = false }: PageFormProps) {
                         <div className="pt-2">
                             <Label>Tipo de Conteúdo</Label>
                             <Tabs value={formData.tipo} onValueChange={handleTypeChange} className="mt-2 w-full">
-                                <TabsList className="grid w-full grid-cols-2">
+                                <TabsList className="grid w-full grid-cols-3">
                                     <TabsTrigger value="texto">Texto Livre (HTML)</TabsTrigger>
                                     <TabsTrigger value="cards">Lista de Cards</TabsTrigger>
+                                    <TabsTrigger value="ambos">Texto + Cards</TabsTrigger>
                                 </TabsList>
                             </Tabs>
                         </div>
                     </CardContent>
                 </Card>
 
-                {formData.tipo === 'texto' ? (
+                {(formData.tipo === 'texto' || formData.tipo === 'ambos') && (
                     <Card>
                         <CardHeader>
                             <CardTitle className="text-lg">Conteúdo (Texto/HTML)</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            import dynamic from 'next/dynamic';
-
-const CKEditor = dynamic(() => import('./CKEditorWrapper'), {
-                                ssr: false,
-    loading: () => <div className="h-[300px] w-full bg-slate-100 dark:bg-zinc-800 animate-pulse rounded-md"></div>
-});
-
-                            // ... inside component ...
-
-                            <CardContent>
-                                <div className="min-h-[300px] border rounded-md">
-                                    <CKEditor
-                                        value={formData.texto}
-                                        onChange={(data) => setFormData(prev => ({ ...prev, texto: data }))}
-                                    />
-                                </div>
-                            </CardContent>
+                            <div className="min-h-[300px] border rounded-md overflow-hidden">
+                                <DynamicRichTextEditor
+                                    value={formData.texto}
+                                    onChange={(data) => setFormData(prev => ({ ...prev, texto: data }))}
+                                />
+                            </div>
                         </CardContent>
                     </Card>
-                ) : (
+                )}
+
+                {(formData.tipo === 'cards' || formData.tipo === 'ambos') && (
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between">
                             <CardTitle className="text-lg">Cards</CardTitle>

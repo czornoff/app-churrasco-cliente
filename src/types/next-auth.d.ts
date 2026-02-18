@@ -6,16 +6,17 @@ declare module "next-auth" {
             id: string;
             role: string;
             status: string;
-            tenantId: string | null;
+            tenantId: string | null; // Tenant atual/primário
+            tenantIds: string[]; // Todos os tenants do usuário
         } & DefaultSession["user"]
     }
 
-    // Isso resolve o erro da imagem 3 (authorize)
     interface User {
         id?: string;
         role: string;
         status?: string;
         tenantId?: string | null;
+        tenantIds?: string[];
     }
 }
 
@@ -25,5 +26,6 @@ declare module "next-auth/jwt" {
         role: string;
         status: string;
         tenantId: string | null;
+        tenantIds: string[];
     }
 }

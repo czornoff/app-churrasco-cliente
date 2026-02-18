@@ -25,6 +25,7 @@ import {
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { EndUserAuthModal } from './auth/EndUserAuthModal';
+import { PublicTenantSelector } from './PublicTenantSelector';
 import { cn } from '@/lib/utils';
 
 interface TenantHeaderProps {
@@ -59,6 +60,21 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
 
     const isInternalLink = (url: string) => url.startsWith('/') || !url.startsWith('http');
 
+    // Hardcoded items
+    const fixedItems = [
+        { _id: 'fixed-calculadora', nome: 'Calculadora', url: '/calculadora', ativo: true },
+        { _id: 'fixed-cardapio', nome: 'Cardápio', url: '/cardapio', ativo: true },
+    ];
+
+    // Merge logic: Add fixed items unless they conflict (optional, but requested to be fixed)
+    // Actually, user said "calculadora e cardápio sempre devem estar visíveis... então não entram na configuração nova, devem ser fixas"
+    // So we prepend them. We also filter out any dynamic menu item that tries to replicate them by name to avoid duplicates.
+    const filteredDynamicItems = menuItems.filter(item =>
+        !['calculadora', 'cardápio', 'cardapio'].includes(item.nome.toLowerCase())
+    );
+
+    const allMenuItems = [...fixedItems, ...filteredDynamicItems];
+
     return (
         <>
             <header className={cn(
@@ -81,7 +97,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                         </div>
                         <span className={cn(
                             "font-black uppercase tracking-tighter text-xl",
-                            scrolled ? "text-neutral-900 dark:text-white" : "text-white drop-shadow-md"
+                            scrolled ? "text-neutral-900 dark:text-white" : "text-neutral-900 dark:text-white"
                         )}>
                             {tenant.name}
                         </span>
@@ -89,7 +105,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
 
                     {/* Desktop Navigation */}
                     <nav className="hidden md:flex items-center gap-1 bg-neutral-100/20 dark:bg-zinc-900/20 p-1 rounded-sm backdrop-blur-sm">
-                        {menuItems.map((item) => {
+                        {allMenuItems.map((item) => {
                             const href = isInternalLink(item.url)
                                 ? `/${tenant.slug}${item.url.startsWith('/') ? item.url : '/' + item.url}`
                                 : item.url;
@@ -102,7 +118,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                                 <Link key={item._id} href={href} target={!isInternalLink(item.url) ? "_blank" : undefined}>
                                     <Button variant="ghost" className={cn(
                                         "rounded-sm px-4 font-bold text-xs uppercase tracking-widest transition-all",
-                                        scrolled ? "text-neutral-600 dark:text-zinc-400" : "text-white/90"
+                                        scrolled ? "text-neutral-600 dark:text-zinc-400" : "text-neutral-600 dark:text-zinc-400"
                                     )}>
                                         <Icon size={14} className="mr-2" />
                                         {item.nome}
@@ -115,7 +131,14 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                     {/* Auth & User Menu */}
                     <div className="flex items-center gap-4">
                         {session ? (
-                            <DropdownMenu>
+                            <>
+                                {/* Public Tenant Selector - aparece apenas se múltiplos tenants */}
+                                <PublicTenantSelector 
+                                    currentTenantSlug={tenant.slug}
+                                    colorPrimary={tenant.colorPrimary}
+                                />
+                                
+                                <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <button className="flex items-center gap-2 group outline-none">
                                         <div className="relative w-9 h-9 rounded-full overflow-hidden border-2 border-white dark:border-zinc-800 shadow-md group-hover:scale-105 transition-all">
@@ -157,6 +180,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
+                            </>
                         ) : (
                             <Button
                                 onClick={() => setIsAuthModalOpen(true)}
@@ -182,7 +206,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                 {isMobileMenuOpen && (
                     <div className="absolute top-full left-0 w-full bg-white dark:bg-zinc-950 border-t border-neutral-100 dark:border-zinc-900 p-6 animate-in slide-in-from-top duration-300">
                         <nav className="flex flex-col gap-4">
-                            {menuItems.map((item) => {
+                            {allMenuItems.map((item) => {
                                 const href = isInternalLink(item.url)
                                     ? `/${tenant.slug}${item.url.startsWith('/') ? item.url : '/' + item.url}`
                                     : item.url;

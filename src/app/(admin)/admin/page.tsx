@@ -5,8 +5,41 @@ import { Users, Store, Activity, ArrowRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
+    const session = await getServerSession(authOptions);
+    
+    // Se não houver sessão, redirecionar para login
+    if (!session?.user) {
+        redirect('/login');
+    }
+
+    // Se role não está definido no banco, redirecionar para login para refazer
+    if (!session.user.role) {
+        redirect('/login');
+    }
+    
+    // Redirecionar END_USER - não pode acessar admin
+    if (session.user.role === 'END_USER') {
+        redirect('/');
+    }
+    
+    // Se for TENANT_OWNER, redirecionar para edição do seu primeiro tenant
+    if (session.user.role === 'TENANT_OWNER') {
+        if (!session.user.tenantIds || session.user.tenantIds.length === 0) {
+            redirect('/');
+        }
+        redirect(`/admin/tenants/${session.user.tenantIds[0]}`);
+    }
+    
+    // Somente SUPERADMIN chega até aqui
+    if (session.user.role !== 'SUPERADMIN') {
+        redirect('/');
+    }
+    
     await connectDB();
 
     // Busca métricas em paralelo para melhor performance
@@ -89,7 +122,7 @@ export default async function DashboardPage() {
             </div>
 
             {/* Quick Actions or System Status */}
-            <Card className="border-none shadow-2xl rounded-[2.5rem] dark:bg-zinc-100 text-zinc-900 overflow-hidden relative group dark:bg-zinc-900 dark:text-zinc-100">
+            <Card className="border-none shadow-2xl rounded-[2.5rem] bg-zinc-100 text-zinc-900 overflow-hidden relative group dark:bg-zinc-900 dark:text-zinc-100">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl -mr-32 -mt-32 transition-colors group-hover:bg-orange-500/20 duration-1000"></div>
 
                 <div className="p-10 md:p-14 flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
@@ -105,7 +138,7 @@ export default async function DashboardPage() {
                     </div>
                     <div className="flex shrink-0">
                         <Link href="/admin/tenants">
-                            <Button className="bg-orange-500 hover:bg-orange-300 text-neutral-950 font-black text-white px-10 py-8 rounded-2xl text-base transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/5">
+                            <Button className="bg-orange-500 hover:bg-orange-300 text-neutral-950 font-black dark:text-white px-10 py-8 rounded-2xl text-base transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/5">
                                 Novo Estabelecimento
                             </Button>
                         </Link>

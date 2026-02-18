@@ -11,6 +11,7 @@ export interface ITenantDocument extends Document {
     email: string;
     whatsApp: string;
     instagram: string;
+    address?: string;
     versao: string;
     limiteConsulta: number;
     ownerId?: Types.ObjectId;
@@ -34,6 +35,7 @@ const TenantSchema = new Schema<ITenantDocument>({
     email: { type: String, default: 'contato@email.com' },
     whatsApp: { type: String, default: '11900000000' },
     instagram: { type: String, default: 'https://instagram.com/' },
+    address: { type: String, default: '' },
     versao: { type: String, default: '1.0.1' },
     limiteConsulta: { type: Number, default: 5 },
     ownerId: { type: Schema.Types.ObjectId, ref: 'User' },

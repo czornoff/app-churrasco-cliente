@@ -49,7 +49,22 @@ export async function updateFullUserAction(userId: string, formData: FormData) {
             : currentAvatar;
     })();
 
-    const data = {
+    // Processar tenantIds
+    const tenantIdsStr = formData.get("tenantIds") as string;
+    let tenantIds: any[] = [];
+    
+    if (tenantIdsStr) {
+        try {
+            const parsed = JSON.parse(tenantIdsStr);
+            tenantIds = Array.isArray(parsed) ? parsed : [];
+        } catch (e) {
+            tenantIds = [];
+        }
+    }
+
+    // Se tenantIds foi fornecido, usar isso (múltiplos tenants)
+    // Se não, manter apenas tenantId (compatibilidade com código antigo)
+    const updateData: any = {
         nome,
         avatar,
         email: (formData.get("email") as string).toLowerCase(),
@@ -60,11 +75,20 @@ export async function updateFullUserAction(userId: string, formData: FormData) {
         cidade: formData.get("cidade") as string,
         genero: formData.get("genero") as string,
         birthday: formData.get("birthday") ? new Date(formData.get("birthday") as string) : undefined,
-        tenantId: (formData.get("tenantId") === "none" || !formData.get("tenantId")) ? null : formData.get("tenantId"),
     };
 
+    // Sempre atualizar tenantIds com o novo array
+    if (tenantIds.length > 0) {
+        updateData.tenantIds = tenantIds;
+        // Definir o primeiro tenant como tenantId primário se houver
+        updateData.tenantId = tenantIds[0];
+    } else {
+        updateData.tenantIds = [];
+        updateData.tenantId = null;
+    }
+
     try {
-        await User.findByIdAndUpdate(userId, { $set: data });
+        await User.findByIdAndUpdate(userId, { $set: updateData });
         revalidatePath("/admin/users");
         return { success: true };
     } catch (error: unknown) {

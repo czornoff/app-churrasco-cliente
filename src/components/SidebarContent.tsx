@@ -2,20 +2,30 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Users, UserCircle, UserCog, LayoutDashboard, ChevronRight, List, FileText } from "lucide-react";
+import { Users, UserCircle, UserCog, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 
 const navItems = [
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/tenants", label: "Estabelecimentos", icon: Users },
-    { href: "/admin/menu", label: "Menu do App", icon: List },
-    { href: "/admin/pages", label: "Páginas Custom", icon: FileText },
     { href: "/admin/users", label: "Usuários", icon: UserCog },
     { href: "/admin/perfil", label: "Meu Perfil", icon: UserCircle },
 ];
 
 export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
     const pathname = usePathname();
+    const { data: session } = useSession();
+
+    // Filtra itens baseado no role do usuário
+    const visibleItems = navItems.filter(item => {
+        // TENANT_OWNER só vê "Meu Perfil"
+        if (session?.user?.role === 'TENANT_OWNER') {
+            return item.label === 'Meu Perfil';
+        }
+        // Super admin vê todos os itens
+        return true;
+    });
 
     return (
         <div className="flex flex-col h-full bg-white dark:bg-zinc-900 border-r border-neutral-200 dark:border-zinc-800 transition-colors duration-300">
@@ -40,7 +50,7 @@ export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
                         Menu Principal
                     </p>
                     <nav className="space-y-1">
-                        {navItems.map((item) => {
+                        {visibleItems.map((item) => {
                             const isActive = pathname === item.href;
                             return (
                                 <Link

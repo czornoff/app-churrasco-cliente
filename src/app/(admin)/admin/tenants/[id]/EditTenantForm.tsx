@@ -12,10 +12,14 @@ import { Label } from "@/components/ui/label";
 import { MaskedInput } from "@/components/ui/masked-input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Save, Palette, Globe, ShieldCheck, ScanBarcode, PlusCircle } from "lucide-react";
+import { Save, Palette, Globe, ShieldCheck, ScanBarcode, PlusCircle, List, FileText, MapPin } from "lucide-react";
 import { ColorPicker } from "@/components/ColorPicker";
 import { CloudinaryUpload } from "@/components/CldUploadWidget"
 import { toast } from "sonner";
+import { TenantMenuManager } from "@/components/admin/TenantMenuManager";
+import { TenantPageManager } from "@/components/admin/TenantPageManager";
+import { Textarea } from "@/components/ui/textarea";
+import { LocationPreview } from "@/components/LocationPreview";
 
 export default function EditTenantForm(
     {
@@ -31,6 +35,7 @@ export default function EditTenantForm(
     const searchParams = useSearchParams();
     const tabFromUrl = searchParams.get("tab");
     const [activeTab, setActiveTab] = useState(tabFromUrl || "geral");
+    const [addressValue, setAddressValue] = useState(tenant.address || "");
 
     const [state, formAction, isPending] = useActionState<ActionState, FormData>(
         updateTenantAction,
@@ -58,18 +63,40 @@ export default function EditTenantForm(
                 onValueChange={setActiveTab}
                 className="w-full"
             >
-                <TabsList className="grid w-full grid-cols-4 mb-8">
-                    <TabsTrigger value="geral"><Globe className="w-3 h-3 mr-2" /> Geral & Branding</TabsTrigger>
-                    <TabsTrigger value="contato"><Palette className="w-3 h-3 mr-2" /> Contato & Social</TabsTrigger>
-                    <TabsTrigger value="config"><ShieldCheck className="w-3 h-3 mr-2" /> Sistema</TabsTrigger>
-                    <TabsTrigger value="cardapio"><ScanBarcode className="w-3 h-3 mr-2" /> Cardápio</TabsTrigger>
-                </TabsList>
+                <div className="overflow-x-auto pb-2">
+                    <TabsList className="inline-flex h-auto w-full justify-start md:grid md:grid-cols-6 mb-8 min-w-[600px]">
+                        <TabsTrigger value="geral"><Globe className="w-3 h-3 mr-2" /> Geral</TabsTrigger>
+                        <TabsTrigger value="contato"><Palette className="w-3 h-3 mr-2" /> Contato</TabsTrigger>
+                        <TabsTrigger value="cardapio"><ScanBarcode className="w-3 h-3 mr-2" /> Produtos</TabsTrigger>
+                        <TabsTrigger value="menus"><List className="w-3 h-3 mr-2" /> Menu App</TabsTrigger>
+                        <TabsTrigger value="paginas"><FileText className="w-3 h-3 mr-2" /> Páginas</TabsTrigger>
+                        <TabsTrigger value="config"><ShieldCheck className="w-3 h-3 mr-2" /> Sistema</TabsTrigger>
+                    </TabsList>
+                </div>
 
                 <TabsContent value="cardapio" forceMount className="data-[state=inactive]:hidden">
                     <Card>
                         <CardHeader><CardTitle>Cardápio de Produtos</CardTitle></CardHeader>
                         <CardContent className="grid gap-4 md:grid-cols-2">
                             {children}
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="menus" forceMount className="data-[state=inactive]:hidden">
+                    <Card>
+                        <CardHeader><CardTitle>Menu do Aplicativo</CardTitle></CardHeader>
+                        <CardContent>
+                            <TenantMenuManager tenantId={id} />
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="paginas" forceMount className="data-[state=inactive]:hidden">
+                    <Card>
+                        <CardHeader><CardTitle>Páginas Customizadas</CardTitle></CardHeader>
+                        <CardContent>
+                            <TenantPageManager tenantId={id} />
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -136,6 +163,27 @@ export default function EditTenantForm(
                                     <MaskedInput name="email" type="email" defaultValue={state?.formData?.email || tenant.email} maskType="email" />
                                     {state?.errors?.email && <p className="text-xs text-red-500 font-medium">{state.errors.email[0]}</p>}
                                 </div>
+                                <div className="space-y-2 md:col-span-2">
+                                    <Label className="flex items-center gap-2">
+                                        <MapPin className="w-4 h-4" />
+                                        Endereço Completo (Localização)
+                                    </Label>
+                                    <Textarea 
+                                        name="address" 
+                                        placeholder="Ex: Rua das Flores, 123, São Paulo, SP"
+                                        defaultValue={state?.formData?.address || tenant.address}
+                                        onChange={(e) => setAddressValue(e.target.value)}
+                                        className="min-h-[80px]"
+                                    />
+                                    <p className="text-xs text-gray-500">
+                                        O endereço será exibido no mapa da página inicial.
+                                    </p>
+                                </div>
+                                {addressValue && (
+                                    <div className="mt-6 md:col-span-2">
+                                        <LocationPreview address={addressValue} name={tenant.name} />
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
                     </TabsContent>
@@ -165,7 +213,7 @@ export default function EditTenantForm(
                             </CardContent>
                         </Card>
                     </TabsContent>
-                    {activeTab !== "cardapio" ? (
+                    {activeTab !== "cardapio" && activeTab !== "menus" && activeTab !== "paginas" ? (
 
                         /* Botão Salvar (Aparece em todas as outras abas) */
                         <div className="mt-8 flex flex-col items-end gap-2">
@@ -183,14 +231,10 @@ export default function EditTenantForm(
 
             <div className="mt-8 flex flex-col items-end gap-2">
                 {activeTab === "cardapio" ? (
-                    /* Botão que aparece APENAS na aba Cardápio */
                     <Button
                         asChild
                         className="bg-orange-600 w-full md:w-auto px-12 py-6 text-white"
                     >
-                        {/* Note: Aqui usamos o slug se você tiver, ou o ID. 
-                            O ideal é passar o link para a página de criação de produtos.
-                        */}
                         <Link href={`/admin/${tenant.slug}/produtos/novo`}>
                             <PlusCircle className="mr-2 h-5 w-5" /> Adicionar Produto
                         </Link>

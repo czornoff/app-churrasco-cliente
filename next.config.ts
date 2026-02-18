@@ -17,10 +17,28 @@ const nextConfig: NextConfig = {
             },
             {
                 protocol: 'https',
-                hostname: '**', // Aceita qualquer site
+                hostname: '**',
             },
         ],
     },
+    webpack: (config, { isServer }) => {
+        if (!isServer) {
+            config.resolve.fallback = {
+                ...config.resolve.fallback,
+                async_hooks: false,
+                fs: false,
+                path: false,
+                crypto: false,
+                stream: false,
+                util: false,
+                buffer: false,
+                net: false,
+                tls: false,
+            };
+        }
+        return config;
+    },
+    turbopack: {},
 };
 
 export default nextConfig;

@@ -18,6 +18,7 @@ export const tenantUpdateSchema = z.object({
     instagram: z.string()
         .url("URL do Instagram inválida")
         .optional().or(z.literal("")),
+    address: z.string().optional(),
     logoUrl: z.string().url("URL da logo inválida").optional().or(z.literal("")),
     colorPrimary: z.string().regex(/^#[0-9A-Fa-f]{6}$/, "Cor inválida (formato #RRGGBB)").optional(),
     versao: z.string().optional(),

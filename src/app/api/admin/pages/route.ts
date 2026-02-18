@@ -4,35 +4,62 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { ClientePagina } from "@/models/ClientePagina";
 
+
+
+// Helper check permissions (Duplicated logic, ideally should be a lib function but keeping inline for simplicity)
+const getTargetTenantId = (session: any, requestedTenantId?: string | null) => {
+    if (requestedTenantId && (session.user.role === 'ADMIN' || session.user.role === 'SUPERADMIN')) {
+        return requestedTenantId;
+    }
+    return session.user.tenantId;
+};
+
 export async function GET(req: Request) {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.tenantId) {
+    if (!session?.user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const { searchParams } = new URL(req.url);
+    const tenantIdParam = searchParams.get("tenantId");
+    const targetTenantId = getTargetTenantId(session, tenantIdParam);
+
+    if (!targetTenantId) {
+        return NextResponse.json([], { status: 200 }); // Return empty if no tenant ID
+    }
+
     await connectDB();
-    const clientePagina = await ClientePagina.findOne({ clienteId: session.user.tenantId });
+    const clientePagina = await ClientePagina.findOne({ clienteId: targetTenantId });
     return NextResponse.json(clientePagina?.paginas || []);
 }
 
 export async function POST(req: Request) {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.tenantId) {
+    if (!session?.user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await req.json();
+    const targetTenantId = getTargetTenantId(session, body.tenantId);
+
+    if (!targetTenantId) {
+        return NextResponse.json({ error: "Tenant ID required" }, { status: 400 });
+    }
+
     await connectDB();
 
-    let clientePagina = await ClientePagina.findOne({ clienteId: session.user.tenantId });
+    let clientePagina = await ClientePagina.findOne({ clienteId: targetTenantId });
+
+    // Remove tenantId from the page object itself to avoid cluttering subdoc
+    const { tenantId, ...pageData } = body;
 
     if (!clientePagina) {
         clientePagina = await ClientePagina.create({
-            clienteId: session.user.tenantId,
-            paginas: [body]
+            clienteId: targetTenantId,
+            paginas: [pageData]
         });
     } else {
-        clientePagina.paginas.push(body);
+        clientePagina.paginas.push(pageData);
         await clientePagina.save();
     }
 
@@ -43,15 +70,21 @@ export async function POST(req: Request) {
 
 export async function PUT(req: Request) {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.tenantId) {
+    if (!session?.user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { _id, ...body } = await req.json();
+    const { _id, tenantId, ...body } = await req.json();
+    const targetTenantId = getTargetTenantId(session, tenantId);
+
+    if (!targetTenantId) {
+        return NextResponse.json({ error: "Tenant ID required" }, { status: 400 });
+    }
+
     await connectDB();
 
     const clientePagina = await ClientePagina.findOneAndUpdate(
-        { clienteId: session.user.tenantId, "paginas._id": _id },
+        { clienteId: targetTenantId, "paginas._id": _id },
         {
             $set: {
                 "paginas.$": { ...body, _id }
@@ -70,16 +103,23 @@ export async function PUT(req: Request) {
 
 export async function DELETE(req: Request) {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.tenantId) {
+    if (!session?.user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
+    const tenantIdParam = searchParams.get("tenantId");
+
+    const targetTenantId = getTargetTenantId(session, tenantIdParam);
+
+    if (!targetTenantId) {
+        return NextResponse.json({ error: "Tenant ID required" }, { status: 400 });
+    }
 
     await connectDB();
     const clientePagina = await ClientePagina.findOneAndUpdate(
-        { clienteId: session.user.tenantId },
+        { clienteId: targetTenantId },
         {
             $pull: { paginas: { _id: id } }
         },

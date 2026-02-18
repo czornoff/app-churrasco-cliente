@@ -8,6 +8,7 @@ import { deleteTenantAction } from "./actions"
 import { CreateTenantForm } from "@/components/CreateTenantForm"
 import { ITenant } from "@/interfaces/tenant";
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -18,10 +19,15 @@ export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 export default async function AdminTenantsPage() {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
 
     if (!session) {
-        redirect("/admin"); // Se não estiver logado, volta pro login
+        redirect("/login");
+    }
+
+    // TENANT_OWNER não pode acessar lista de tenants
+    if (session?.user?.role === 'TENANT_OWNER') {
+        redirect(`/admin/tenants/${session.user.tenantId}`);
     }
 
     await connectDB()

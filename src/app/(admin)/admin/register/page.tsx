@@ -5,10 +5,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useSession } from "next-auth/react";
 
 export default function RegisterPage() {
     const router = useRouter();
+    const { data: session, status } = useSession();
+
+    // Se for TENANT_OWNER, redirecionar
+    useEffect(() => {
+        if (status === 'authenticated' && session?.user?.role === 'TENANT_OWNER') {
+            router.push(`/admin/tenants/${session.user.tenantId}`);
+        }
+    }, [status, session, router]);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault(); // Evita o refresh da página

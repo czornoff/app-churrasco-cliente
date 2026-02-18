@@ -3,7 +3,6 @@ import { Tenant, Product as LegacyProduct } from '@/models/Schemas';
 import { Cardapio } from '@/models/Cardapio';
 import Image from "next/image";
 import { UtensilsCrossed } from 'lucide-react';
-
 interface CardapioPageProps {
     params: Promise<{ tenantSlug: string }>;
 }
@@ -46,8 +45,16 @@ export default async function CardapioPage({ params }: CardapioPageProps) {
     const primaryColor = tenant.colorPrimary || "#059669";
 
     return (
-        <section className="max-w-6xl mx-auto px-6 pb-32 mt-20">
-            <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl border border-white dark:border-zinc-800/50 rounded-sm p-8 md:p-12 shadow-xl shadow-neutral-200/50 dark:shadow-black/20">
+        <section className="max-w-6xl mx-auto px-6 py-12 mt-12">
+            <div className="mb-4 space-y-2">
+                <h1 className="text-4xl font-black text-neutral-900 dark:text-white">
+                    🔥 Cardápio
+                </h1>
+                <p className="text-neutral-500 dark:text-neutral-400">
+                    Calcule a quantidade perfeita de alimentos para seu evento
+                </p>
+            </div>
+            <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl border border-white dark:border-zinc-800/50 rounded-sm p-6 shadow-xl shadow-neutral-200/50 dark:shadow-black/20">
                 {allProducts.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {allProducts.map((item: any) => (

@@ -128,3 +128,42 @@ export async function deleteProductAction(tenantId: string, category: string, pr
         return { success: false };
     }
 }
+
+export async function getCardapioByTenant(tenantId: string) {
+    await connectDB();
+
+    try {
+        const cardapio = await Cardapio.findOne({ tenantId }).lean();
+
+        if (!cardapio) {
+            return { success: false, produtos: [] };
+        }
+
+        // Juntar todos os produtos de todas as categorias
+        const todasAsCategories = ['carnes', 'bebidas', 'acompanhamentos', 'sobremesas', 'adicionais', 'utensilios'];
+        const todosProdutos: any[] = [];
+
+        todasAsCategories.forEach(categoria => {
+            if (cardapio[categoria] && Array.isArray(cardapio[categoria])) {
+                cardapio[categoria].forEach((produto: any) => {
+                    if (produto.ativo !== false) { // Incluir se não estiver explicitamente inativo
+                        todosProdutos.push({
+                            _id: produto._id?.toString() || '',
+                            nome: produto.nome,
+                            preco: produto.preco || 0,
+                            categoria: categoria,
+                            gramasPorAdulto: produto.gramasPorAdulto || 0,
+                            mlPorAdulto: produto.mlPorAdulto || 0,
+                            qtdePorAdulto: produto.qtdePorAdulto || 0,
+                        });
+                    }
+                });
+            }
+        });
+
+        return { success: true, produtos: todosProdutos };
+    } catch (error) {
+        console.error("Erro ao buscar cardápio:", error);
+        return { success: false, produtos: [] };
+    }
+}

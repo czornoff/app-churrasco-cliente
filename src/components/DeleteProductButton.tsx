@@ -17,8 +17,6 @@ export function DeleteProductButton({ tenantId, category, productId }: DeletePro
         if (!confirm("Deseja excluir?")) return;
 
         startTransition(async () => {
-            // O log ajuda você a ver no navegador se os dados saíram certos
-            console.log("Deletando:", { category, productId }); 
             await deleteProductAction(tenantId, category, productId);
         });
     };

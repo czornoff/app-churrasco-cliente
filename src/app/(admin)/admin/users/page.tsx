@@ -10,8 +10,22 @@ import { Chrome, Lock, Mail, MapPin, Plus, Users } from "lucide-react";
 import { EditUserModal } from "@/components/EditUserModal";
 import Image from "next/image";
 import { IUser } from "@/interfaces/user";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function UsersPage() {
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+        redirect("/login");
+    }
+
+    // TENANT_OWNER não pode gerenciar usuários
+    if (session?.user?.role === 'TENANT_OWNER') {
+        redirect(`/admin/tenants/${session.user.tenantId}`);
+    }
+
     await connectDB();
 
     // Buscamos os usuários e estabelecimentos
@@ -49,6 +63,7 @@ export default async function UsersPage() {
                             <TableHead>Nível / Cargo</TableHead>
                             <TableHead>Método</TableHead>
                             <TableHead>Localização</TableHead>
+                            <TableHead>Estabelecimentos</TableHead>
                             <TableHead>Status</TableHead>
                             <TableHead className="text-right">Ações</TableHead>
                         </TableRow>
@@ -103,6 +118,24 @@ export default async function UsersPage() {
                                         <MapPin size={12} className="text-slate-400" />
                                         {user.cidade ? `${user.cidade} - ${user.UF}` : "Não informado"}
                                     </span>
+                                </TableCell>
+
+                                {/* Estabelecimentos Atribuídos */}
+                                <TableCell>
+                                    <div className="flex flex-wrap gap-1">
+                                        {user.tenantIds && user.tenantIds.length > 0 ? (
+                                            user.tenantIds.map(tenantId => {
+                                                const tenant = tenants.find(t => t._id.toString() === tenantId.toString());
+                                                return tenant ? (
+                                                    <Badge key={tenantId.toString()} className="text-xs bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200">
+                                                        {tenant.name}
+                                                    </Badge>
+                                                ) : null;
+                                            })
+                                        ) : (
+                                            <span className="text-xs text-slate-400">Nenhum</span>
+                                        )}
+                                    </div>
                                 </TableCell>
 
                                 {/* Status com Cores */}

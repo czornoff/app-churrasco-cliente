@@ -1,4 +1,5 @@
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import connectDB from "@/lib/mongodb";
 import { User } from "@/models/User";
@@ -8,8 +9,13 @@ import { IUser } from "@/interfaces/user";
 import { UserCircle } from "lucide-react";
 
 export default async function ProfilePage() {
-    const session = await getServerSession();
-    if (!session) redirect("/admin");
+    const session = await getServerSession(authOptions);
+    if (!session) redirect("/login");
+
+    // TENANT_OWNER não pode acessar perfil geral, vai para seu primeiro tenant
+    if (session?.user?.role === 'TENANT_OWNER' && session.user.tenantIds && session.user.tenantIds.length > 0) {
+        redirect(`/admin/tenants/${session.user.tenantIds[0]}`);
+    }
 
     await connectDB();
     const userData = await User.findOne({ email: session.user?.email }).lean() as unknown as IUser;

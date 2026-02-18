@@ -7,6 +7,7 @@ export interface ITenant {
     email?: string;
     whatsApp?: string;
     instagram?: string;
+    address?: string;
     logoUrl?: string;
     colorPrimary?: string;
     active: boolean;

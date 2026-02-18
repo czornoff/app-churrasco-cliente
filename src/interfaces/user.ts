@@ -13,5 +13,6 @@ export interface IUser {
     genero: 'masculino' | 'feminino' | 'outros' | 'undefined';
     birthday?: string | Date;
     tenantId?: string;
+    tenantIds?: string[];
     save(): Promise<void>;
 }

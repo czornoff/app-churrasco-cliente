@@ -4,10 +4,24 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Edit } from "lucide-react";
 import Link from "next/link";
 import EditTenantForm from "./EditTenantForm"; 
-import { ProductList } from "@/components/ProductList"; 
+import { ProductList } from "@/components/ProductList";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function EditTenantPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+        redirect("/login");
+    }
+
+    // Se for TENANT_OWNER, só pode acessar seus próprios tenants
+    if (session?.user?.role === 'TENANT_OWNER' && !session.user.tenantIds?.includes(id)) {
+        redirect(`/admin/tenants/${session.user.tenantIds?.[0]}`);
+    }
+
     await connectDB();
     
     const tenantRaw = await Tenant.findById(id).lean();

@@ -1,12 +1,20 @@
 import { getTenantBySlug } from "@/lib/actions/tenant"; // Exemplo do caminho da sua função
 import { ProductForm } from "@/components/ProductForm";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export default async function NewProductPage({
     params
 }: {
     params: Promise<{ tenantSlug: string }>
 }) {
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+        redirect("/login");
+    }
+
     // 1. Aguarda as params (Obrigatório no Next 15)
     const { tenantSlug } = await params;
 
@@ -16,6 +24,11 @@ export default async function NewProductPage({
     // 3. Se não existir, mostra 404
     if (!tenant) {
         notFound();
+    }
+
+    // 4. Se for TENANT_OWNER, só pode acessar seus próprios tenants
+    if (session?.user?.role === 'TENANT_OWNER' && !session.user.tenantIds?.includes(tenant._id?.toString())) {
+        redirect(`/admin/tenants/${session.user.tenantIds?.[0]}`);
     }
 
     return (

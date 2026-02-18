@@ -19,12 +19,17 @@ export default withAuth(
             return NextResponse.next();
         }
 
-        // 2. Redirecionar usuário logado para fora do /login
+        // 2. Redirecionar END_USER se tentar acessar /admin
+        if (pathname.startsWith("/admin") && token?.role === 'END_USER') {
+            return NextResponse.redirect(new URL("/", req.url));
+        }
+
+        // 3. Redirecionar usuário logado para fora do /login
         if (pathname === "/login" && token) {
             return NextResponse.redirect(new URL("/admin", req.url));
         }
 
-        // 3. Lógica do seu Proxy (Tenant Slug) - Opcional se não houver conflito
+        // 4. Lógica do seu Proxy (Tenant Slug) - Opcional se não houver conflito
         const segments = pathname.split('/').filter(Boolean);
         const tenantSlug = segments[0];
         const reservedPaths = ['admin', 'login', 'register', 'dashboard', 'api'];
@@ -44,7 +49,7 @@ export default withAuth(
                 const publicPaths = ["/login", "/register", "/"];
                 if (publicPaths.includes(pathname)) return true;
 
-                // Protege administradores
+                // Todas as outras rotas precisam de autenticação
                 if (pathname.startsWith("/admin")) {
                     return !!token;
                 }

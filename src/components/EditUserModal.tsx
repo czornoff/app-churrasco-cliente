@@ -11,6 +11,7 @@ import { Edit2, BadgeCheck } from "lucide-react";
 import { IUser } from "@/interfaces/user";
 import { ITenantDocument } from "@/models/Schemas";
 import { CloudinaryUpload } from "@/components/CldUploadWidget";
+import { TenantsMultiSelect } from "@/components/TenantsMultiSelect";
 import Image from "next/image";
 
 export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenantDocument[] }) {
@@ -20,6 +21,9 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
     // Estados para campos controlados e máscaras
     const [nome, setNome] = useState(user.nome || "");
     const [whatsApp, setWhatsApp] = useState(user.whatsApp || "");
+    const [selectedTenantIds, setSelectedTenantIds] = useState<string[]>(
+        user.tenantIds?.map(id => id.toString()) || []
+    );
     const [ufs, setUfs] = useState<{ sigla: string; nome: string }[]>([]);
     const [selectedUf, setSelectedUf] = useState(user.UF || "");
     const [cities, setCities] = useState<{ nome: string }[]>([]);
@@ -59,6 +63,7 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
         // Garantindo que enviamos a UF e Cidade se forem provenientes dos selects customizados
         formData.set("UF", selectedUf);
         formData.set("cidade", selectedCity);
+        formData.set("tenantIds", JSON.stringify(selectedTenantIds));
 
         const result = await updateFullUserAction(user._id.toString(), formData);
         setLoading(false);
@@ -160,7 +165,7 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
                             </Select>
                         </div>
 
-                        {/* Status e Estabelecimento */}
+                        {/* Status e Estabelecimentos */}
                         <div className="space-y-2">
                             <Label>Status</Label>
                             <Select name="status" defaultValue={user.status}>
@@ -172,58 +177,54 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
                                 </SelectContent>
                             </Select>
                         </div>
-                        <div className="space-y-2">
-                            <Label>Estabelecimento (Tenant)</Label>
-                            <Select name="tenantId" defaultValue={user.tenantId?.toString() || ""}>
-                                <SelectTrigger><SelectValue placeholder="Nenhum estabelecimento" /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="none">Nenhum</SelectItem>
-                                    {tenants.map(t => (
-                                        <SelectItem key={t._id.toString()} value={t._id.toString()}>
-                                            {t.name}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
+                    </div>
 
-                        {/* Avatar */}
-                        <div className="col-span-2 space-y-3 pt-2">
-                            <Label>Avatar do Usuário</Label>
-                            <div className="p-4 border rounded-lg bg-slate-200 dark:bg-slate-800">
-                                {user.googleId ? (
-                                    <div className="flex items-start gap-4">
-                                        <div className="relative w-20 h-20 shrink-0 rounded-full overflow-hidden border-2 border-orange-100 bg-white shadow-sm min-w-[80px] min-h-[80px]">
-                                            <Image
-                                                unoptimized
-                                                src={((user.avatar && !user.avatar.includes('mandebem.com') && !user.avatar.includes('placeholder')) ? user.avatar.trim() : null) || `https://ui-avatars.com/api/?name=${encodeURIComponent(nome || "User")}&background=random`}
-                                                alt="Avatar Preview"
-                                                width={80}
-                                                height={80}
-                                                className="object-cover"
-                                            />
-                                        </div>
-                                        <div className="flex-1 space-y-1">
-                                            <p className="text-sm font-medium text-slate-700 flex items-center gap-1.5">
-                                                Sincronizado via Google <BadgeCheck size={14} className="text-blue-500" />
-                                            </p>
-                                            <p className="text-xs text-slate-500 italic">
-                                                O avatar é gerenciado pela conta do Google Suite.
-                                            </p>
-                                            <input type="hidden" name="avatar" value={user.avatar} />
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-3">
-                                        <CloudinaryUpload
-                                            name="avatar"
-                                            defaultValue={user.avatar}
-                                            isAvatar={true}
-                                            fallbackUrl={`https://ui-avatars.com/api/?name=${encodeURIComponent(nome || "User")}&background=random`}
+                    {/* Estabelecimentos (Multi-select) - Full Width */}
+                    <div className="space-y-2 pt-2">
+                        <Label>Estabelecimentos (Tenants)</Label>
+                        <TenantsMultiSelect
+                            tenants={tenants}
+                            selectedIds={selectedTenantIds}
+                            onChange={setSelectedTenantIds}
+                        />
+                    </div>
+
+                    {/* Avatar e outros itens */}
+                    <div className="col-span-2 space-y-3 pt-2">
+                        <Label>Avatar do Usuário</Label>
+                        <div className="p-4 border rounded-lg bg-slate-200 dark:bg-slate-800">
+                            {user.googleId ? (
+                                <div className="flex items-start gap-4">
+                                    <div className="relative w-20 h-20 shrink-0 rounded-full overflow-hidden border-2 border-orange-100 bg-white shadow-sm min-w-[80px] min-h-[80px]">
+                                        <Image
+                                            unoptimized
+                                            src={((user.avatar && !user.avatar.includes('mandebem.com') && !user.avatar.includes('placeholder')) ? user.avatar.trim() : null) || `https://ui-avatars.com/api/?name=${encodeURIComponent(nome || "User")}&background=random`}
+                                            alt="Avatar Preview"
+                                            width={80}
+                                            height={80}
+                                            className="object-cover"
                                         />
                                     </div>
-                                )}
-                            </div>
+                                    <div className="flex-1 space-y-1">
+                                        <p className="text-sm font-medium text-slate-700 flex items-center gap-1.5">
+                                            Sincronizado via Google <BadgeCheck size={14} className="text-blue-500" />
+                                        </p>
+                                        <p className="text-xs text-slate-500 italic">
+                                            O avatar é gerenciado pela conta do Google Suite.
+                                        </p>
+                                        <input type="hidden" name="avatar" value={user.avatar} />
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                    <CloudinaryUpload
+                                        name="avatar"
+                                        defaultValue={user.avatar}
+                                        isAvatar={true}
+                                        fallbackUrl={`https://ui-avatars.com/api/?name=${encodeURIComponent(nome || "User")}&background=random`}
+                                    />
+                                </div>
+                            )}
                         </div>
                     </div>
 

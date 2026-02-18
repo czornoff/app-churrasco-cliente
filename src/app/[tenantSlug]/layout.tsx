@@ -1,10 +1,10 @@
 import connectDB from '@/lib/mongodb';
 import { Tenant } from '@/models/Schemas';
 import { ClienteMenu } from '@/models/ClienteMenu';
-
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { MessageSquare } from 'lucide-react';
 import { TenantHeader } from '@/components/TenantHeader';
+import { TenantFooter } from '@/components/TenantFooter';
+import { FaWhatsapp } from "react-icons/fa";
 
 interface TenantLayoutProps {
     children: React.ReactNode;
@@ -35,7 +35,6 @@ export default async function TenantLayout({ children, params }: TenantLayoutPro
 
     const tenant = JSON.parse(JSON.stringify(tenantRaw));
     const whatsappLimpo = tenant.whatsApp ? formatWhatsAppLink(tenant.whatsApp) : "#";
-    const primaryColor = tenant.colorPrimary || "#059669";
 
     // Fetch Menu Items
     const menuItemsRaw = await ClienteMenu.find({ clienteId: tenantRaw._id, ativo: true }).sort({ createdAt: 1 }).lean();
@@ -58,12 +57,14 @@ export default async function TenantLayout({ children, params }: TenantLayoutPro
                 href={whatsappLimpo}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="fixed bottom-8 right-8 z-50 flex items-center gap-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-950 px-6 py-4 rounded-sm shadow-2xl transition-all hover:scale-105 active:scale-95 group"
-                style={{ backgroundColor: primaryColor, color: '#fff' }}
+                className="fixed bottom-8 right-8 z-50 flex items-center gap-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-950 px-4 py-4 rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95 group"
+                style={{ backgroundColor: '#050', color: '#fff' }}
             >
-                <MessageSquare size={20} className="transition-transform group-hover:rotate-12" />
-                <span className="font-bold tracking-tight">Falar no WhatsApp</span>
+                <FaWhatsapp color="#fff" size={30} className="transition-transform group-hover:rotate-12" />
             </a>
+
+            {/* Footer */}
+            <TenantFooter tenant={tenant} menuItems={menuItems} />
         </main>
     );
 }

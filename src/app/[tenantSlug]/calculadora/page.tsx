@@ -1,42 +1,53 @@
 import connectDB from '@/lib/mongodb';
 import { Tenant } from '@/models/Schemas';
-import { Calculator } from 'lucide-react';
+import { ClienteMenu } from '@/models/ClienteMenu';
+import { CalculadoraChurrasco } from '@/components/CalculadoraChurrasco';
+import { MessageSquare } from 'lucide-react';
+import { getCardapioByTenant } from '@/lib/actions/product';
 
 interface CalculadoraPageProps {
     params: Promise<{ tenantSlug: string }>;
+}
+
+function formatWhatsAppLink(url: string) {
+    const numbers = url.replace("https://wa.me/", "").replace(/\D/g, "");
+    const formatted = numbers.startsWith("55") ? numbers : `55${numbers}`;
+    return `https://wa.me/+${formatted}`;
 }
 
 export default async function CalculadoraPage({ params }: CalculadoraPageProps) {
     const { tenantSlug } = await params;
     await connectDB();
 
-    const tenant = await Tenant.findOne({ slug: tenantSlug }).lean();
-    if (!tenant) return null;
+    const tenantRaw = await Tenant.findOne({ slug: tenantSlug }).lean();
+    if (!tenantRaw) return null;
 
+    const tenant = JSON.parse(JSON.stringify(tenantRaw));
     const primaryColor = tenant.colorPrimary || "#059669";
+    const whatsappLimpo = tenant.whatsApp ? formatWhatsAppLink(tenant.whatsApp) : "#";
+
+    // Fetch cardápio
+    const { produtos } = await getCardapioByTenant(tenantRaw._id.toString());
 
     return (
-        <section className="max-w-6xl mx-auto px-6 pb-32 mt-20">
-            <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl border border-white dark:border-zinc-800/50 rounded-sm p-8 md:p-12 shadow-xl shadow-neutral-200/50 dark:shadow-black/20">
-                <div className="text-center mb-12">
-                    <h2 className="text-2xl md:text-3xl font-black text-neutral-900 dark:text-white mb-4">
-                        Calculadora de Churrasco
-                    </h2>
-                    <div className="h-1.5 w-20 bg-emerald-600 mx-auto rounded-sm" style={{ backgroundColor: primaryColor }}></div>
+        <>
+
+            {/* Conteúdo Principal */}
+            <section className="max-w-6xl mx-auto px-6 py-12 mt-12">
+                <div className="mb-4 space-y-2">
+                    <h1 className="text-4xl font-black text-neutral-900 dark:text-white">
+                        🔥 Calculadora de Churrasco
+                    </h1>
+                    <p className="text-neutral-500 dark:text-neutral-400">
+                        Calcule a quantidade perfeita de alimentos para seu evento
+                    </p>
                 </div>
 
-                <div className="flex flex-col items-center justify-center min-h-[300px] space-y-6">
-                    <Calculator size={80} className="text-neutral-300 dark:text-zinc-700" />
-                    <div className="text-center space-y-2">
-                        <h3 className="text-xl font-bold text-neutral-900 dark:text-white">
-                            Em breve!
-                        </h3>
-                        <p className="text-neutral-500 dark:text-zinc-500 max-w-md">
-                            A calculadora interativa estará disponível em breve para ajudá-lo a planejar o churrasco perfeito.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
+                <CalculadoraChurrasco 
+                    produtos={produtos} 
+                    primaryColor={primaryColor}
+                />
+            </section>
+        </>
     );
 }

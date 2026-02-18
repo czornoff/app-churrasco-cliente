@@ -21,7 +21,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const clientePagina = await ClientePagina.findOne({
         clienteId: tenant._id,
-        "paginas.slug": slug
+        "paginas.slug": slug,
+        "paginas.ativo": true
     }).select("paginas.$");
 
     const page = clientePagina?.paginas[0];
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const emoji = page.emoji ? `${page.emoji} ` : "";
     return {
         title: `${emoji}${page.titulo} | ${tenant.name}`,
-        description: page.texto.substring(0, 160)
+        description: typeof page.texto === 'string' ? page.texto.substring(0, 160) : 'Página de conteúdo'
     };
 }
 
@@ -39,14 +40,26 @@ export default async function DynamicPage({ params }: PageProps) {
     const { tenantSlug, slug } = await params;
     await connectDB();
 
-    const tenant = await Tenant.findOne({ slug: tenantSlug, active: true }).select("_id primaryColor name");
+    const tenantRaw = await Tenant.findOne({ slug: tenantSlug, active: true });
 
-    if (!tenant) {
+    if (!tenantRaw) {
         notFound();
     }
 
+    const tenant = JSON.parse(JSON.stringify(tenantRaw));
+    const primaryColor = tenant.colorPrimary || "#059669";
+
+    // Format WhatsApp link
+    function formatWhatsAppLink(url: string) {
+        const numbers = url.replace("https://wa.me/", "").replace(/\D/g, "");
+        const formatted = numbers.startsWith("55") ? numbers : `55${numbers}`;
+        return `https://wa.me/+${formatted}`;
+    }
+
+    const whatsappLimpo = tenant.whatsApp ? formatWhatsAppLink(tenant.whatsApp) : "#";
+
     const clientePagina = await ClientePagina.findOne({
-        clienteId: tenant._id,
+        clienteId: tenantRaw._id,
         "paginas.slug": slug,
         "paginas.ativo": true
     });
@@ -59,47 +72,55 @@ export default async function DynamicPage({ params }: PageProps) {
     }
 
     return (
-        <div className="min-h-screen pt-24 pb-12 px-4 md:px-8 max-w-7xl mx-auto">
-            <div className="mb-8 text-center md:text-left">
-                <h1 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-4 uppercase tracking-tight">
-                    {page.emoji && <span className="mr-2">{page.emoji}</span>}
+        <section className="max-w-6xl mx-auto px-6 py-12 mt-12">
+            {/* Conteúdo Principal */}
+            <div className="mb-4 space-y-2">
+                <h1 className="text-4xl font-black text-neutral-900 dark:text-white">
+                    {page.emoji && <span className="text-4xl">{page.emoji}</span>}
                     {page.titulo}
                 </h1>
+                <p className="text-neutral-500 dark:text-neutral-400">&nbsp;</p>
+            </div>
+            
+            <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl border border-white dark:border-zinc-800/50 rounded-sm p-6 shadow-xl shadow-neutral-200/50 dark:shadow-black/20">
+                {/* Título */}
 
-                {page.tipo === 'texto' && (
-                    <div
-                        className="prose prose-lg dark:prose-invert max-w-none mt-6 bg-white dark:bg-zinc-900/50 p-6 md:p-10 rounded-2xl shadow-sm border border-neutral-100 dark:border-zinc-800"
-                        dangerouslySetInnerHTML={{ __html: page.texto.replace(/\n/g, '<br />') }}
+                {/* Conteúdo de Texto */}
+                {(page.tipo === 'texto' || page.tipo === 'ambos') && page.texto && (
+                    <div 
+                        className="prose prose-neutral"
+                        dangerouslySetInnerHTML={{ __html: page.texto }}
                     />
                 )}
-            </div>
 
-            {page.tipo === 'cards' && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {page.cards?.filter((card: any) => card.ativo).map((card: any, index: number) => (
-                        <Card key={index} className="overflow-hidden hover:shadow-lg transition-all duration-300 border-neutral-200 dark:border-zinc-800">
-                            <CardHeader className="bg-neutral-50 dark:bg-zinc-900/50 border-b border-neutral-100 dark:border-zinc-800 py-4">
-                                <CardTitle className="flex items-center gap-2 text-lg">
-                                    {card.emoji && <span>{card.emoji}</span>}
-                                    {card.titulo}
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-6">
-                                <p className="text-slate-600 dark:text-slate-300 mb-4 text-sm leading-relaxed">
-                                    {card.texto}
-                                </p>
-                                {card.extra && (
-                                    <div className="pt-4 mt-auto border-t border-dashed border-neutral-200 dark:border-zinc-800">
-                                        <p className="text-xs font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider">
-                                            {card.extra}
-                                        </p>
-                                    </div>
-                                )}
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
-            )}
-        </div>
+                {/* Cards */}
+                {(page.tipo === 'cards' || page.tipo === 'ambos') && page.cards?.length > 0 && (
+                    <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 ${page.tipo === 'ambos' ? 'mt-12' : ''}`}>
+                        {page.cards?.filter((card: any) => card.ativo).map((card: any, index: number) => (
+                            <Card key={index} className="overflow-hidden hover:shadow-lg transition-all duration-300 border-neutral-200 dark:border-zinc-800">
+                                <CardHeader className="bg-neutral-50 dark:bg-neutral-900 border-b border-neutral-100 dark:border-zinc-800 py-4">
+                                    <CardTitle className="flex items-center gap-2 text-lg">
+                                        {card.emoji && <span>{card.emoji}</span>}
+                                        {card.titulo}
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="p-4">
+                                    <p className="text-slate-600 dark:text-slate-300 mb-4 text-sm leading-relaxed">
+                                        <div dangerouslySetInnerHTML={{ __html: card.texto.replace(/\n/g, '<br />') }} />
+                                    </p>
+                                    {card.extra && (
+                                        <div className="pt-4 mt-auto border-t border-dashed border-neutral-200 dark:border-zinc-800">
+                                            <p className="text-xs font-bold uppercase tracking-wider" style={{ color: primaryColor }}>
+                                                {card.extra}
+                                            </p>
+                                        </div>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </section>
     );
 }

@@ -8,7 +8,8 @@ export interface IUser extends Document {
     role: 'SUPERADMIN' | 'TENANT_OWNER' | 'END_USER';
     status: 'active' | 'inactive' | 'banned';
     avatar: string;
-    tenantId?: mongoose.Types.ObjectId;
+    tenantIds?: mongoose.Types.ObjectId[]; // Array de tenants
+    tenantId?: mongoose.Types.ObjectId; // Compatibilidade com código antigo (tenant primário)
     whatsApp?: string;
     UF?: string;
     cidade?: string;
@@ -52,6 +53,11 @@ const UserSchema = new Schema<IUser>({
     avatar: {
         type: String,
         default: 'https://ui-avatars.com/api/?name=User&background=random'
+    },
+    tenantIds: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Tenant',
+        default: []
     },
     tenantId: {
         type: mongoose.Schema.Types.ObjectId,

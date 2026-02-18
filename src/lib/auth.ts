@@ -30,7 +30,8 @@ export const authOptions: NextAuthOptions = {
                         image: user.avatar,
                         role: user.role,
                         status: user.status,
-                        tenantId: user.tenantId ? user.tenantId.toString() : null
+                        tenantId: user.tenantId ? user.tenantId.toString() : null,
+                        tenantIds: user.tenantIds?.map(id => id.toString()) || []
                     };
                 }
                 return null;
@@ -46,7 +47,6 @@ export const authOptions: NextAuthOptions = {
             const dbUser = await User.findOne({ email: user.email }) as unknown as IUser;
 
             // Se for Google e não existir, cria como END_USER (Ativo)
-            // Se for login de admin, ele deve ser criado via outra rota ou ter o status alterado manualmente
             if (account?.provider === "google") {
                 if (!dbUser) {
                     await User.create({
@@ -56,30 +56,41 @@ export const authOptions: NextAuthOptions = {
                         avatar: user.image || undefined,
                         role: 'END_USER',
                         status: 'active',
-                        tenantId: null // O tenantId pode ser associado depois ou via cookie se disponível
+                        tenantIds: [],
+                        tenantId: null
                     });
                     return true;
+                } else {
+                    // Propaga os dados do banco para o objeto user
+                    user.role = dbUser.role;
+                    user.status = dbUser.status;
+                    user.tenantId = dbUser.tenantId ? dbUser.tenantId.toString() : null;
+                    user.tenantIds = dbUser.tenantIds?.map(id => id.toString()) || [];
                 }
+                return true;
             }
-
-            // Se for um TENANT_OWNER inativo, bloqueia
-            if (dbUser && dbUser.role === 'TENANT_OWNER' && dbUser.status === 'inactive') {
-                throw new Error("InactiveAccount");
-            }
-
-            // End users e outros ativos passam direto
+            // Para Credentials provider
             return true;
         },
 
-        async session({ session, token }) {
-            await connectDB();
-            const dbUser = await User.findOne({ email: session.user?.email }).lean() as unknown as IUser;
+        async jwt({ token, user }) {
+            if (user) {
+                token.id = user.id;
+                token.role = (user as any).role as string;
+                token.status = (user as any).status as string;
+                token.tenantId = (user as any).tenantId as string | null;
+                token.tenantIds = (user as any).tenantIds as string[];
+            }
+            return token;
+        },
 
-            if (dbUser && session.user) {
-                (session.user).id = dbUser._id.toString();
-                (session.user).role = dbUser.role;
-                (session.user).status = dbUser.status;
-                (session.user).tenantId = dbUser.tenantId?.toString() || null;
+        async session({ session, token }) {
+            if (session.user) {
+                (session.user as any).id = token.id as string;
+                (session.user as any).role = token.role as string;
+                (session.user as any).status = token.status as string;
+                (session.user as any).tenantId = token.tenantId as string | null;
+                (session.user as any).tenantIds = token.tenantIds as string[];
             }
             return session;
         }
