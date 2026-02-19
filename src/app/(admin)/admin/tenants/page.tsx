@@ -39,8 +39,8 @@ export default async function AdminTenantsPage() {
                 <div className="flex items-left gap-2">
                     <Users className="h-8 w-8 text-orange-600" />
                     <div>
-                        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Estabelecimentos</h1>
-                        <p className="text-slate-500 dark:text-slate-200 text-sm">
+                        <h1 className="text-2xl font-bold text-zinc-800 dark:text-zinc-200">Estabelecimentos</h1>
+                        <p className="text-zinc-500 dark:text-zinc-200 text-sm">
                             Cadastre e gerencie estabelecimentos que utilizam sua calculadora.
                         </p>
                     </div>
@@ -73,10 +73,10 @@ export default async function AdminTenantsPage() {
                                             alt={tenant.name}
                                             width={100}
                                             height={100}
-                                            className="w-9 h-9 rounded-full border-2 border-slate-600 shadow-sm object-cover"
+                                            className="w-9 h-9 rounded-full border-2 border-zinc-600 shadow-sm object-cover"
                                         />
                                         <div className="flex flex-col">
-                                            <span className="font-semibold text-slate-700 dark:text-slate-400 leading-none mb-1">
+                                            <span className="font-semibold text-zinc-700 dark:text-zinc-400 leading-none mb-1">
                                                 {tenant.name}
                                             </span>
                                         </div>

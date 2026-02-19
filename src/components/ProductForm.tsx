@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { CloudinaryUpload } from "@/components/CldUploadWidget"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,10 +10,12 @@ import { saveProductAction } from "@/lib/actions/product";
 
 import { Switch } from "@/components/ui/switch"
 
+type Categoria = "carnes" | "bebidas" | "acompanhamentos" | "outros" | "sobremesas" | "suprimentos";
+
 interface ProductFormData {
     _id?: string;
     nome: string;
-    category: "carnes" | "bebidas" | "acompanhamentos" | "sobremesas" | "adicionais" | "utensilios";
+    category: Categoria;
     preco: number;
     imageUrl?: string;
     gramasPorAdulto?: number;
@@ -21,6 +23,8 @@ interface ProductFormData {
     mlPorAdulto?: number;
     mlEmbalagem?: number;
     qtdePorAdulto?: number;
+    tipoSuprimento?: string;
+    subCategoriaBebida?: 'alcoolica' | 'nao-alcoolica';
     subcategoria?: string;
     ativo: boolean;
 }
@@ -31,20 +35,103 @@ interface ProductFormProps {
 }
 
 export function ProductForm({ tenantId, initialData }: ProductFormProps) {
-    const [category, setCategory] = useState(initialData?.category || "carnes")
+    const [category, setCategory] = useState<Categoria>(initialData?.category || "carnes")
+    const [tipoSuprimento, setTipoSuprimento] = useState(initialData?.tipoSuprimento || null)
+    const [subCategoriaBebida, setSubCategoriaBebida] = useState<'alcoolica' | 'nao-alcoolica'>(
+        initialData?.category === 'bebidas' ? (initialData?.subCategoriaBebida || 'nao-alcoolica') : 'nao-alcoolica'
+    )
     const [nome, setNome] = useState(initialData?.nome || "");
     // Default true para novos produtos, ou o valor existente para edição
     const [ativo, setAtivo] = useState(initialData?.ativo !== undefined ? initialData.ativo : true);
 
+    const renderCamposDinamicos = () => {
+        if (category === 'carnes' || category === 'acompanhamentos' || category === 'outros' || category === 'sobremesas') {
+            // Campos: preco, gramasPorAdulto, gramasEmbalagem
+            return (
+                <>
+                    <div className="space-y-2">
+                        <Label>Gramas por Adulto</Label>
+                        <Input name="gramasPorAdulto" type="number" step="0.01" defaultValue={initialData?.gramasPorAdulto} required />
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Gramas por Embalagem</Label>
+                        <Input name="gramasEmbalagem" type="number" step="0.01" defaultValue={initialData?.gramasEmbalagem} required />
+                    </div>
+                </>
+            )
+        }
+
+        if (category === 'bebidas') {
+            // Campos: preco, mlPorAdulto, mlEmbalagem, subCategoriaBebida
+            return (
+                <>
+                    <div className="space-y-2">
+                        <Label>Tipo de Bebida</Label>
+                        <Select
+                            value={subCategoriaBebida}
+                            onValueChange={(v) => setSubCategoriaBebida(v as 'alcoolica' | 'nao-alcoolica')}
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="Selecione" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="alcoolica">Alcoólica</SelectItem>
+                                <SelectItem value="nao-alcoolica">Não Alcoólica</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="space-y-2">
+                        <Label>ML por Adulto</Label>
+                        <Input name="mlPorAdulto" type="number" step="0.01" defaultValue={initialData?.mlPorAdulto} required />
+                    </div>
+                    <div className="space-y-2">
+                        <Label>ML por Embalagem</Label>
+                        <Input name="mlEmbalagem" type="number" step="0.01" defaultValue={initialData?.mlEmbalagem} required />
+                    </div>
+                </>
+            )
+        }
+
+        if (category === 'suprimentos') {
+            // Campo: qtdePorAdulto
+            return (
+                <>
+                    <div className="space-y-2">
+                        <Label htmlFor="qtdePorAdulto">Quantidade por Adulto</Label>
+                        <Input 
+                            id="qtdePorAdulto"
+                            name="qtdePorAdulto" 
+                            type="number" 
+                            step="0.01" 
+                            defaultValue={initialData?.qtdePorAdulto}
+                            placeholder={tipoSuprimento === 'CARVAO' ? "Ex: 2.5 (kg por kg)" : tipoSuprimento === 'ACENDEDOR' ? "Ex: 1 (por hora)" : "Ex: 10"}
+                            required 
+                        />
+                    </div>
+                </>
+            )
+        }
+
+        return null
+    }
+
     return (
         <form
-            action={saveProductAction}
+            action={(formData) => {
+                saveProductAction(formData);
+            }}
             className="space-y-6 bg-white dark:bg-zinc-800 p-6 rounded-lg shadow-sm border"
         >
             {initialData?._id && <input type="hidden" name="productId" value={initialData._id} />}
             <input type="hidden" name="tenantId" value={tenantId} />
-            {/* Input hidden controlado pelo Switch. Se "on", o backend entende como true. Se "off" ou omitido, falso. */}
+            <input type="hidden" name="category" value={category} />
             <input type="hidden" name="ativo" value={ativo ? "on" : "off"} />
+            {tipoSuprimento && <input type="hidden" name="tipoSuprimento" value={tipoSuprimento} />}
+            
+            {/* SubCategoriaBebida - sempre envia se for bebida */}
+            {category === 'bebidas' ? (
+                <input type="hidden" name="subCategoriaBebida" value={subCategoriaBebida} />
+            ) : null}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Lado Esquerdo: Upload da Foto */}
@@ -73,56 +160,65 @@ export function ProductForm({ tenantId, initialData }: ProductFormProps) {
                     </div>
 
                     <div className="space-y-2">
-                        <Label>Categoria</Label>
+                        <Label htmlFor="category">Categoria</Label>
                         <Select
                             name="category"
-                            defaultValue={category}
-                            onValueChange={(v: ProductFormData["category"]) => setCategory(v)}
+                            value={category}
+                            onValueChange={(v) => {
+                                setCategory(v as Categoria)
+                                if (v !== 'suprimentos') setTipoSuprimento(null)
+                                if (v !== 'bebidas') setSubCategoriaBebida('nao-alcoolica')
+                            }}
                         >
-                            <SelectTrigger>
+                            <SelectTrigger id="category">
                                 <SelectValue placeholder="Selecione" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="carnes">Carnes</SelectItem>
-                                <SelectItem value="bebidas">Bebidas</SelectItem>
-                                <SelectItem value="acompanhamentos">Acompanhamentos</SelectItem>
-                                <SelectItem value="sobremesas">Sobremesas</SelectItem>
+                                <SelectItem value="carnes">CARNE</SelectItem>
+                                <SelectItem value="bebidas">BEBIDA</SelectItem>
+                                <SelectItem value="acompanhamentos">ACOMPANHAMENTO</SelectItem>
+                                <SelectItem value="outros">OUTRO</SelectItem>
+                                <SelectItem value="sobremesas">SOBREMESA</SelectItem>
+                                <SelectItem value="suprimentos">SUPRIMENTO</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
+
+                    {category === 'suprimentos' && (
+                        <div className="space-y-2">
+                            <Label htmlFor="tipoSuprimento">Tipo de Suprimento (opcional)</Label>
+                            <Input 
+                                id="tipoSuprimento"
+                                name="tipoSuprimento"
+                                type="text"
+                                value={tipoSuprimento || ""}
+                                onChange={(e) => setTipoSuprimento(e.target.value || null)}
+                                placeholder="Ex: CARVAO, ACENDEDOR, COPO, VELA, GUARDANAPO, TALHERES, PRATO"
+                                className="text-sm"
+                            />
+                            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                                Deixe em branco para suprimento genérico. Especifique para CARVAO (kg por kg), ACENDEDOR (1 por hora) ou outro tipo.
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="space-y-2">
-                    <Label>Preço (R$)</Label>
-                    <Input name="preco" type="number" step="0.01" defaultValue={initialData?.preco} />
+                    <Label htmlFor="preco">Preço (R$)</Label>
+                    <Input 
+                        id="preco"
+                        name="preco" 
+                        type="number" 
+                        step="0.01" 
+                        defaultValue={initialData?.preco}
+                        required
+                    />
                 </div>
 
                 {/* Campos Dinâmicos baseados na Categoria */}
-                {category === 'carnes' || category === 'acompanhamentos' ? (
-                    <>
-                        <div className="space-y-2">
-                            <Label>Gramas por Adulto</Label>
-                            <Input name="gramasPorAdulto" type="number" defaultValue={initialData?.gramasPorAdulto} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Gramas por Embalagem</Label>
-                            <Input name="gramasEmbalagem" type="number" defaultValue={initialData?.gramasEmbalagem} />
-                        </div>
-                    </>
-                ) : category === 'bebidas' ? (
-                    <>
-                        <div className="space-y-2">
-                            <Label>ML por Adulto</Label>
-                            <Input name="mlPorAdulto" type="number" defaultValue={initialData?.mlPorAdulto} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>ML Embalagem</Label>
-                            <Input name="mlEmbalagem" type="number" defaultValue={initialData?.mlEmbalagem} />
-                        </div>
-                    </>
-                ) : null}
+                {renderCamposDinamicos()}
             </div>
 
             <div className="flex items-center space-x-2 pt-4">
@@ -132,7 +228,7 @@ export function ProductForm({ tenantId, initialData }: ProductFormProps) {
                     onCheckedChange={setAtivo}
                 />
                 <Label htmlFor="ativo" className="font-medium cursor-pointer">Produto Ativo</Label>
-                <p className="text-xs text-slate-400 dark:text-zinc-500 ml-2 italic">
+                <p className="text-xs text-zinc-400 dark:text-zinc-500 ml-2 italic">
                     (Inativos não aparecem para clientes)
                 </p>
             </div>

@@ -23,7 +23,7 @@ export function TenantFooter({ tenant, menuItems = [] }: TenantFooterProps) {
         : '';
 
     return (
-        <footer className="w-full bg-neutral-950 dark:bg-black text-neutral-50 mt-8">
+        <footer className="w-full bg-zinc-950 dark:bg-black text-zinc-50 mt-8">
             {/* Linha decorativa de cor primária */}
             <div 
                 className="h-1 w-full" 
@@ -41,12 +41,12 @@ export function TenantFooter({ tenant, menuItems = [] }: TenantFooterProps) {
                     >
                         {tenant.nomeApp?.toUpperCase() || 'APLICAÇÃO'}
                     </h3>
-                    <p className="text-sm text-neutral-400 leading-relaxed">
+                    <p className="text-sm text-zinc-400 leading-relaxed">
                         {tenant.slogan || 'A solução inteligente para organizar seu evento.'}
                     </p>
                     <Link
                         href={`/${tenant.slug}/politica-privacidade`}
-                        className="inline-block text-xs text-neutral-400 hover:text-white transition-colors duration-200 mt-2"
+                        className="inline-block text-xs text-zinc-400 hover:text-white transition-colors duration-200 mt-2"
                     >
                         Política de Privacidade
                     </Link>
@@ -62,10 +62,10 @@ export function TenantFooter({ tenant, menuItems = [] }: TenantFooterProps) {
                     </h3>
                     <nav className="space-y-2">
                         {/* Menus fixos */}
-                        <Link href={`/${tenant.slug}/calculadora`} className="block text-sm text-neutral-400 hover:text-white transition-colors duration-200">
+                        <Link href={`/${tenant.slug}/calculadora`} className="block text-sm text-zinc-400 hover:text-white transition-colors duration-200">
                             Calculadora
                         </Link>
-                        <Link href={`/${tenant.slug}/cardapio`} className="block text-sm text-neutral-400 hover:text-white transition-colors duration-200">
+                        <Link href={`/${tenant.slug}/cardapio`} className="block text-sm text-zinc-400 hover:text-white transition-colors duration-200">
                             Cardápio
                         </Link>
                         
@@ -77,7 +77,7 @@ export function TenantFooter({ tenant, menuItems = [] }: TenantFooterProps) {
                                     href={item.url}
                                     target={item.url.startsWith('http') ? '_blank' : undefined}
                                     rel={item.url.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                    className="block text-sm text-neutral-400 hover:text-white transition-colors duration-200"
+                                    className="block text-sm text-zinc-400 hover:text-white transition-colors duration-200"
                                 >
                                     {item.nome}
                                 </Link>
@@ -98,7 +98,7 @@ export function TenantFooter({ tenant, menuItems = [] }: TenantFooterProps) {
                         {tenant.email && (
                             <a
                                 href={`mailto:${tenant.email}`}
-                                className="flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors duration-200 group"
+                                className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors duration-200 group"
                             >
                                 <Mail size={16} className="transition-transform group-hover:scale-110" />
                                 <span>{tenant.email}</span>
@@ -109,7 +109,7 @@ export function TenantFooter({ tenant, menuItems = [] }: TenantFooterProps) {
                                 href={instagramUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors duration-200 group"
+                                className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors duration-200 group"
                             >
                                 <Instagram size={16} className="transition-transform group-hover:scale-110" />
                                 <span>Instagram</span>
@@ -120,8 +120,8 @@ export function TenantFooter({ tenant, menuItems = [] }: TenantFooterProps) {
             </div>
 
             {/* Copyright */}
-            <div className="border-t border-neutral-800">
-                <div className="max-w-7xl mx-auto px-6 py-6 text-center text-xs text-neutral-500">
+            <div className="border-t border-zinc-800">
+                <div className="max-w-7xl mx-auto px-6 py-6 text-center text-xs text-zinc-500">
                     © {currentYear} {tenant.name} - Desenvolvido por{' '}
                     <a
                         href="https://zornoff.com.br"

@@ -20,9 +20,18 @@ export default async function EditProductPage(props: {
 
     if (!cardapio || !category) return notFound();
 
+    // Definir tipo para o array de produtos
+    interface ProductItem {
+        _id?: unknown;
+        nome: string;
+        preco: number;
+        subCategoriaBebida?: string; // Adicionar este campo
+        [key: string]: unknown;
+    }
+
     // Localiza o produto específico dentro do array da categoria
-    const productList = cardapio ? (cardapio[category] as any[]) : [];
-    const product = productList?.find(p => p._id.toString() === productId);
+    const productList = cardapio ? (cardapio[category] as ProductItem[]) : [];
+    const product = productList?.find(p => p._id?.toString() === productId);
 
     if (!product) return notFound();
 

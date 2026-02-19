@@ -64,9 +64,9 @@ export function TenantsMultiSelect({
                 onClick={() => !disabled && setOpen(!open)}
                 className={`w-full min-h-10 border rounded-md px-3 py-2 flex items-center justify-between gap-2 cursor-pointer transition-colors ${
                     disabled 
-                        ? 'bg-slate-100 dark:bg-slate-700 cursor-not-allowed' 
-                        : 'bg-white dark:bg-slate-800 hover:border-orange-400'
-                } ${open ? 'border-orange-500' : 'border-slate-200 dark:border-slate-600'}`}
+                        ? 'bg-zinc-100 dark:bg-zinc-700 cursor-not-allowed' 
+                        : 'bg-white dark:bg-zinc-800 hover:border-orange-400'
+                } ${open ? 'border-orange-500' : 'border-zinc-200 dark:border-zinc-600'}`}
             >
                 <div className="flex flex-wrap gap-2 flex-1">
                     {selectedTenants.length > 0 ? (
@@ -90,21 +90,21 @@ export function TenantsMultiSelect({
                             </Badge>
                         ))
                     ) : (
-                        <span className="text-slate-400 dark:text-slate-500 text-sm">
+                        <span className="text-zinc-400 dark:text-zinc-500 text-sm">
                             Selecione estabelecimentos...
                         </span>
                     )}
                 </div>
                 <ChevronDown 
                     size={16} 
-                    className={`text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`}
+                    className={`text-zinc-400 transition-transform ${open ? 'rotate-180' : ''}`}
                 />
             </div>
 
             {open && !disabled && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
                     {tenants.length === 0 ? (
-                        <div className="p-3 text-center text-sm text-slate-500 dark:text-slate-400">
+                        <div className="p-3 text-center text-sm text-zinc-500 dark:text-zinc-400">
                             Nenhum estabelecimento disponível
                         </div>
                     ) : (
@@ -117,7 +117,7 @@ export function TenantsMultiSelect({
                                     className={`w-full text-left px-3 py-2 rounded-md transition-colors text-sm ${
                                         selected.includes(tenant._id.toString())
                                             ? 'bg-orange-100 dark:bg-orange-900 text-orange-900 dark:text-orange-100 font-medium'
-                                            : 'hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'
+                                            : 'hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300'
                                     }`}
                                 >
                                     {tenant.name}

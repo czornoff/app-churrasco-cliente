@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import EmojiPicker from 'emoji-picker-react';
+import EmojiPicker, { Theme } from 'emoji-picker-react';
 import DynamicRichTextEditor from '@/components/DynamicRichTextEditor';
 
 interface ICard {
@@ -58,7 +58,7 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
             const data = await res.json();
             setPages(data);
         } catch (error) {
-            toast.error('Erro ao carregar páginas');
+            toast.error('Erro ao carregar páginas', error.message);
         } finally {
             setLoading(false);
         }
@@ -75,7 +75,7 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
             toast.success('Página excluída com sucesso');
             fetchPages();
         } catch (error) {
-            toast.error('Erro ao excluir página');
+            toast.error('Erro ao excluir página', error.message);
         }
     };
 
@@ -100,7 +100,7 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
             setCurrentPage({});
             fetchPages();
         } catch (error) {
-            toast.error('Erro ao salvar página');
+            toast.error('Erro ao salvar página', error.message);
         }
     };
 
@@ -179,8 +179,8 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                     <Button variant="ghost" size="icon" onClick={() => setView('list')}>
                         <ChevronLeft />
                     </Button>
-                    <h3 className="text-xl font-bold text-slate-800 dark:text-slate-200">
-                        {currentPage._id ? 'Editar Página' : 'Nova Página'}
+                    <h3 className="text-xl font-bold text-zinc-800 dark:text-zinc-200">
+                        {currentPage._id ? 'Editar Item' : 'Novo Item'}
                     </h3>
                 </div>
 
@@ -195,7 +195,7 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                 className={`px-4 py-2 rounded-md font-medium transition-colors ${
                                     currentPage.tipo === 'texto'
                                         ? 'bg-orange-600 text-white'
-                                        : 'bg-neutral-200 dark:bg-zinc-700 text-slate-800 dark:text-slate-200 hover:bg-neutral-300 dark:hover:bg-zinc-600'
+                                        : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-600'
                                 }`}
                             >
                                 Apenas Texto
@@ -206,7 +206,7 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                 className={`px-4 py-2 rounded-md font-medium transition-colors ${
                                     currentPage.tipo === 'cards'
                                         ? 'bg-orange-600 text-white'
-                                        : 'bg-neutral-200 dark:bg-zinc-700 text-slate-800 dark:text-slate-200 hover:bg-neutral-300 dark:hover:bg-zinc-600'
+                                        : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-600'
                                 }`}
                             >
                                 Apenas Cards
@@ -217,7 +217,7 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                 className={`px-4 py-2 rounded-md font-medium transition-colors ${
                                     currentPage.tipo === 'ambos'
                                         ? 'bg-orange-600 text-white'
-                                        : 'bg-neutral-200 dark:bg-zinc-700 text-slate-800 dark:text-slate-200 hover:bg-neutral-300 dark:hover:bg-zinc-600'
+                                        : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-600'
                                 }`}
                             >
                                 Texto + Cards
@@ -248,14 +248,16 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                     placeholder="ex: sobre-nos"
                                 />
                             </div>
-                            <div className="space-y-2 flex items-center gap-2">
-                                <Label htmlFor="emoji">Emoji (Ícone)</Label>
-                                <Input
-                                    id="emoji"
-                                    value={currentPage.emoji || ''}
-                                    onChange={e => setCurrentPage({ ...currentPage, emoji: e.target.value })}
-                                    className="w-16 text-center text-2xl"
-                                />
+                            <div className="space-y-2 flex gap-2 items-start">
+                                <div className="align-top">
+                                    <Label htmlFor="emoji">Ícone</Label>
+                                    <Input
+                                        id="emoji"
+                                        value={currentPage.emoji || ''}
+                                        onChange={e => setCurrentPage({ ...currentPage, emoji: e.target.value })}
+                                        className="w-16 text-center text-2xl mt-2"
+                                    />
+                                </div>
                                 <EmojiPicker
                                     onEmojiClick={(emojiData) => 
                                         setCurrentPage({ ...currentPage, emoji: emojiData.emoji })
@@ -264,7 +266,7 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                     height={200}
                                     searchDisabled
                                     previewConfig={{ showPreview: false }}
-                                    theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
+                                    theme={resolvedTheme === 'dark' ? Theme.DARK : Theme.LIGHT}
                                 />
                             </div>
                             <div className="flex items-center gap-2 pt-2">
@@ -285,7 +287,7 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                 <CardTitle>Conteúdo de Texto</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="border rounded-md overflow-hidden min-h-[500px]">
+                                <div className="border rounded-md overflow-hidden min-h-125">
                                     <DynamicRichTextEditor
                                         value={currentPage.texto || ''}
                                         onChange={(data) => setCurrentPage({ ...currentPage, texto: data })}
@@ -357,14 +359,25 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                         <CardTitle>{editingCard._id ? 'Editar Card' : 'Novo Card'}</CardTitle>
                                     </CardHeader>
                                     <CardContent className="space-y-4">
+                                        <div className="space-y-2">
+                                            <Label>Título</Label>
+                                            <Input
+                                                value={editingCard.titulo || ''}
+                                                onChange={e => setEditingCard({ ...editingCard, titulo: e.target.value })}
+                                                placeholder="Título do card"
+                                            />
+                                        </div>
+
                                         <div className="flex gap-4">
                                             <div className="w-1/4 space-y-2">
-                                                <Label>Emoji</Label>
+                                                <Label>Ícone</Label>
                                                 <Input
                                                     value={editingCard.emoji || ''}
                                                     onChange={e => setEditingCard({ ...editingCard, emoji: e.target.value })}
                                                     className="text-center text-2xl"
                                                 />
+                                            </div>
+                                            <div className="w-3/4">
                                                 <EmojiPicker
                                                     onEmojiClick={(emojiData) => 
                                                         setEditingCard({ ...editingCard, emoji: emojiData.emoji })
@@ -373,22 +386,14 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                                     height={200}
                                                     searchDisabled
                                                     previewConfig={{ showPreview: false }}
-                                                    theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
-                                                />
-                                            </div>
-                                            <div className="w-3/4 space-y-2">
-                                                <Label>Título</Label>
-                                                <Input
-                                                    value={editingCard.titulo || ''}
-                                                    onChange={e => setEditingCard({ ...editingCard, titulo: e.target.value })}
-                                                    placeholder="Título do card"
+                                                    theme={resolvedTheme === 'dark' ? Theme.DARK : Theme.LIGHT}
                                                 />
                                             </div>
                                         </div>
 
                                         <div className="space-y-2">
                                             <Label>Texto Descritivo</Label>
-                                            <div className="border rounded-md overflow-hidden min-h-[300px]">
+                                            <div className="border rounded-md overflow-hidden min-h-75">
                                                 <DynamicRichTextEditor
                                                     value={editingCard.texto || ''}
                                                     onChange={(data) => setEditingCard({ ...editingCard, texto: data })}
@@ -416,7 +421,7 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
 
                                         <div className="flex gap-2 justify-end pt-4">
                                             <Button variant="outline" onClick={() => setIsCardModalOpen(false)}>Cancelar</Button>
-                                            <Button onClick={handleSaveCard}>Salvar Card</Button>
+                                            <Button onClick={handleSaveCard} className="bg-orange-600 hover:bg-orange-700 text-white">Salvar Card</Button>
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -444,43 +449,43 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h3 className="text-lg font-medium text-slate-800 dark:text-slate-200">Páginas Customizadas</h3>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm">
+                    <h3 className="text-lg font-medium text-zinc-800 dark:text-zinc-200">Páginas Customizadas</h3>
+                    <p className="text-zinc-500 dark:text-zinc-400 text-sm">
                         Crie páginas com conteúdo rico (texto, imagens, etc).
                     </p>
                 </div>
                 <Button onClick={openCreate} className="bg-orange-600 hover:bg-orange-700 text-white font-bold">
                     <Plus className="mr-2 h-4 w-4" />
-                    Nova Página
+                    Novo Item
                 </Button>
             </div>
 
-            <Card className="border-neutral-200 dark:border-zinc-800">
+            <Card className="border-zinc-200 dark:border-zinc-800">
                 <CardContent className="p-0">
                     {loading ? (
-                        <div className="p-8 text-center text-slate-500">Carregando...</div>
+                        <div className="p-8 text-center text-zinc-500">Carregando...</div>
                     ) : pages.length === 0 ? (
                         <div className="p-12 text-center flex flex-col items-center gap-4">
                             <div className="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center">
                                 <FileText className="text-orange-600 dark:text-orange-400" />
                             </div>
                             <div>
-                                <h3 className="text-lg font-medium text-slate-900 dark:text-slate-100">Nenhuma página criada</h3>
-                                <p className="text-slate-500 text-sm mt-1">Crie páginas para informar seus clientes.</p>
+                                <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">Nenhuma página criada</h3>
+                                <p className="text-zinc-500 text-sm mt-1">Crie páginas para informar seus clientes.</p>
                             </div>
                         </div>
                     ) : (
-                        <div className="divide-y divide-neutral-200 dark:divide-zinc-800">
+                        <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
                             {pages.map((page) => (
-                                <div key={page._id} className="p-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-zinc-900/50 transition-colors">
+                                <div key={page._id} className="p-4 flex items-center justify-between hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors">
                                     <div className="flex flex-col gap-1">
                                         <div className="flex items-center gap-2">
-                                            <span className="font-medium text-slate-900 dark:text-slate-100">{page.titulo}</span>
+                                            <span className="font-medium text-zinc-900 dark:text-zinc-100">{page.titulo}</span>
                                             {!page.ativo && (
                                                 <span className="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold uppercase">Inativo</span>
                                             )}
                                         </div>
-                                        <div className="flex items-center gap-1 text-xs text-slate-500 font-mono">
+                                        <div className="flex items-center gap-1 text-xs text-zinc-500 font-mono">
                                             /{page.slug}
                                         </div>
                                     </div>
@@ -488,7 +493,7 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                         <Button
                                             variant="ghost"
                                             size="icon"
-                                            className="h-8 w-8 text-slate-500 hover:text-orange-600"
+                                            className="h-8 w-8 text-zinc-500 hover:text-orange-600"
                                             onClick={() => openEdit(page)}
                                         >
                                             <Pencil size={16} />
@@ -496,7 +501,7 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                         <Button
                                             variant="ghost"
                                             size="icon"
-                                            className="h-8 w-8 text-slate-500 hover:text-red-600"
+                                            className="h-8 w-8 text-zinc-500 hover:text-red-600"
                                             onClick={() => handleDelete(page._id!)}
                                         >
                                             <Trash2 size={16} />

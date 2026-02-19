@@ -69,8 +69,8 @@ export function LoginForm() {
     }
 
     return (
-        <div className="w-full dark:bg-zinc-900 rounded-3xl shadow-2xl p-8 md:p-10 border border-neutral-200/50 dark:border-zinc-800/50 transition-all duration-300 rounded-sm">
-            <h2 className="text-3xl font-black text-center text-neutral-900 dark:text-white mb-10 tracking-tight">
+        <div className="w-full dark:bg-zinc-900 rounded-3xl shadow-2xl p-8 md:p-10 border border-zinc-200/50 dark:border-zinc-800/50 transition-all duration-300 rounded-sm">
+            <h2 className="text-3xl font-black text-center text-zinc-900 dark:text-white mb-10 tracking-tight">
                 {view === 'register' ? 'Criar Conta' : 'Acesso Administrador'}
             </h2>
 
@@ -86,7 +86,7 @@ export function LoginForm() {
                     type="button"
                     onClick={() => signIn("google", { callbackUrl: callbackUrl })}
                     disabled={loading}
-                    className="w-full flex items-center justify-center gap-3 dark:bg-zinc-800 border border-neutral-200 dark:border-zinc-700 hover:bg-neutral-50 dark:hover:bg-zinc-700 text-neutral-700 dark:text-zinc-200 font-bold py-4 px-4 rounded-2xl transition-all shadow-sm active:scale-[0.98] border-b-4 active:border-b-0 active:translate-y-[2px] p-3 rounded-sm"
+                    className="w-full flex items-center justify-center gap-3 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 font-bold py-4 px-4 rounded-2xl transition-all shadow-sm active:scale-[0.98] border-b-4 active:border-b-0 active:translate-y-[2px] p-3 rounded-sm"
                 >
                     <img
                         src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
@@ -96,11 +96,11 @@ export function LoginForm() {
                 </button>
 
                 <div className="flex items-center gap-4 py-2">
-                    <div className="flex-1 h-px bg-neutral-200 dark:bg-zinc-800"></div>
-                    <span className="text-[10px] text-neutral-400 dark:text-zinc-600 uppercase tracking-[0.2em] font-black whitespace-nowrap">
+                    <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-800"></div>
+                    <span className="text-[10px] text-zinc-400 dark:text-zinc-600 uppercase tracking-[0.2em] font-black whitespace-nowrap">
                         ou use seu e-mail
                     </span>
-                    <div className="flex-1 h-px bg-neutral-200 dark:bg-zinc-800"></div>
+                    <div className="flex-1 h-px bg-zinc-200 dark:bg-zinc-800"></div>
                 </div>
 
                 {view === 'login' ? (
@@ -111,7 +111,7 @@ export function LoginForm() {
                             placeholder="E-mail"
                             required
                             disabled={loading}
-                            className="w-full h-14 rounded-2xl border-neutral-200 dark:border-zinc-800 bg-neutral-50/50 dark:bg-zinc-950/50 dark:text-white outline-none focus-visible:ring-4 focus-visible:ring-orange-500/10 focus-visible:border-orange-500 transition-all placeholder:text-neutral-400 dark:placeholder:text-zinc-600 px-5 text-base font-medium p-3 rounded-sm"
+                            className="w-full h-14 rounded-2xl border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/50 dark:text-white outline-none focus-visible:ring-4 focus-visible:ring-orange-500/10 focus-visible:border-orange-500 transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-600 px-5 text-base font-medium p-3 rounded-sm"
                         />
                         <Input
                             name="password"
@@ -119,7 +119,7 @@ export function LoginForm() {
                             placeholder="Senha"
                             required
                             disabled={loading}
-                            className="w-full h-14 rounded-2xl border-neutral-200 dark:border-zinc-800 bg-neutral-50/50 dark:bg-zinc-950/50 dark:text-white outline-none focus-visible:ring-4 focus-visible:ring-orange-500/10 focus-visible:border-orange-500 transition-all placeholder:text-neutral-400 dark:placeholder:text-zinc-600 px-5 text-base font-medium p-3 rounded-sm"
+                            className="w-full h-14 rounded-2xl border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/50 dark:text-white outline-none focus-visible:ring-4 focus-visible:ring-orange-500/10 focus-visible:border-orange-500 transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-600 px-5 text-base font-medium p-3 rounded-sm"
                         />
                         <button
                             type="submit"
@@ -137,7 +137,7 @@ export function LoginForm() {
                             placeholder="Nome completo"
                             required
                             disabled={loading}
-                            className="w-full h-14 rounded-2xl border-neutral-200 dark:border-zinc-800 bg-neutral-50/50 dark:bg-zinc-950/50 dark:text-white outline-none focus-visible:ring-4 focus-visible:ring-orange-500/10 focus-visible:border-orange-500 transition-all placeholder:text-neutral-400 dark:placeholder:text-zinc-600 px-5 text-base font-medium"
+                            className="w-full h-14 rounded-2xl border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/50 dark:text-white outline-none focus-visible:ring-4 focus-visible:ring-orange-500/10 focus-visible:border-orange-500 transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-600 px-5 text-base font-medium"
                         />
                         <Input
                             name="email"
@@ -145,7 +145,7 @@ export function LoginForm() {
                             placeholder="E-mail corporativo"
                             required
                             disabled={loading}
-                            className="w-full h-14 rounded-2xl border-neutral-200 dark:border-zinc-800 bg-neutral-50/50 dark:bg-zinc-950/50 dark:text-white outline-none focus-visible:ring-4 focus-visible:ring-orange-500/10 focus-visible:border-orange-500 transition-all placeholder:text-neutral-400 dark:placeholder:text-zinc-600 px-5 text-base font-medium"
+                            className="w-full h-14 rounded-2xl border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/50 dark:text-white outline-none focus-visible:ring-4 focus-visible:ring-orange-500/10 focus-visible:border-orange-500 transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-600 px-5 text-base font-medium"
                         />
                         <Input
                             name="password"
@@ -153,7 +153,7 @@ export function LoginForm() {
                             placeholder="Criar senha"
                             required
                             disabled={loading}
-                            className="w-full h-14 rounded-2xl border-neutral-200 dark:border-zinc-800 bg-neutral-50/50 dark:bg-zinc-950/50 dark:text-white outline-none focus-visible:ring-4 focus-visible:ring-orange-500/10 focus-visible:border-orange-500 transition-all placeholder:text-neutral-400 dark:placeholder:text-zinc-600 px-5 text-base font-medium"
+                            className="w-full h-14 rounded-2xl border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/50 dark:text-white outline-none focus-visible:ring-4 focus-visible:ring-orange-500/10 focus-visible:border-orange-500 transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-600 px-5 text-base font-medium"
                         />
                         <button
                             type="submit"
@@ -166,7 +166,7 @@ export function LoginForm() {
                 )}
 
                 <div className="pt-6 text-center space-y-8">
-                    <p className="text-sm text-neutral-500 dark:text-zinc-500 font-bold uppercase tracking-widest">
+                    <p className="text-sm text-zinc-500 dark:text-zinc-500 font-bold uppercase tracking-widest">
                         {view === 'register' ? 'Já tem uma conta?' : 'Ainda não tem conta?'}
                     </p>
 
@@ -181,7 +181,7 @@ export function LoginForm() {
                     <div className="pt-2">
                         <a
                             href="/"
-                            className="inline-flex items-center text-[10px] uppercase tracking-[0.3em] text-neutral-400 dark:text-zinc-700 hover:text-orange-600 dark:hover:text-orange-500 transition-colors font-black"
+                            className="inline-flex items-center text-[10px] uppercase tracking-[0.3em] text-zinc-400 dark:text-zinc-700 hover:text-orange-600 dark:hover:text-orange-500 transition-colors font-black"
                         >
                             ← Voltar para o Início
                         </a>

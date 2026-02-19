@@ -76,7 +76,7 @@ export function MenuForm({ initialData, isEditing = false }: MenuFormProps) {
                         <ArrowLeft size={20} />
                     </Button>
                 </Link>
-                <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">
+                <h1 className="text-2xl font-bold text-zinc-800 dark:text-zinc-200">
                     {isEditing ? 'Editar Item' : 'Novo Item do Menu'}
                 </h1>
             </div>
@@ -106,15 +106,15 @@ export function MenuForm({ initialData, isEditing = false }: MenuFormProps) {
                                 placeholder="Ex: /contato ou https://google.com"
                                 required
                             />
-                            <p className="text-xs text-slate-500">
+                            <p className="text-xs text-zinc-500">
                                 Para links internos use o formato /slug (ex: /sobre). Para externos use https://...
                             </p>
                         </div>
 
-                        <div className="flex items-center justify-between p-4 bg-neutral-50 dark:bg-zinc-900 rounded-lg">
+                        <div className="flex items-center justify-between p-4 bg-zinc-50 dark:bg-zinc-900 rounded-lg">
                             <div className="space-y-0.5">
                                 <Label className="text-base">Ativo</Label>
-                                <p className="text-xs text-slate-500">Exibir este item no menu do aplicativo</p>
+                                <p className="text-xs text-zinc-500">Exibir este item no menu do aplicativo</p>
                             </div>
                             <Switch
                                 checked={formData.ativo}

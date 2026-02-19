@@ -4,7 +4,7 @@ import { Suspense } from "react";
 
 export default function LoginPage() {
     return (
-        <div className="min-h-screen w-full flex flex-col bg-neutral-50 dark:bg-zinc-950 transition-colors duration-300">
+        <div className="min-h-screen w-full flex flex-col bg-zinc-50 dark:bg-zinc-950 transition-colors duration-300">
             {/* Theme Toggle - Fixed top-right */}
             <div className="fixed top-6 right-6 z-50">
                 <ThemeToggle />
@@ -24,7 +24,7 @@ export default function LoginPage() {
 
             {/* Footer - Part of the flex flow, but pushed to bottom */}
             <footer className="py-8 text-center bg-transparent">
-                <p className="text-[10px] text-neutral-400 dark:text-zinc-600 font-bold uppercase tracking-widest">
+                <p className="text-[10px] text-zinc-400 dark:text-zinc-600 font-bold uppercase tracking-widest">
                     MandeBem Sistemas © 2026
                 </p>
             </footer>

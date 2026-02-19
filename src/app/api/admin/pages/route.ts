@@ -3,11 +3,14 @@ import { authOptions } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { ClientePagina } from "@/models/ClientePagina";
+import type { Session } from "next-auth";
+import type { IPagina } from "@/models/ClientePagina";
 
 
 
 // Helper check permissions (Duplicated logic, ideally should be a lib function but keeping inline for simplicity)
-const getTargetTenantId = (session: any, requestedTenantId?: string | null) => {
+const getTargetTenantId = (session: Session | null, requestedTenantId?: string | null) => {
+    if (!session?.user) return null;
     if (requestedTenantId && (session.user.role === 'ADMIN' || session.user.role === 'SUPERADMIN')) {
         return requestedTenantId;
     }
@@ -97,7 +100,7 @@ export async function PUT(req: Request) {
         return NextResponse.json({ error: "Page not found" }, { status: 404 });
     }
 
-    const updatedPage = clientePagina.paginas.find((p: any) => p._id.toString() === _id);
+    const updatedPage = clientePagina.paginas.find((p: IPagina) => p._id.toString() === _id);
     return NextResponse.json(updatedPage);
 }
 

@@ -42,17 +42,26 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
     };
 
     // IBGE APIs
+    interface IApiUF {
+        sigla: string;
+        nome: string;
+    }
+
+    interface IApiCity {
+        nome: string;
+    }
+
     useEffect(() => {
         fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome")
             .then(res => res.json())
-            .then(data => setUfs(data.map((item: any) => ({ sigla: item.sigla, nome: item.nome }))));
+            .then((data: IApiUF[]) => setUfs(data.map((item) => ({ sigla: item.sigla, nome: item.nome }))));
     }, []);
 
     useEffect(() => {
         if (selectedUf) {
             fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios?orderBy=nome`)
                 .then(res => res.json())
-                .then(data => setCities(data.map((item: any) => ({ nome: item.nome }))));
+                .then((data: IApiCity[]) => setCities(data.map((item) => ({ nome: item.nome }))));
         } else {
             setCities([]);
         }
@@ -75,7 +84,7 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                    <Edit2 size={14} className="text-slate-500" />
+                    <Edit2 size={14} className="text-zinc-500" />
                 </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -192,7 +201,7 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
                     {/* Avatar e outros itens */}
                     <div className="col-span-2 space-y-3 pt-2">
                         <Label>Avatar do Usuário</Label>
-                        <div className="p-4 border rounded-lg bg-slate-200 dark:bg-slate-800">
+                        <div className="p-4 border rounded-lg bg-zinc-200 dark:bg-zinc-800">
                             {user.googleId ? (
                                 <div className="flex items-start gap-4">
                                     <div className="relative w-20 h-20 shrink-0 rounded-full overflow-hidden border-2 border-orange-100 bg-white shadow-sm min-w-[80px] min-h-[80px]">
@@ -206,10 +215,10 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
                                         />
                                     </div>
                                     <div className="flex-1 space-y-1">
-                                        <p className="text-sm font-medium text-slate-700 flex items-center gap-1.5">
+                                        <p className="text-sm font-medium text-zinc-700 flex items-center gap-1.5">
                                             Sincronizado via Google <BadgeCheck size={14} className="text-blue-500" />
                                         </p>
-                                        <p className="text-xs text-slate-500 italic">
+                                        <p className="text-xs text-zinc-500 italic">
                                             O avatar é gerenciado pela conta do Google Suite.
                                         </p>
                                         <input type="hidden" name="avatar" value={user.avatar} />

@@ -77,10 +77,10 @@ export function EndUserAuthModal({ isOpen, onClose, tenantId, tenantName, primar
                             <LogIn size={24} />
                         </div>
                         <div className="space-y-1">
-                            <DialogTitle className="text-2xl font-black text-neutral-900 dark:text-white uppercase tracking-tighter">
+                            <DialogTitle className="text-2xl font-black text-zinc-900 dark:text-white uppercase tracking-tighter">
                                 {isLogin ? 'Bem-vindo de volta!' : 'Criar sua conta'}
                             </DialogTitle>
-                            <DialogDescription className="text-neutral-500 dark:text-zinc-500 font-medium">
+                            <DialogDescription className="text-zinc-500 dark:text-zinc-500 font-medium">
                                 {isLogin
                                     ? `Acesse seu cardápio em ${tenantName}`
                                     : `Cadastre-se para aproveitar o melhor de ${tenantName}`}
@@ -92,7 +92,7 @@ export function EndUserAuthModal({ isOpen, onClose, tenantId, tenantName, primar
                         {/* Social Login */}
                         <Button
                             variant="outline"
-                            className="w-full h-12 font-bold border-2 hover:bg-neutral-50 dark:hover:bg-zinc-900 rounded-sm transition-all flex items-center justify-center gap-3"
+                            className="w-full h-12 font-bold border-2 hover:bg-zinc-50 dark:hover:bg-zinc-900 rounded-sm transition-all flex items-center justify-center gap-3"
                             onClick={() => signIn('google')}
                         >
                             <Chrome size={20} className="text-blue-600" />
@@ -101,19 +101,19 @@ export function EndUserAuthModal({ isOpen, onClose, tenantId, tenantName, primar
 
                         <div className="relative">
                             <div className="absolute inset-0 flex items-center">
-                                <span className="w-full border-t border-neutral-200 dark:border-zinc-800" />
+                                <span className="w-full border-t border-zinc-200 dark:border-zinc-800" />
                             </div>
                             <div className="relative flex justify-center text-xs uppercase">
-                                <span className="bg-white dark:bg-zinc-950 px-2 text-neutral-400 font-bold">ou use seu e-mail</span>
+                                <span className="bg-white dark:bg-zinc-950 px-2 text-zinc-400 font-bold">ou use seu e-mail</span>
                             </div>
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-4">
                             {!isLogin && (
                                 <div className="space-y-2">
-                                    <Label className="text-[10px] uppercase font-bold tracking-widest text-neutral-400">Nome Completo</Label>
+                                    <Label className="text-[10px] uppercase font-bold tracking-widest text-zinc-400">Nome Completo</Label>
                                     <div className="relative">
-                                        <UserIcon className="absolute left-3 top-3 h-4 w-4 text-neutral-400" />
+                                        <UserIcon className="absolute left-3 top-3 h-4 w-4 text-zinc-400" />
                                         <Input
                                             name="nome"
                                             placeholder="Seu nome"
@@ -125,9 +125,9 @@ export function EndUserAuthModal({ isOpen, onClose, tenantId, tenantName, primar
                             )}
 
                             <div className="space-y-2">
-                                <Label className="text-[10px] uppercase font-bold tracking-widest text-neutral-400">E-mail</Label>
+                                <Label className="text-[10px] uppercase font-bold tracking-widest text-zinc-400">E-mail</Label>
                                 <div className="relative">
-                                    <Mail className="absolute left-3 top-3 h-4 w-4 text-neutral-400" />
+                                    <Mail className="absolute left-3 top-3 h-4 w-4 text-zinc-400" />
                                     <Input
                                         name="email"
                                         type="email"
@@ -139,9 +139,9 @@ export function EndUserAuthModal({ isOpen, onClose, tenantId, tenantName, primar
                             </div>
 
                             <div className="space-y-2">
-                                <Label className="text-[10px] uppercase font-bold tracking-widest text-neutral-400">Senha</Label>
+                                <Label className="text-[10px] uppercase font-bold tracking-widest text-zinc-400">Senha</Label>
                                 <div className="relative">
-                                    <Lock className="absolute left-3 top-3 h-4 w-4 text-neutral-400" />
+                                    <Lock className="absolute left-3 top-3 h-4 w-4 text-zinc-400" />
                                     <Input
                                         name="password"
                                         type="password"
@@ -165,7 +165,7 @@ export function EndUserAuthModal({ isOpen, onClose, tenantId, tenantName, primar
                         <div className="text-center pt-2">
                             <button
                                 onClick={() => setIsLogin(!isLogin)}
-                                className="text-sm font-bold text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
+                                className="text-sm font-bold text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors"
                             >
                                 {isLogin ? 'Não tem uma conta? Crie agora' : 'Já tem uma conta? Entre aqui'}
                             </button>

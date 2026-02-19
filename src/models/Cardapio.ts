@@ -7,16 +7,18 @@ export interface IItem {
     descricao?: string;
     imageUrl?: string;
     subcategoria?: string;
+    subCategoriaBebida?: 'alcoolica' | 'nao-alcoolica';
     preco: number;
-    gramasPorAdulto: number;
-    gramasEmbalagem: number;
-    mlPorAdulto: number;
-    mlEmbalagem: number;
-    qtdePorAdulto: number;
-    pesoRelativo: number;
-    base: number;
-    fator: number;
+    gramasPorAdulto?: number;
+    gramasEmbalagem?: number;
+    mlPorAdulto?: number;
+    mlEmbalagem?: number;
+    qtdePorAdulto?: number;
+    pesoRelativo?: number;
+    base?: number;
+    fator?: number;
     unidade?: string;
+    tipoSuprimento?: string; // Exemplo: 'CARVAO', 'ACENDEDOR', 'COPO', 'VELA', 'GUARDANAPO', 'TALHERES', 'PRATO', etc.
 }
 
 const ItemSchema = new Schema<IItem>(
@@ -26,6 +28,7 @@ const ItemSchema = new Schema<IItem>(
         descricao: { type: String },
         imageUrl: { type: String },
         subcategoria: { type: String },
+        subCategoriaBebida: { type: String, enum: ['alcoolica', 'nao-alcoolica'], default: 'nao-alcoolica' },
         preco: { type: Number, default: 0 },
         gramasPorAdulto: { type: Number, default: 0 },
         gramasEmbalagem: { type: Number, default: 0 },
@@ -36,6 +39,7 @@ const ItemSchema = new Schema<IItem>(
         base: { type: Number, default: 1 },
         fator: { type: Number, default: 1 },
         unidade: { type: String },
+        tipoSuprimento: { type: String },
     },
     { timestamps: true }
 );
@@ -50,16 +54,16 @@ export interface ICardapio extends Document {
     carnes: IItem[];
     bebidas: IItem[];
     acompanhamentos: IItem[];
-    adicionais: IItem[];
-    utensilios: IItem[];
+    outros: IItem[];
     sobremesas: IItem[];
+    suprimentos: IItem[];
     categoriasAtivas: {
         carnes: boolean;
         bebidas: boolean;
         acompanhamentos: boolean;
-        adicionais: boolean;
-        utensilios: boolean;
+        outros: boolean;
         sobremesas: boolean;
+        suprimentos: boolean;
     };
     createdAt: Date;
     updatedAt: Date;
@@ -81,16 +85,16 @@ const CardapioSchema = new Schema<ICardapio>(
         carnes: [ItemSchema],
         bebidas: [ItemSchema],
         acompanhamentos: [ItemSchema],
-        adicionais: [ItemSchema],
-        utensilios: [ItemSchema],
+        outros: [ItemSchema],
         sobremesas: [ItemSchema],
+        suprimentos: [ItemSchema],
         categoriasAtivas: {
             carnes: { type: Boolean, default: true },
             bebidas: { type: Boolean, default: true },
             acompanhamentos: { type: Boolean, default: true },
-            adicionais: { type: Boolean, default: true },
-            utensilios: { type: Boolean, default: true },
-            sobremesas: { type: Boolean, default: true }
+            outros: { type: Boolean, default: true },
+            sobremesas: { type: Boolean, default: true },
+            suprimentos: { type: Boolean, default: true }
         }
     },
     { timestamps: true }

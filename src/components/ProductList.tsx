@@ -23,7 +23,7 @@ export async function ProductList({ tenantId }: { tenantId: string }) {
     await connectDB();
     const cardapio = await Cardapio.findOne({ tenantId }).lean();
 
-    if (!cardapio) return <p className="text-slate-500">Nenhum produto cadastrado.</p>;
+    if (!cardapio) return <p className="text-zinc-500">Nenhum produto cadastrado.</p>;
 
     // Função auxiliar para renderizar cada seção
     const renderSection = (title: string, items: IProductItem[], categoryKey: string) => {
@@ -31,12 +31,12 @@ export async function ProductList({ tenantId }: { tenantId: string }) {
 
         return (
             <div className="mt-6">
-                <h3 className="text-sm font-bold uppercase text-slate-400 mb-3 tracking-wider">{title}</h3>
-                <div className="grid gap-3">
+                <h3 className="text-sm font-bold uppercase text-zinc-400 mb-3 tracking-wider">{title}</h3>
+                <div className="grid gap-3 md:grid-cols-2">
                     {items.map((item) => (
                         <div key={item._id.toString()} className="flex items-center justify-between p-3 bg-white dark:bg-zinc-800 border rounded-lg hover:shadow-sm transition-shadow">
                             <div className="flex items-center gap-4">
-                                <div className="relative h-12 w-12 rounded bg-slate-100 overflow-hidden border">
+                                <div className="relative h-12 w-12 rounded bg-zinc-100 overflow-hidden border">
                                     <Image
                                         unoptimized
                                         src={((item.imageUrl && !item.imageUrl.includes('mandebem.com') && !item.imageUrl.includes('placeholder')) ? item.imageUrl.trim() : null) || `https://ui-avatars.com/api/?name=${encodeURIComponent(item.nome || "Produto")}&background=random&size=128`}
@@ -46,15 +46,15 @@ export async function ProductList({ tenantId }: { tenantId: string }) {
                                     />
                                 </div>
                                 <div>
-                                    <p className="font-medium text-slate-800">{item.nome}</p>
-                                    <p className="text-xs text-slate-400">
+                                    <p className="font-medium text-zinc-400">{item.nome}</p>
+                                    <p className="text-xs text-zinc-400">
                                         R$ {item.preco.toFixed(2)} | {item.gramasEmbalagem || item.mlEmbalagem || 0}{item.mlEmbalagem ? 'ml' : 'g'}/embalagem
                                     </p>
                                 </div>
                             </div>
 
                             <div className="flex gap-2">
-                                <button className="p-2 text-slate-600 hover:text-blue-600 transition-colors">
+                                <button className="p-2 text-zinc-600 hover:text-blue-600 transition-colors">
                                     <Link href={`/admin/tenants/${tenantId}/produtos/${item._id}?category=${categoryKey}`}>
                                         <Edit size={18} />
                                     </Link>
@@ -77,8 +77,9 @@ export async function ProductList({ tenantId }: { tenantId: string }) {
             {renderSection("🔥 Carnes", (cardapio.carnes || []) as IProductItem[], "carnes")}
             {renderSection("🍹 Bebidas", (cardapio.bebidas || []) as IProductItem[], "bebidas")}
             {renderSection("🥗 Acompanhamentos", (cardapio.acompanhamentos || []) as IProductItem[], "acompanhamentos")}
+            {renderSection("➕ Outros", (cardapio.outros || []) as IProductItem[], "outros")}
             {renderSection("🍰 Sobremesas", (cardapio.sobremesas || []) as IProductItem[], "sobremesas")}
-            {renderSection("➕ Adicionais", (cardapio.adicionais || []) as IProductItem[], "adicionais")}
+            {renderSection("🛠️ Suprimentos", (cardapio.suprimentos || []) as IProductItem[], "suprimentos")}
         </div>
     );
 }

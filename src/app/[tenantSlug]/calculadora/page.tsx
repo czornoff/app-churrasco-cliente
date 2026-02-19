@@ -35,10 +35,10 @@ export default async function CalculadoraPage({ params }: CalculadoraPageProps) 
             {/* Conteúdo Principal */}
             <section className="max-w-6xl mx-auto px-6 py-12 mt-12">
                 <div className="mb-4 space-y-2">
-                    <h1 className="text-4xl font-black text-neutral-900 dark:text-white">
+                    <h1 className="text-4xl font-black text-zinc-900 dark:text-white">
                         🔥 Calculadora de Churrasco
                     </h1>
-                    <p className="text-neutral-500 dark:text-neutral-400">
+                    <p className="text-zinc-500 dark:text-zinc-400">
                         Calcule a quantidade perfeita de alimentos para seu evento
                     </p>
                 </div>

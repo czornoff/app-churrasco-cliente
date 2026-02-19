@@ -4,6 +4,22 @@ import connectDB from "@/lib/mongodb";
 import { User } from "@/models/User";
 import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
+import type { IUser } from "@/models/User";
+
+interface UpdateUserData extends Partial<IUser> {
+    email?: string;
+    nome?: string;
+    avatar?: string;
+    role?: string;
+    status?: string;
+    whatsApp?: string;
+    UF?: string;
+    cidade?: string;
+    genero?: string;
+    birthday?: Date;
+    tenantIds?: string[];
+    tenantId?: string | null;
+}
 
 export async function updateProfileAction(formData: FormData) {
     const session = await getServerSession();
@@ -51,7 +67,7 @@ export async function updateFullUserAction(userId: string, formData: FormData) {
 
     // Processar tenantIds
     const tenantIdsStr = formData.get("tenantIds") as string;
-    let tenantIds: any[] = [];
+    let tenantIds: string[] = [];
     
     if (tenantIdsStr) {
         try {
@@ -64,7 +80,7 @@ export async function updateFullUserAction(userId: string, formData: FormData) {
 
     // Se tenantIds foi fornecido, usar isso (múltiplos tenants)
     // Se não, manter apenas tenantId (compatibilidade com código antigo)
-    const updateData: any = {
+    const updateData: UpdateUserData = {
         nome,
         avatar,
         email: (formData.get("email") as string).toLowerCase(),

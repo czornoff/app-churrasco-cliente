@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { MapPin } from 'lucide-react';
@@ -11,8 +11,15 @@ interface LocationPreviewProps {
 }
 
 export function LocationPreview({ address, name = 'Estabelecimento' }: LocationPreviewProps) {
-  const [mapUrl, setMapUrl] = useState('');
   const [apiKey, setApiKey] = useState<string>('');
+
+  const mapUrl = useMemo(() => {
+    if (address.trim()) {
+      const encodedAddress = encodeURIComponent(address);
+      return `https://www.google.com/maps/search/${encodedAddress}`;
+    }
+    return '';
+  }, [address]);
 
   useEffect(() => {
     // Buscar API Key do backend
@@ -28,15 +35,6 @@ export function LocationPreview({ address, name = 'Estabelecimento' }: LocationP
     fetchApiKey();
   }, []);
 
-  const hasApiKey = apiKey && apiKey.trim().length > 0;
-
-  useEffect(() => {
-    if (address.trim()) {
-      const encodedAddress = encodeURIComponent(address);
-      setMapUrl(`https://www.google.com/maps/search/${encodedAddress}`);
-    }
-  }, [address]);
-
   if (!address.trim()) return null;
 
   return (
@@ -50,13 +48,13 @@ export function LocationPreview({ address, name = 'Estabelecimento' }: LocationP
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <Label className="text-xs">Endereço configurado</Label>
-          <p className="text-sm text-gray-700 p-3 bg-gray-50 rounded-md border border-gray-200">{address}</p>
+          <p className="text-sm p-3 bg-zinc-100 rounded-md border border-zinc-200 dark:text-zinc-50 dark:bg-zinc-800 dark:border-zinc-700">{address}</p>
         </div>
 
         <div className="space-y-2">
           <Label>Visualização</Label>
-          <div className="bg-gray-100 rounded-lg overflow-hidden border border-gray-200 h-[300px]">
-            {hasApiKey ? (
+          <div className="bg-zinc-100 rounded-lg overflow-hidden border border-zinc-200 h-[300px]">
+            {apiKey ? (
               <iframe
                 width="100%"
                 height="100%"

@@ -3,11 +3,11 @@ import { authOptions } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { ClienteMenu } from "@/models/ClienteMenu";
-
-
+import type { Session } from "next-auth";
 
 // Helper check permissions
-const getTargetTenantId = (session: any, requestedTenantId?: string | null) => {
+const getTargetTenantId = (session: Session | null, requestedTenantId?: string | null) => {
+    if (!session?.user) return null;
     if (requestedTenantId && (session.user.role === 'ADMIN' || session.user.role === 'SUPERADMIN')) {
         return requestedTenantId;
     }

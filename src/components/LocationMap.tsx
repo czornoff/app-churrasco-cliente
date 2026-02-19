@@ -49,13 +49,13 @@ export function LocationMap({ address = '', name = 'Estabelecimento' }: Location
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label className="text-xs text-gray-600">Endereço</Label>
-          <p className="text-sm text-gray-800 p-3 bg-gray-50 rounded-md border border-gray-200">{address}</p>
+          <Label className="text-xs text-zinc-600">Endereço</Label>
+          <p className="text-sm text-zinc-800 p-3 bg-zinc-50 rounded-md border border-zinc-200">{address}</p>
         </div>
 
         <div className="space-y-2">
           <Label>Mapa</Label>
-          <div className="bg-gray-100 rounded-lg overflow-hidden border border-gray-200 h-[300px]">
+          <div className="bg-zinc-100 rounded-lg overflow-hidden border border-zinc-200 h-[300px]">
             {hasApiKey ? (
               <iframe
                 width="100%"

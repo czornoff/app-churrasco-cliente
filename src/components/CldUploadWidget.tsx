@@ -141,15 +141,15 @@ export function CloudinaryUpload({
                                 onClick={() => open()}
                                 className={`border-dashed border-2 ${isAvatar ? 'h-24 w-24 rounded-full' : 'h-24 w-40'} flex flex-col gap-2 hover:border-orange-500 hover:bg-orange-50 text-center`}
                             >
-                                <ImagePlus className="text-slate-400" />
-                                <span className="text-[10px] text-slate-500 leading-tight">{isAvatar ? "Subir Foto" : "Subir Logo"}</span>
+                                <ImagePlus className="text-zinc-400" />
+                                <span className="text-[10px] text-zinc-500 leading-tight">{isAvatar ? "Subir Foto" : "Subir Logo"}</span>
                             </Button>
                         )}
                     </CldUploadWidget>
                 )}
 
                 {isAvatar && !url && fallbackUrl && (
-                    <p className="text-[10px] text-slate-600 dark:text-slate-400 italic max-w-[150px]">
+                    <p className="text-[10px] text-zinc-600 dark:text-zinc-400 italic max-w-[150px]">
                         Mostrando avatar gerado. Clique no círculo para enviar uma foto personalizada.
                     </p>
                 )}

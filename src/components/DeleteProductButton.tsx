@@ -25,7 +25,7 @@ export function DeleteProductButton({ tenantId, category, productId }: DeletePro
         <button 
             onClick={handleDelete}
             disabled={isPending}
-            className={`p-2 text-slate-600 ${isPending ? 'opacity-50' : 'hover:text-red-600'}`}
+            className={`p-2 text-zinc-600 ${isPending ? 'opacity-50' : 'hover:text-red-600'}`}
         >
             {isPending ? "..." : <Trash2 size={18} />}
         </button>

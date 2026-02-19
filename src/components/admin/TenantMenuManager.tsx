@@ -100,8 +100,8 @@ export function TenantMenuManager({ tenantId }: TenantMenuManagerProps) {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h3 className="text-lg font-medium text-slate-800 dark:text-slate-200">Itens do Menu</h3>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm">
+                    <h3 className="text-lg font-medium text-zinc-800 dark:text-zinc-200">Itens do Menu</h3>
+                    <p className="text-zinc-500 dark:text-zinc-400 text-sm">
                         Gerencie os links que aparecem no menu do aplicativo.
                     </p>
                 </div>
@@ -111,32 +111,32 @@ export function TenantMenuManager({ tenantId }: TenantMenuManagerProps) {
                 </Button>
             </div>
 
-            <Card className="border-neutral-200 dark:border-zinc-800">
+            <Card className="border-zinc-200 dark:border-zinc-800">
                 <CardContent className="p-0">
                     {loading ? (
-                        <div className="p-8 text-center text-slate-500">Carregando...</div>
+                        <div className="p-8 text-center text-zinc-500">Carregando...</div>
                     ) : menus.length === 0 ? (
                         <div className="p-12 text-center flex flex-col items-center gap-4">
                             <div className="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center">
                                 <Plus className="text-orange-600 dark:text-orange-400" />
                             </div>
                             <div>
-                                <h3 className="text-lg font-medium text-slate-900 dark:text-slate-100">Nenhum item no menu</h3>
-                                <p className="text-slate-500 text-sm mt-1">Comece adicionando links para páginas ou sites externos.</p>
+                                <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">Nenhum item no menu</h3>
+                                <p className="text-zinc-500 text-sm mt-1">Comece adicionando links para páginas ou sites externos.</p>
                             </div>
                         </div>
                     ) : (
-                        <div className="divide-y divide-neutral-200 dark:divide-zinc-800">
+                        <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
                             {menus.map((menu) => (
-                                <div key={menu._id} className="p-4 flex items-center justify-between hover:bg-neutral-50 dark:hover:bg-zinc-900/50 transition-colors">
+                                <div key={menu._id} className="p-4 flex items-center justify-between hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors">
                                     <div className="flex flex-col gap-1">
                                         <div className="flex items-center gap-2">
-                                            <span className="font-medium text-slate-900 dark:text-slate-100">{menu.nome}</span>
+                                            <span className="font-medium text-zinc-900 dark:text-zinc-100">{menu.nome}</span>
                                             {!menu.ativo && (
                                                 <span className="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold uppercase">Inativo</span>
                                             )}
                                         </div>
-                                        <div className="flex items-center gap-1 text-xs text-slate-500 font-mono">
+                                        <div className="flex items-center gap-1 text-xs text-zinc-500 font-mono">
                                             <ExternalLink size={10} />
                                             {menu.url}
                                         </div>
@@ -145,7 +145,7 @@ export function TenantMenuManager({ tenantId }: TenantMenuManagerProps) {
                                         <Button
                                             variant="ghost"
                                             size="icon"
-                                            className="h-8 w-8 text-slate-500 hover:text-orange-600"
+                                            className="h-8 w-8 text-zinc-500 hover:text-orange-600"
                                             onClick={() => openEdit(menu)}
                                         >
                                             <Pencil size={16} />
@@ -153,7 +153,7 @@ export function TenantMenuManager({ tenantId }: TenantMenuManagerProps) {
                                         <Button
                                             variant="ghost"
                                             size="icon"
-                                            className="h-8 w-8 text-slate-500 hover:text-red-600"
+                                            className="h-8 w-8 text-zinc-500 hover:text-red-600"
                                             onClick={() => handleDelete(menu._id)}
                                         >
                                             <Trash2 size={16} />

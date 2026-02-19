@@ -34,7 +34,7 @@ export default async function EditTenantPage({ params }: { params: Promise<{ id:
     const tenant = JSON.parse(JSON.stringify(tenantRaw));
 
     return (
-        <div className="max-w-5xl mx-auto p-6 space-y-6">
+        <div className="w-full lg:w-8/12 mx-auto p-6 space-y-6">
         {/* HEADER */}
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold italic text-slate-700 flex items-center gap-3">

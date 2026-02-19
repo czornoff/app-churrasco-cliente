@@ -38,8 +38,8 @@ export default async function UsersPage() {
                 <div className="flex items-left gap-2">
                     <Users className="h-8 w-8 text-orange-600" />
                     <div>
-                        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Gerenciar Usuários</h1>
-                        <p className="text-slate-500 dark:text-slate-200 text-sm">
+                        <h1 className="text-2xl font-bold text-zinc-800 dark:text-zinc-200">Gerenciar Usuários</h1>
+                        <p className="text-zinc-500 dark:text-zinc-200 text-sm">
                             Administre permissões, status e informações de perfil de todos os usuários.
                         </p>
                     </div>
@@ -79,14 +79,14 @@ export default async function UsersPage() {
                                         alt={user.nome}
                                         width={100}
                                         height={100}
-                                        className="w-9 h-9 rounded-full border-2 border-slate-600 shadow-sm"
+                                        className="w-9 h-9 rounded-full border-2 border-zinc-600 shadow-sm"
 
                                     />
                                     <div className="flex flex-col">
-                                        <span className="font-semibold text-slate-700 dark:text-slate-400 leading-none mb-1">
+                                        <span className="font-semibold text-zinc-700 dark:text-zinc-400 leading-none mb-1">
                                             {user.nome}
                                         </span>
-                                        <span className="text-xs text-slate-700 dark:text-slate-400 flex items-center gap-1">
+                                        <span className="text-xs text-zinc-700 dark:text-zinc-400 flex items-center gap-1">
                                             <Mail size={12} /> {user.email}
                                         </span>
                                     </div>
@@ -94,7 +94,7 @@ export default async function UsersPage() {
 
                                 {/* Nível de Acesso */}
                                 <TableCell>
-                                    <Badge variant="outline" className="font-medium bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-slate-400 border-slate-200 rounded-[0.4em] dark:border-slate-600">
+                                    <Badge variant="outline" className="font-medium bg-zinc-50 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-400 border-zinc-200 rounded-[0.4em] dark:border-zinc-600">
                                         {user.role === 'SUPERADMIN' ? ' SuperAdmin' : (user.role === 'TENANT_OWNER' ? ' Dono do Estabelecimento' : 'Usuário Final')}
                                     </Badge>
                                 </TableCell>
@@ -106,7 +106,7 @@ export default async function UsersPage() {
                                             <Chrome size={14} /> Google
                                         </div>
                                     ) : (
-                                        <div className="flex items-center gap-1.5 text-slate-500 font-medium text-xs">
+                                        <div className="flex items-center gap-1.5 text-zinc-500 font-medium text-xs">
                                             <Lock size={14} /> Senha
                                         </div>
                                     )}
@@ -114,8 +114,8 @@ export default async function UsersPage() {
 
                                 {/* Localização Rápida */}
                                 <TableCell>
-                                    <span className="text-xs text-slate-600 flex items-center gap-1">
-                                        <MapPin size={12} className="text-slate-400" />
+                                    <span className="text-xs text-zinc-600 flex items-center gap-1">
+                                        <MapPin size={12} className="text-zinc-400" />
                                         {user.cidade ? `${user.cidade} - ${user.UF}` : "Não informado"}
                                     </span>
                                 </TableCell>
@@ -133,7 +133,7 @@ export default async function UsersPage() {
                                                 ) : null;
                                             })
                                         ) : (
-                                            <span className="text-xs text-slate-400">Nenhum</span>
+                                            <span className="text-xs text-zinc-400">Nenhum</span>
                                         )}
                                     </div>
                                 </TableCell>
@@ -169,8 +169,8 @@ export default async function UsersPage() {
             </div>
 
             {users.length === 0 && (
-                <div className="text-center py-20 bg-white rounded-xl border-2 border-dashed border-slate-200">
-                    <p className="text-slate-400 font-medium">Nenhum usuário cadastrado no sistema.</p>
+                <div className="text-center py-20 bg-white rounded-xl border-2 border-dashed border-zinc-200">
+                    <p className="text-zinc-400 font-medium">Nenhum usuário cadastrado no sistema.</p>
                 </div>
             )}
         </div>

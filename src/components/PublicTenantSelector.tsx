@@ -11,6 +11,13 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 
+interface Tenant {
+    _id: string;
+    name: string;
+    slug: string;
+    nomeApp: string;
+}
+
 interface PublicTenantSelectorProps {
     currentTenantSlug?: string;
     colorPrimary?: string;
@@ -19,7 +26,7 @@ interface PublicTenantSelectorProps {
 export function PublicTenantSelector({ currentTenantSlug, colorPrimary }: PublicTenantSelectorProps) {
     const router = useRouter();
     const { data: session } = useSession();
-    const [tenants, setTenants] = useState<any[]>([]);
+    const [tenants, setTenants] = useState<Tenant[]>([]);
     const [loading, setLoading] = useState(false);
     const [currentTenantId, setCurrentTenantId] = useState<string>('');
 
@@ -34,7 +41,7 @@ export function PublicTenantSelector({ currentTenantSlug, colorPrimary }: Public
 
                 // Encontrar o tenant atual pelo slug
                 if (currentTenantSlug && data.tenants) {
-                    const current = data.tenants.find((t: any) => t.slug === currentTenantSlug);
+                    const current = data.tenants.find((t: Tenant) => t.slug === currentTenantSlug);
                     if (current) {
                         setCurrentTenantId(current._id);
                     }

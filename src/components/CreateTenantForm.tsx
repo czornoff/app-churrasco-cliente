@@ -37,7 +37,7 @@ export function CreateTenantForm() {
                     <div className="space-y-2">
                         <Label htmlFor="slug">Slug da URL (ex: churrascaria-pantanal)</Label>
                         <div className="flex items-center gap-2">
-                            <span className="text-sm text-slate-400 font-mono">/</span>
+                            <span className="text-sm text-zinc-400 font-mono">/</span>
                             <Input id="slug" name="slug" placeholder="slug-unico" minLength={5} required />
                         </div>
                     </div>

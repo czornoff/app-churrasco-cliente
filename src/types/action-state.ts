@@ -4,5 +4,5 @@ export type ActionState = {
     errors?: {
         [key: string]: string[];
     };
-    formData?: any;
+    formData?: Record<string, unknown>;
 } | null;

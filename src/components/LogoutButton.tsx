@@ -10,7 +10,7 @@ export function LogoutButton() {
             variant="ghost" 
             size="sm" 
             onClick={() => signOut({ callbackUrl: "/admin" })}
-            className="text-slate-500 hover:text-red-600"
+            className="text-zinc-500 hover:text-red-600"
         >
             <LogOut className="w-4 h-4 mr-2" />
             Sair

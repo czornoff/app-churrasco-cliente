@@ -41,10 +41,10 @@ export default async function TenantHome({ params }: { params: Promise<{ tenantS
                     </div>
 
                     <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
-                        <h1 className="text-4xl md:text-5xl font-black text-neutral-900 dark:text-white tracking-tighter uppercase leading-tight">
+                        <h1 className="text-4xl md:text-5xl font-black text-zinc-900 dark:text-white tracking-tighter uppercase leading-tight">
                             {tenant.nomeApp || tenant.name}
                         </h1>
-                        <p className="text-md md:text-lg text-neutral-500 dark:text-zinc-400 font-medium tracking-tight max-w-2xl mx-auto">
+                        <p className="text-md md:text-lg text-zinc-500 dark:text-zinc-400 font-medium tracking-tight max-w-2xl mx-auto">
                             {tenant.slogan || "Sua melhor experiência em churrasco começa aqui."}
                         </p>
                     </div>
@@ -64,7 +64,7 @@ export default async function TenantHome({ params }: { params: Promise<{ tenantS
                             <Button
                                 size="lg"
                                 variant="outline"
-                                className="rounded-full px-8 h-14 font-black text-sm uppercase tracking-widest border-2 hover:bg-neutral-100 dark:hover:bg-zinc-900 w-full sm:w-auto bg-transparent border-neutral-200 dark:border-zinc-800 text-neutral-900 dark:text-white"
+                                className="rounded-full px-8 h-14 font-black text-sm uppercase tracking-widest border-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 w-full sm:w-auto bg-transparent border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white"
                             >
                                 Ver Cardápio
                             </Button>
@@ -78,10 +78,10 @@ export default async function TenantHome({ params }: { params: Promise<{ tenantS
                 <div className="max-w-3xl mx-auto text-center space-y-8">
                     <div className="w-16 h-1 bg-zinc-200 dark:bg-zinc-800 rounded-full mx-auto"></div>
                     <div className="space-y-6">
-                        <h2 className="text-3xl font-bold text-neutral-900 dark:text-white tracking-tight">
+                        <h2 className="text-3xl font-bold text-zinc-900 dark:text-white tracking-tight">
                             Bem-vindo ao {tenant.name}
                         </h2>
-                        <p className="text-lg text-neutral-600 dark:text-zinc-400 leading-relaxed">
+                        <p className="text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
                             {tenant.descricao || `Estamos felizes em ter você aqui! Utilizando nossa plataforma, você pode calcular a quantidade exata de ingredientes para o seu churrasco e navegar pelo nosso cardápio exclusivo. Oferecemos produtos de alta qualidade para garantir que seu evento seja inesquecível.`}
                         </p>
                     </div>

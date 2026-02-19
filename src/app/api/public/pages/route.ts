@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { ClientePagina } from "@/models/ClientePagina";
+import type { IPagina } from "@/models/ClientePagina";
 import { Tenant } from "@/models/Schemas";
 
 export async function GET(req: Request) {
@@ -29,7 +30,7 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: "Page not found" }, { status: 404 });
     }
 
-    const page = clientePagina.paginas.find((p: any) => p.slug === pageSlug && p.ativo);
+    const page = clientePagina.paginas.find((p: IPagina) => p.slug === pageSlug && p.ativo);
 
     if (!page) {
         return NextResponse.json({ error: "Page not found" }, { status: 404 });

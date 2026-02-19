@@ -19,11 +19,11 @@ export async function addUserToTenantAction(userId: string, tenantId: string) {
         if (!user.tenantIds) {
             user.tenantIds = [];
         }
-        user.tenantIds.push(tenantId as any);
+        user.tenantIds.push(tenantId);
 
         // Define como tenant primário se for o primeiro
         if (!user.tenantId) {
-            user.tenantId = tenantId as any;
+            user.tenantId = tenantId;
         }
 
         await user.save();
@@ -76,7 +76,7 @@ export async function setActiveTenantAction(userId: string, tenantId: string) {
         }
 
         // Define como tenant primário
-        user.tenantId = tenantId as any;
+        user.tenantId = tenantId;
         await user.save();
         
         return { success: true, message: "Estabelecimento ativo alterado com sucesso" };

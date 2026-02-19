@@ -24,10 +24,10 @@ export default async function TenantLayout({ children, params }: TenantLayoutPro
 
     if (!tenantRaw || tenantRaw.active === false) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-zinc-950 px-4 transition-colors duration-300">
+            <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 px-4 transition-colors duration-300">
                 <div className="text-center space-y-4">
-                    <h1 className="text-2xl font-black text-neutral-900 dark:text-white">Ops! Cliente não encontrado</h1>
-                    <p className="text-neutral-500 dark:text-zinc-500 font-medium">Este estabelecimento pode estar inativo ou o link está incorreto.</p>
+                    <h1 className="text-2xl font-black text-zinc-900 dark:text-white">Ops! Cliente não encontrado</h1>
+                    <p className="text-zinc-500 dark:text-zinc-500 font-medium">Este estabelecimento pode estar inativo ou o link está incorreto.</p>
                 </div>
             </div>
         );
@@ -41,7 +41,7 @@ export default async function TenantLayout({ children, params }: TenantLayoutPro
     const menuItems = JSON.parse(JSON.stringify(menuItemsRaw));
 
     return (
-        <main className="min-h-screen bg-neutral-50 dark:bg-zinc-950 transition-colors duration-500">
+        <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950 transition-colors duration-500">
             {/* Modern Header Navigation */}
             <TenantHeader tenant={tenant} menuItems={menuItems} />
 
@@ -57,7 +57,7 @@ export default async function TenantLayout({ children, params }: TenantLayoutPro
                 href={whatsappLimpo}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="fixed bottom-8 right-8 z-50 flex items-center gap-3 bg-neutral-900 dark:bg-white text-white dark:text-neutral-950 px-4 py-4 rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95 group"
+                className="fixed bottom-8 right-8 z-50 flex items-center gap-3 bg-zinc-900 dark:bg-white text-white dark:text-zinc-950 px-4 py-4 rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95 group"
                 style={{ backgroundColor: '#050', color: '#fff' }}
             >
                 <FaWhatsapp color="#fff" size={30} className="transition-transform group-hover:rotate-12" />

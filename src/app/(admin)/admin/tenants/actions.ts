@@ -41,8 +41,8 @@ export async function createTenantAction(prevState: ActionState, formData: FormD
 
         newId = newTenant._id.toString();
         revalidatePath('/admin/tenants');
-    } catch (error: any) {
-        if (error.code === 11000) {
+    } catch (error) {
+        if (error instanceof Error && 'code' in error && error.code === 11000) {
             return {
                 success: false,
                 message: `O endereço "/${formattedSlug}" já está sendo usado por outro estabelecimento.`,

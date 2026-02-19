@@ -77,7 +77,7 @@ export function PageForm({ initialData, isEditing = false }: PageFormProps) {
         }));
     };
 
-    const updateCard = (index: number, field: keyof ICard, value: any) => {
+    const updateCard = (index: number, field: keyof ICard, value: string | number | boolean | undefined) => {
         const newCards = [...formData.cards];
         newCards[index] = { ...newCards[index], [field]: value };
         setFormData(prev => ({ ...prev, cards: newCards }));
@@ -118,7 +118,7 @@ export function PageForm({ initialData, isEditing = false }: PageFormProps) {
                         <ArrowLeft size={20} />
                     </Button>
                 </Link>
-                <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">
+                <h1 className="text-2xl font-bold text-zinc-800 dark:text-zinc-200">
                     {isEditing ? 'Editar Página' : 'Nova Página Customizada'}
                 </h1>
             </div>
@@ -151,13 +151,13 @@ export function PageForm({ initialData, isEditing = false }: PageFormProps) {
                                     placeholder="Ex: promocoes"
                                     required
                                 />
-                                <p className="text-xs text-slate-500">Será acessado via /nome-do-estabelecimento/<strong>slug</strong></p>
+                                <p className="text-xs text-zinc-500">Será acessado via /nome-do-estabelecimento/<strong>slug</strong></p>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label htmlFor="emoji">Emoji (Opcional)</Label>
+                                <Label htmlFor="emoji">Ícone</Label>
                                 <Input
                                     id="emoji"
                                     name="emoji"
@@ -167,10 +167,10 @@ export function PageForm({ initialData, isEditing = false }: PageFormProps) {
                                     className="max-w-[100px]"
                                 />
                             </div>
-                            <div className="flex items-center justify-between p-3 bg-neutral-50 dark:bg-zinc-900 rounded-lg">
+                            <div className="flex items-center justify-between p-3 bg-zinc-50 dark:bg-zinc-900 rounded-lg">
                                 <div className="space-y-0.5">
                                     <Label className="text-base">Ativa</Label>
-                                    <p className="text-xs text-slate-500">Página visível publicamente</p>
+                                    <p className="text-xs text-zinc-500">Página visível publicamente</p>
                                 </div>
                                 <Switch
                                     checked={formData.ativo}
@@ -218,11 +218,11 @@ export function PageForm({ initialData, isEditing = false }: PageFormProps) {
                         </CardHeader>
                         <CardContent className="space-y-4">
                             {formData.cards.length === 0 && (
-                                <p className="text-center text-sm text-slate-500 py-8">Nenhum card adicionado.</p>
+                                <p className="text-center text-sm text-zinc-500 py-8">Nenhum card adicionado.</p>
                             )}
                             {formData.cards.map((card, index) => (
-                                <div key={index} className="flex gap-4 p-4 border rounded-lg bg-neutral-50 dark:bg-zinc-900/50">
-                                    <div className="flex-none pt-2 text-slate-400">
+                                <div key={index} className="flex gap-4 p-4 border rounded-lg bg-zinc-50 dark:bg-zinc-900/50">
+                                    <div className="flex-none pt-2 text-zinc-400">
                                         <GripVertical size={20} />
                                     </div>
                                     <div className="flex-1 space-y-4">

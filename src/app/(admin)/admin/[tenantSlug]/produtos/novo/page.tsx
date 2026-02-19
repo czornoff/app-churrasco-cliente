@@ -34,10 +34,10 @@ export default async function NewProductPage({
     return (
         <div className="max-w-4xl mx-auto py-10 px-4">
             <div className="mb-8">
-                <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">
+                <h1 className="text-2xl font-bold text-zinc-800 dark:text-zinc-200">
                     Novo Item para {tenant.name}
                 </h1>
-                <p className="text-slate-500 dark:text-slate-200 text-sm">
+                <p className="text-zinc-500 dark:text-zinc-200 text-sm">
                     Cadastre as opções de carnes, bebidas ou acompanhamentos do estabelecimento.
                 </p>
             </div>

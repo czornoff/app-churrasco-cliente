@@ -26,7 +26,7 @@ export function MobileNav() {
             <Button
                 variant="ghost"
                 size="icon"
-                className="text-neutral-600 dark:text-zinc-400 hover:bg-neutral-100 dark:hover:bg-zinc-800/50 active:scale-95"
+                className="text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 active:scale-95"
                 onClick={() => setIsOpen(true)}
             >
                 <Menu size={26} />
@@ -36,7 +36,7 @@ export function MobileNav() {
             {/* Backdrop / Overlay */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-neutral-900/60 backdrop-blur-sm z-[100] animate-in fade-in duration-300 md:hidden"
+                    className="fixed inset-0 bg-zinc-900/60 backdrop-blur-sm z-[100] animate-in fade-in duration-300 md:hidden"
                     onClick={() => setIsOpen(false)}
                 />
             )}
@@ -44,15 +44,15 @@ export function MobileNav() {
             {/* Slide-out Sheet */}
             {isOpen && (
                 <div className={cn(
-                    "fixed top-0 left-0 bottom-0 w-[300px] bg-white dark:bg-zinc-900 z-[101] transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) shadow-2xl flex flex-col border-r border-neutral-200 dark:border-zinc-800 md:hidden",
+                    "fixed top-0 left-0 bottom-0 w-[300px] bg-white dark:bg-zinc-900 z-[101] transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) shadow-2xl flex flex-col border-r border-zinc-200 dark:border-zinc-800 md:hidden",
                     "translate-x-0"
                 )}>
-                    <div className="h-16 flex items-center justify-between px-6 border-b border-neutral-100 dark:border-zinc-800/50">
-                        <span className="text-xs font-black text-neutral-400 dark:text-zinc-600 uppercase tracking-[0.2em]">Navegação</span>
+                    <div className="h-16 flex items-center justify-between px-6 border-b border-zinc-100 dark:border-zinc-800/50">
+                        <span className="text-xs font-black text-zinc-400 dark:text-zinc-600 uppercase tracking-[0.2em]">Navegação</span>
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="text-neutral-400 dark:text-zinc-600 hover:text-red-500"
+                            className="text-zinc-400 dark:text-zinc-600 hover:text-red-500"
                             onClick={() => setIsOpen(false)}
                         >
                             <X size={20} />

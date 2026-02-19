@@ -75,22 +75,22 @@ export const authOptions: NextAuthOptions = {
 
         async jwt({ token, user }) {
             if (user) {
-                token.id = user.id;
-                token.role = (user as any).role as string;
-                token.status = (user as any).status as string;
-                token.tenantId = (user as any).tenantId as string | null;
-                token.tenantIds = (user as any).tenantIds as string[];
+                token.id = user.id || '';
+                token.role = user.role || '';
+                token.status = user.status || '';
+                token.tenantId = user.tenantId || null;
+                token.tenantIds = user.tenantIds || [];
             }
             return token;
         },
 
         async session({ session, token }) {
             if (session.user) {
-                (session.user as any).id = token.id as string;
-                (session.user as any).role = token.role as string;
-                (session.user as any).status = token.status as string;
-                (session.user as any).tenantId = token.tenantId as string | null;
-                (session.user as any).tenantIds = token.tenantIds as string[];
+                session.user.id = token.id;
+                session.user.role = token.role;
+                session.user.status = token.status;
+                session.user.tenantId = token.tenantId;
+                session.user.tenantIds = token.tenantIds;
             }
             return session;
         }

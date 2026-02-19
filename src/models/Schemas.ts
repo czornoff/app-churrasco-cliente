@@ -27,7 +27,7 @@ const TenantSchema = new Schema<ITenantDocument>({
     slogan: { type: String, default: 'A solução inteligente para organizar seu churrasco sem desperdícios.' },
     logoUrl: {
         type: String,
-        default: function (this: any) {
+        default: function (this: ITenantDocument) {
             return `https://ui-avatars.com/api/?name=${encodeURIComponent(this.name || 'Estabelecimento')}&background=random`;
         }
     },
@@ -47,7 +47,7 @@ export interface IProductDocument extends Document {
     tenantId: Types.ObjectId;
     name: string;
     price: number;
-    category: 'CARNE' | 'BEBIDA' | 'ACOMPANHAMENTO' | 'SUPRIMENTO';
+    category: 'CARNE', 'BEBIDA', 'ACOMPANHAMENTO', 'OUTRO', 'SOBREMESA', 'SUPRIMENTO';
     createdAt: Date;
     updatedAt: Date;
 }
@@ -56,10 +56,14 @@ const ProductSchema = new Schema<IProductDocument>({
     tenantId: { type: Schema.Types.ObjectId, ref: 'Tenant', required: true },
     name: { type: String, required: true },
     price: { type: Number, required: true },
-    category: { type: String, enum: ['CARNE', 'BEBIDA', 'ACOMPANHAMENTO', 'SUPRIMENTO'] },
+    category: { type: String, enum: ['CARNE', 'BEBIDA', 'ACOMPANHAMENTO', 'OUTRO', 'SOBREMESA', 'SUPRIMENTO'] },
 }, { timestamps: true });
 
 // 3. CALCULATION (Cálculos dos usuários finais)
+export interface ICalculationItem {
+    [key: string]: unknown;
+}
+
 export interface ICalculationDocument extends Document {
     tenantId: Types.ObjectId;
     userId?: Types.ObjectId;
@@ -69,7 +73,7 @@ export interface ICalculationDocument extends Document {
         women: number;
         children: number;
     };
-    items: any[];
+    items: ICalculationItem[];
     totalPrice: number;
     createdAt: Date;
     updatedAt: Date;

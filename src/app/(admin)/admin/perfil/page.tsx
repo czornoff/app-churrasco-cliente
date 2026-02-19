@@ -26,8 +26,8 @@ export default async function ProfilePage() {
                 <div className="flex items-left gap-2">
                     <UserCircle className="h-8 w-8 text-orange-600" />
                     <div>
-                        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">Meu Perfil</h1>
-                        <p className="text-slate-500 dark:text-slate-200 text-sm">Atualize suas informações de contato e localização.</p>
+                        <h1 className="text-2xl font-bold text-zinc-800 dark:text-zinc-200">Meu Perfil</h1>
+                        <p className="text-zinc-500 dark:text-zinc-200 text-sm">Atualize suas informações de contato e localização.</p>
                     </div>
                 </div>
             </div>

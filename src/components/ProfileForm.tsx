@@ -34,11 +34,20 @@ export function ProfileForm({ initialData }: { initialData: IUser }) {
         setWhatsApp(value);
     };
 
+    interface UF {
+        sigla: string;
+        nome: string;
+    }
+
+    interface City {
+        nome: string;
+    }
+
     // Carregar UFs do IBGE
     useEffect(() => {
         fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome")
             .then(res => res.json())
-            .then(data => setUfs(data.map((item: any) => ({ sigla: item.sigla, nome: item.nome }))));
+            .then((data: UF[]) => setUfs(data.map((item) => ({ sigla: item.sigla, nome: item.nome }))));
     }, []);
 
     // Carregar Cidades quando UF muda
@@ -46,7 +55,7 @@ export function ProfileForm({ initialData }: { initialData: IUser }) {
         if (selectedUf) {
             fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios?orderBy=nome`)
                 .then(res => res.json())
-                .then(data => setCities(data.map((item: any) => ({ nome: item.nome }))));
+                .then((data: City[]) => setCities(data.map((item) => ({ nome: item.nome }))));
         } else {
             setCities([]);
         }
@@ -59,7 +68,7 @@ export function ProfileForm({ initialData }: { initialData: IUser }) {
         }} className="space-y-6 max-w-lg bg-white dark:bg-zinc-800 p-6 rounded-lg shadow-sm">
 
             <div className="space-y-4 border-b pb-6 mb-2">
-                <Label className="text-slate-700 dark:text-slate-200 font-bold">Minha Foto</Label>
+                <Label className="text-zinc-700 dark:text-zinc-200 font-bold">Minha Foto</Label>
                 <div className="flex items-center gap-6">
                     {initialData?.googleId ? (
                         <div className="flex items-center gap-4">
@@ -74,10 +83,10 @@ export function ProfileForm({ initialData }: { initialData: IUser }) {
                                 />
                             </div>
                             <div className="flex-1 space-y-1">
-                                <p className="text-sm font-medium text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+                                <p className="text-sm font-medium text-zinc-700 dark:text-zinc-200 flex items-center gap-1.5">
                                     Sincronizado via Google <BadgeCheck size={14} className="text-blue-500" />
                                 </p>
-                                <p className="text-xs text-slate-500 italic leading-relaxed">
+                                <p className="text-xs text-zinc-500 italic leading-relaxed">
                                     Sua foto é gerenciada pela sua conta Google Suite.
                                 </p>
                                 <input type="hidden" name="avatar" value={initialData?.avatar} />

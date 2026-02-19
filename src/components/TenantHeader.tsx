@@ -80,7 +80,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
             <header className={cn(
                 "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6",
                 scrolled
-                    ? "py-3 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md shadow-lg border-b border-neutral-200 dark:border-zinc-800"
+                    ? "py-3 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md shadow-lg border-b border-zinc-200 dark:border-zinc-800"
                     : "py-6 bg-transparent"
             )}>
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -97,14 +97,14 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                         </div>
                         <span className={cn(
                             "font-black uppercase tracking-tighter text-xl",
-                            scrolled ? "text-neutral-900 dark:text-white" : "text-neutral-900 dark:text-white"
+                            scrolled ? "text-zinc-900 dark:text-white" : "text-zinc-900 dark:text-white"
                         )}>
                             {tenant.name}
                         </span>
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <nav className="hidden md:flex items-center gap-1 bg-neutral-100/20 dark:bg-zinc-900/20 p-1 rounded-sm backdrop-blur-sm">
+                    <nav className="hidden md:flex items-center gap-1 bg-zinc-100/20 dark:bg-zinc-900/20 p-1 rounded-sm backdrop-blur-sm">
                         {allMenuItems.map((item) => {
                             const href = isInternalLink(item.url)
                                 ? `/${tenant.slug}${item.url.startsWith('/') ? item.url : '/' + item.url}`
@@ -118,7 +118,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                                 <Link key={item._id} href={href} target={!isInternalLink(item.url) ? "_blank" : undefined}>
                                     <Button variant="ghost" className={cn(
                                         "rounded-sm px-4 font-bold text-xs uppercase tracking-widest transition-all",
-                                        scrolled ? "text-neutral-600 dark:text-zinc-400" : "text-neutral-600 dark:text-zinc-400"
+                                        scrolled ? "text-zinc-600 dark:text-zinc-400" : "text-zinc-600 dark:text-zinc-400"
                                     )}>
                                         <Icon size={14} className="mr-2" />
                                         {item.nome}
@@ -152,25 +152,25 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                                         </div>
                                         <ChevronDown size={14} className={cn(
                                             "transition-transform group-data-[state=open]:rotate-180",
-                                            scrolled ? "text-neutral-500" : "text-white"
+                                            scrolled ? "text-zinc-500" : "text-white"
                                         )} />
                                     </button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-56 rounded-sm p-2 border-none shadow-2xl bg-white dark:bg-zinc-950 animate-in zoom-in-95 duration-200">
                                     <DropdownMenuLabel className="px-3 py-2">
-                                        <p className="text-xs uppercase font-black text-neutral-400 tracking-widest">Acesso Cliente</p>
-                                        <p className="text-sm font-bold text-neutral-900 dark:text-white line-clamp-1">{session.user?.name}</p>
+                                        <p className="text-xs uppercase font-black text-zinc-400 tracking-widest">Acesso Cliente</p>
+                                        <p className="text-sm font-bold text-zinc-900 dark:text-white line-clamp-1">{session.user?.name}</p>
                                     </DropdownMenuLabel>
-                                    <DropdownMenuSeparator className="my-1 bg-neutral-100 dark:bg-zinc-900" />
-                                    <DropdownMenuItem className="rounded-sm font-bold text-neutral-600 dark:text-zinc-400 focus:bg-neutral-50 dark:focus:bg-zinc-900 cursor-pointer">
+                                    <DropdownMenuSeparator className="my-1 bg-zinc-100 dark:bg-zinc-900" />
+                                    <DropdownMenuItem className="rounded-sm font-bold text-zinc-600 dark:text-zinc-400 focus:bg-zinc-50 dark:focus:bg-zinc-900 cursor-pointer">
                                         <UserCircle size={16} className="mr-3" />
                                         Meu Perfil
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem className="rounded-sm font-bold text-neutral-600 dark:text-zinc-400 focus:bg-neutral-50 dark:focus:bg-zinc-900 cursor-pointer">
+                                    <DropdownMenuItem className="rounded-sm font-bold text-zinc-600 dark:text-zinc-400 focus:bg-zinc-50 dark:focus:bg-zinc-900 cursor-pointer">
                                         <Calculator size={16} className="mr-3" />
                                         Meus Churrascos
                                     </DropdownMenuItem>
-                                    <DropdownMenuSeparator className="my-1 bg-neutral-100 dark:bg-zinc-900" />
+                                    <DropdownMenuSeparator className="my-1 bg-zinc-100 dark:bg-zinc-900" />
                                     <DropdownMenuItem
                                         className="rounded-sm font-bold text-red-600 focus:bg-red-50 dark:focus:bg-red-950/30 cursor-pointer"
                                         onClick={() => signOut()}
@@ -197,14 +197,14 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                             className="md:hidden p-2 text-white"
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         >
-                            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} className={scrolled ? "text-neutral-900 dark:text-white" : "text-white"} />}
+                            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} className={scrolled ? "text-zinc-900 dark:text-white" : "text-white"} />}
                         </button>
                     </div>
                 </div>
 
                 {/* Mobile Menu Overlay */}
                 {isMobileMenuOpen && (
-                    <div className="absolute top-full left-0 w-full bg-white dark:bg-zinc-950 border-t border-neutral-100 dark:border-zinc-900 p-6 animate-in slide-in-from-top duration-300">
+                    <div className="absolute top-full left-0 w-full bg-white dark:bg-zinc-950 border-t border-zinc-100 dark:border-zinc-900 p-6 animate-in slide-in-from-top duration-300">
                         <nav className="flex flex-col gap-4">
                             {allMenuItems.map((item) => {
                                 const href = isInternalLink(item.url)
@@ -217,7 +217,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
 
                                 return (
                                     <Link key={item._id} href={href} onClick={() => setIsMobileMenuOpen(false)} target={!isInternalLink(item.url) ? "_blank" : undefined}>
-                                        <div className="p-4 rounded-sm bg-neutral-50 dark:bg-zinc-900 font-black text-xs uppercase tracking-widest flex items-center justify-between">
+                                        <div className="p-4 rounded-sm bg-zinc-50 dark:bg-zinc-900 font-black text-xs uppercase tracking-widest flex items-center justify-between">
                                             {item.nome}
                                             <Icon size={16} style={{ color: tenant.colorPrimary }} />
                                         </div>
