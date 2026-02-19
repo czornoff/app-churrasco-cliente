@@ -10,7 +10,7 @@ interface LocationMapProps {
   name?: string;
 }
 
-export function LocationMap({ address = '', name = 'Estabelecimento' }: LocationMapProps) {
+export function LocationMap({ address = '' }: LocationMapProps) {
   const [mapUrl, setMapUrl] = useState('');
   const [apiKey, setApiKey] = useState<string>('');
 
@@ -55,7 +55,7 @@ export function LocationMap({ address = '', name = 'Estabelecimento' }: Location
 
         <div className="space-y-2">
           <Label>Mapa</Label>
-          <div className="bg-zinc-100 rounded-lg overflow-hidden border border-zinc-200 h-[300px]">
+          <div className="bg-zinc-100 rounded-lg overflow-hidden border border-zinc-200 h-75">
             {hasApiKey ? (
               <iframe
                 width="100%"

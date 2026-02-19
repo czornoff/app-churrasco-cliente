@@ -6,7 +6,6 @@ import { Tenant, ITenantDocument } from "@/models/Schemas"
 import { DeleteTenantButton } from "@/components/DeleteTenantButton"
 import { deleteTenantAction } from "./actions"
 import { CreateTenantForm } from "@/components/CreateTenantForm"
-import { ITenant } from "@/interfaces/tenant";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";

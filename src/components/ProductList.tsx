@@ -3,8 +3,7 @@ import connectDB from "@/lib/mongodb";
 import Link from "next/link";
 import { DeleteProductButton } from "./DeleteProductButton"; // Importe o novo botão
 import { Cardapio } from "@/models/Cardapio";
-import { Edit, Package } from "lucide-react";
-import { deleteProductAction } from "@/lib/actions/product";
+import { Edit } from "lucide-react";
 import Image from "next/image";
 
 interface IProductItem {

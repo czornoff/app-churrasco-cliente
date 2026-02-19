@@ -107,7 +107,7 @@ export async function updateTenantAction(prevState: ActionState, formData: FormD
         revalidatePath(`/admin/tenants/${id}`);
         revalidatePath('/admin/tenants');
     } catch (error) {
-        return { success: false, message: "Falha ao salvar no banco de dados.", formData: rawData };
+        return { success: false, message: "Falha ao salvar no banco de dados.\n"+error.message, formData: rawData };
     }
 
     redirect('/admin/tenants');

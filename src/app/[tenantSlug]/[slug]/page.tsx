@@ -57,8 +57,6 @@ export default async function DynamicPage({ params }: PageProps) {
         return `https://wa.me/+${formatted}`;
     }
 
-    const whatsappLimpo = tenant.whatsApp ? formatWhatsAppLink(tenant.whatsApp) : "#";
-
     const clientePagina = await ClientePagina.findOne({
         clienteId: tenantRaw._id,
         "paginas.slug": slug,

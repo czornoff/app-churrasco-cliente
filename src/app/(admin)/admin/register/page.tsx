@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { toast } from 'sonner';
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -32,8 +33,8 @@ export default function RegisterPage() {
             }
             alert("Conta criada! Agora faça login.");
             router.push("/admin");
-        } catch (error: unknown) {
-            alert("Erro inesperado ao cadastrar.");
+        } catch (error) {
+            toast.error("Erro inesperado ao cadastrar.", error.message);
         }
     }
 

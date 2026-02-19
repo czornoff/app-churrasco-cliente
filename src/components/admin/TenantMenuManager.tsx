@@ -1,12 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Pencil, Trash2, Plus, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
@@ -41,7 +40,7 @@ export function TenantMenuManager({ tenantId }: TenantMenuManagerProps) {
             const data = await res.json();
             setMenus(data);
         } catch (error) {
-            toast.error('Erro ao carregar menus');
+            toast.error('Erro ao carregar menus', error.message);
         } finally {
             setLoading(false);
         }
@@ -58,7 +57,7 @@ export function TenantMenuManager({ tenantId }: TenantMenuManagerProps) {
             toast.success('Item excluído com sucesso');
             fetchMenus();
         } catch (error) {
-            toast.error('Erro ao excluir item');
+            toast.error('Erro ao excluir item', error.message);
         }
     };
 
@@ -82,7 +81,7 @@ export function TenantMenuManager({ tenantId }: TenantMenuManagerProps) {
             setCurrentMenu({});
             fetchMenus();
         } catch (error) {
-            toast.error('Erro ao salvar menu');
+            toast.error('Erro ao salvar menu', error.message);
         }
     };
 

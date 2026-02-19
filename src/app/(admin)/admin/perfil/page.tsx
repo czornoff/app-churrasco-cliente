@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import connectDB from "@/lib/mongodb";
 import { User } from "@/models/User";
 import { ProfileForm } from "@/components/ProfileForm";
-import Image from "next/image";
 import { IUser } from "@/interfaces/user";
 import { UserCircle } from "lucide-react";
 

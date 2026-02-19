@@ -1,18 +1,10 @@
 import connectDB from '@/lib/mongodb';
 import { Tenant } from '@/models/Schemas';
-import { ClienteMenu } from '@/models/ClienteMenu';
 import { CalculadoraChurrasco } from '@/components/CalculadoraChurrasco';
-import { MessageSquare } from 'lucide-react';
 import { getCardapioByTenant } from '@/lib/actions/product';
 
 interface CalculadoraPageProps {
     params: Promise<{ tenantSlug: string }>;
-}
-
-function formatWhatsAppLink(url: string) {
-    const numbers = url.replace("https://wa.me/", "").replace(/\D/g, "");
-    const formatted = numbers.startsWith("55") ? numbers : `55${numbers}`;
-    return `https://wa.me/+${formatted}`;
 }
 
 export default async function CalculadoraPage({ params }: CalculadoraPageProps) {
@@ -24,7 +16,6 @@ export default async function CalculadoraPage({ params }: CalculadoraPageProps) 
 
     const tenant = JSON.parse(JSON.stringify(tenantRaw));
     const primaryColor = tenant.colorPrimary || "#059669";
-    const whatsappLimpo = tenant.whatsApp ? formatWhatsAppLink(tenant.whatsApp) : "#";
 
     // Fetch cardápio
     const { produtos } = await getCardapioByTenant(tenantRaw._id.toString());

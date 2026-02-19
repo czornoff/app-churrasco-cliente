@@ -2,7 +2,7 @@ import connectDB from '@/lib/mongodb';
 import { Tenant } from '@/models/Schemas';
 import Image from "next/image";
 import Link from 'next/link';
-import { ArrowRight, Instagram, Mail, MapPin } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LocationMap } from '@/components/LocationMap';
 
@@ -23,7 +23,7 @@ export default async function TenantHome({ params }: { params: Promise<{ tenantS
             {/* Hero Section / Banner */}
             <section className="relative pt-32 pb-20 px-6 text-center overflow-hidden">
                 <div
-                    className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] opacity-10 dark:opacity-20 blur-[120px] pointer-events-none"
+                    className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-150 opacity-10 dark:opacity-20 blur-[120px] pointer-events-none"
                     style={{ background: `radial-gradient(circle, ${primaryColor} 0%, transparent 70%)` }}
                 ></div>
 

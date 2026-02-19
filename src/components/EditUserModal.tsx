@@ -204,7 +204,7 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
                         <div className="p-4 border rounded-lg bg-zinc-200 dark:bg-zinc-800">
                             {user.googleId ? (
                                 <div className="flex items-start gap-4">
-                                    <div className="relative w-20 h-20 shrink-0 rounded-full overflow-hidden border-2 border-orange-100 bg-white shadow-sm min-w-[80px] min-h-[80px]">
+                                    <div className="relative w-20 h-20 shrink-0 rounded-full overflow-hidden border-2 border-orange-100 bg-white shadow-sm min-w-20 min-h-20">
                                         <Image
                                             unoptimized
                                             src={((user.avatar && !user.avatar.includes('mandebem.com') && !user.avatar.includes('placeholder')) ? user.avatar.trim() : null) || `https://ui-avatars.com/api/?name=${encodeURIComponent(nome || "User")}&background=random`}

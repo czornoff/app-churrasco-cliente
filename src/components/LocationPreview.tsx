@@ -10,7 +10,7 @@ interface LocationPreviewProps {
   name?: string;
 }
 
-export function LocationPreview({ address, name = 'Estabelecimento' }: LocationPreviewProps) {
+export function LocationPreview({ address }: LocationPreviewProps) {
   const [apiKey, setApiKey] = useState<string>('');
 
   const mapUrl = useMemo(() => {
@@ -53,7 +53,7 @@ export function LocationPreview({ address, name = 'Estabelecimento' }: LocationP
 
         <div className="space-y-2">
           <Label>Visualização</Label>
-          <div className="bg-zinc-100 rounded-lg overflow-hidden border border-zinc-200 h-[300px]">
+          <div className="bg-zinc-100 rounded-lg overflow-hidden border border-zinc-200 h-75">
             {apiKey ? (
               <iframe
                 width="100%"

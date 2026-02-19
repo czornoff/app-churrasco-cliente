@@ -72,7 +72,7 @@ export function ProfileForm({ initialData }: { initialData: IUser }) {
                 <div className="flex items-center gap-6">
                     {initialData?.googleId ? (
                         <div className="flex items-center gap-4">
-                            <div className="relative w-20 h-20 shrink-0 rounded-full overflow-hidden border-2 border-orange-100 bg-white shadow-sm min-w-[80px] min-h-[80px]">
+                            <div className="relative w-20 h-20 shrink-0 rounded-full overflow-hidden border-2 border-orange-100 bg-white shadow-sm min-w-20 min-h-20">
                                 <Image
                                     unoptimized
                                     src={((initialData?.avatar && !initialData.avatar.includes('mandebem.com') && !initialData.avatar.includes('placeholder')) ? initialData.avatar.trim() : null) || `https://ui-avatars.com/api/?name=${encodeURIComponent(nome || 'User')}&background=random`}

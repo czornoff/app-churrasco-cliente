@@ -44,7 +44,7 @@ export function CloudinaryUpload({
                 {displayUrl ? (
                     <div className="relative group">
                         {/* Container da Imagem com overflow hidden para manter o formato redondo/quadrado */}
-                        <div className={`relative shrink-0 ${isAvatar ? 'w-24 h-24 rounded-full min-w-[96px] min-h-[96px]' : 'w-40 h-40 rounded-lg min-w-[160px] min-h-[160px]'} border-2 border-orange-100 overflow-hidden bg-white shadow-sm flex items-center justify-center`}>
+                        <div className={`relative shrink-0 ${isAvatar ? 'w-24 h-24 rounded-full min-w-24 min-h-24' : 'w-40 h-40 rounded-lg min-w-40 min-h-40'} border-2 border-orange-100 overflow-hidden bg-white shadow-sm flex items-center justify-center`}>
                             <Image
                                 unoptimized
                                 src={displayUrl.trim()}
@@ -149,7 +149,7 @@ export function CloudinaryUpload({
                 )}
 
                 {isAvatar && !url && fallbackUrl && (
-                    <p className="text-[10px] text-zinc-600 dark:text-zinc-400 italic max-w-[150px]">
+                    <p className="text-[10px] text-zinc-600 dark:text-zinc-400 italic max-w-37.5">
                         Mostrando avatar gerado. Clique no círculo para enviar uma foto personalizada.
                     </p>
                 )}

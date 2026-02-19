@@ -7,7 +7,6 @@ import Link from 'next/link';
 import {
     UtensilsCrossed,
     Calculator,
-    User as UserIcon,
     LogOut,
     ChevronDown,
     Menu,

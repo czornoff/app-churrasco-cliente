@@ -92,17 +92,6 @@ export function CalculadoraChurrasco({ produtos, primaryColor }: CalculadoraChur
         }));
     };
 
-    const calcularQuantidadeCarnes = (pessoasAdultas: number, horasEvento: number): number => {
-        // Fórmula: 250g base + 50g por hora
-        const gramasPorPessoa = 250 + (horasEvento * 50);
-        return pessoasAdultas * gramasPorPessoa; // em gramas
-    };
-
-    const calcularQuantidadeAcompanhamentos = (pessoasAdultas: number): number => {
-        // Fórmula: 200g por pessoa (total de acompanhamentos)
-        return pessoasAdultas * 200; // em gramas
-    };
-
     const calcularEquivalentePessoas = (homens: number, mulheres: number, crianças: number): number => {
         // Calcular equivalente em pessoas adultas (homens)
         // Mulheres: 75% dos homens

@@ -36,7 +36,7 @@ export function MobileNav() {
             {/* Backdrop / Overlay */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-zinc-900/60 backdrop-blur-sm z-[100] animate-in fade-in duration-300 md:hidden"
+                    className="fixed inset-0 bg-zinc-900/60 backdrop-blur-sm z-100 animate-in fade-in duration-300 md:hidden"
                     onClick={() => setIsOpen(false)}
                 />
             )}
@@ -44,7 +44,7 @@ export function MobileNav() {
             {/* Slide-out Sheet */}
             {isOpen && (
                 <div className={cn(
-                    "fixed top-0 left-0 bottom-0 w-[300px] bg-white dark:bg-zinc-900 z-[101] transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) shadow-2xl flex flex-col border-r border-zinc-200 dark:border-zinc-800 md:hidden",
+                    "fixed top-0 left-0 bottom-0 w-75 bg-white dark:bg-zinc-900 z-101 transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) shadow-2xl flex flex-col border-r border-zinc-200 dark:border-zinc-800 md:hidden",
                     "translate-x-0"
                 )}>
                     <div className="h-16 flex items-center justify-between px-6 border-b border-zinc-100 dark:border-zinc-800/50">

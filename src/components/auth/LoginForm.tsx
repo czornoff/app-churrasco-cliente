@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { registerUserAction } from "@/lib/actions/auth";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
+import Link from "next/link";
 
 export function LoginForm() {
     const router = useRouter();
@@ -69,7 +71,7 @@ export function LoginForm() {
     }
 
     return (
-        <div className="w-full dark:bg-zinc-900 rounded-3xl shadow-2xl p-8 md:p-10 border border-zinc-200/50 dark:border-zinc-800/50 transition-all duration-300 rounded-sm">
+        <div className="w-full dark:bg-zinc-900 shadow-2xl p-8 md:p-10 border border-zinc-200/50 dark:border-zinc-800/50 transition-all duration-300 rounded-sm">
             <h2 className="text-3xl font-black text-center text-zinc-900 dark:text-white mb-10 tracking-tight">
                 {view === 'register' ? 'Criar Conta' : 'Acesso Administrador'}
             </h2>
@@ -86,9 +88,9 @@ export function LoginForm() {
                     type="button"
                     onClick={() => signIn("google", { callbackUrl: callbackUrl })}
                     disabled={loading}
-                    className="w-full flex items-center justify-center gap-3 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 font-bold py-4 px-4 rounded-2xl transition-all shadow-sm active:scale-[0.98] border-b-4 active:border-b-0 active:translate-y-[2px] p-3 rounded-sm"
+                    className="w-full flex items-center justify-center gap-3 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 font-bold py-4 px-4 transition-all shadow-sm active:scale-[0.98] border-b-4 active:border-b-0 active:translate-y-0.5 p-3 rounded-sm"
                 >
-                    <img
+                    <Image
                         src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
                         alt="Google" className="w-5 h-5"
                     />
@@ -111,7 +113,7 @@ export function LoginForm() {
                             placeholder="E-mail"
                             required
                             disabled={loading}
-                            className="w-full h-14 rounded-2xl border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/50 dark:text-white outline-none focus-visible:ring-4 focus-visible:ring-orange-500/10 focus-visible:border-orange-500 transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-600 px-5 text-base font-medium p-3 rounded-sm"
+                            className="w-full h-14 border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/50 dark:text-white outline-none focus-visible:ring-4 focus-visible:ring-orange-500/10 focus-visible:border-orange-500 transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-600 px-5 text-base font-medium p-3 rounded-sm"
                         />
                         <Input
                             name="password"
@@ -119,12 +121,12 @@ export function LoginForm() {
                             placeholder="Senha"
                             required
                             disabled={loading}
-                            className="w-full h-14 rounded-2xl border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/50 dark:text-white outline-none focus-visible:ring-4 focus-visible:ring-orange-500/10 focus-visible:border-orange-500 transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-600 px-5 text-base font-medium p-3 rounded-sm"
+                            className="w-full h-14 border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/50 dark:text-white outline-none focus-visible:ring-4 focus-visible:ring-orange-500/10 focus-visible:border-orange-500 transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-600 px-5 text-base font-medium p-3 rounded-sm"
                         />
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full py-5 rounded-2xl transition-all shadow-xl shadow-orange-600/10 mt-2 bg-orange-600 hover:bg-orange-500 text-white text-lg font-black active:scale-95 text-center no-underline disabled:opacity-50 p-3 rounded-sm"
+                            className="w-full py-5 transition-all shadow-xl shadow-orange-600/10 mt-2 bg-orange-600 hover:bg-orange-500 text-white text-lg font-black active:scale-95 text-center no-underline disabled:opacity-50 p-3 rounded-sm"
                         >
                             {loading ? 'Processando...' : 'Entrar na Plataforma'}
                         </button>
@@ -179,12 +181,12 @@ export function LoginForm() {
                     </button>
 
                     <div className="pt-2">
-                        <a
+                        <Link
                             href="/"
                             className="inline-flex items-center text-[10px] uppercase tracking-[0.3em] text-zinc-400 dark:text-zinc-700 hover:text-orange-600 dark:hover:text-orange-500 transition-colors font-black"
                         >
                             ← Voltar para o Início
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>

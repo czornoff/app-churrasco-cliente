@@ -69,7 +69,7 @@ export default function EditTenantForm(
                 className="w-full"
             >
                 <div className="overflow-x-auto pb-2">
-                    <TabsList className="inline-flex h-auto w-full justify-start md:grid md:grid-cols-6 mb-8 min-w-[600px]">
+                    <TabsList className="inline-flex h-auto w-full justify-start md:grid md:grid-cols-6 mb-8 min-w-150">
                         <TabsTrigger value="geral"><Globe className="w-3 h-3 mr-2" /> Geral</TabsTrigger>
                         <TabsTrigger value="contato"><Palette className="w-3 h-3 mr-2" /> Contato</TabsTrigger>
                         <TabsTrigger value="cardapio"><ScanBarcode className="w-3 h-3 mr-2" /> Produtos</TabsTrigger>
@@ -212,7 +212,7 @@ export default function EditTenantForm(
                                         placeholder="Ex: Rua das Flores, 123, São Paulo, SP"
                                         defaultValue={(state?.formData?.address as string) || tenant.address}
                                         onChange={(e) => setAddressValue(e.target.value)}
-                                        className="min-h-[80px]"
+                                        className="min-h-20"
                                     />
                                     <p className="text-xs text-zinc-500">
                                         O endereço será exibido no mapa da página inicial.

@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { ReactNode } from "react";
-import { LayoutDashboard, UserCircle } from "lucide-react";
+import { UserCircle } from "lucide-react";
 import { AdminBreadcrumbs } from "@/components/AdminBreadcrumbs";
 import Image from "next/image";
 import { LogoutButton } from "@/components/LogoutButton";
@@ -53,7 +53,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
                         {session?.user && (
                             <div className="flex items-center gap-3">
                                 <div className="text-right hidden lg:block">
-                                    <p className="text-xs font-black text-zinc-900 dark:text-white mb-0.5 tracking-tight truncate max-w-[150px]">
+                                    <p className="text-xs font-black text-zinc-900 dark:text-white mb-0.5 tracking-tight truncate max-w-37.5">
                                         {session.user.name}
                                     </p>
                                     <p className="text-[9px] text-zinc-400 dark:text-zinc-500 uppercase font-black tracking-widest">

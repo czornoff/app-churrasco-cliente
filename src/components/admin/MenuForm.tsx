@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { ArrowLeft, Save } from 'lucide-react';
 import Link from 'next/link';
@@ -62,7 +62,7 @@ export function MenuForm({ initialData, isEditing = false }: MenuFormProps) {
             router.push('/admin/menu');
             router.refresh();
         } catch (error) {
-            toast.error('Erro ao salvar menu');
+            toast.error('Erro ao salvar menu', error.message);
         } finally {
             setLoading(false);
         }

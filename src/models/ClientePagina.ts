@@ -1,4 +1,4 @@
-import mongoose, { Schema, model, models, Model, Document, Types } from 'mongoose';
+import { Schema, model, models, Model, Document, Types } from 'mongoose';
 
 export interface ICard {
     titulo: string;

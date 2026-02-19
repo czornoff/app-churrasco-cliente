@@ -104,7 +104,7 @@ export function PageForm({ initialData, isEditing = false }: PageFormProps) {
             router.push('/admin/pages');
             router.refresh();
         } catch (error) {
-            toast.error('Erro ao salvar página');
+            toast.error('Erro ao salvar página', error.message);
         } finally {
             setLoading(false);
         }
@@ -164,7 +164,7 @@ export function PageForm({ initialData, isEditing = false }: PageFormProps) {
                                     value={formData.emoji}
                                     onChange={handleChange}
                                     placeholder="Ex: 🎉"
-                                    className="max-w-[100px]"
+                                    className="max-w-25"
                                 />
                             </div>
                             <div className="flex items-center justify-between p-3 bg-zinc-50 dark:bg-zinc-900 rounded-lg">
@@ -198,7 +198,7 @@ export function PageForm({ initialData, isEditing = false }: PageFormProps) {
                             <CardTitle className="text-lg">Conteúdo (Texto/HTML)</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="min-h-[300px] border rounded-md overflow-hidden">
+                            <div className="min-h-75 border rounded-md overflow-hidden">
                                 <DynamicRichTextEditor
                                     value={formData.texto}
                                     onChange={(data) => setFormData(prev => ({ ...prev, texto: data }))}

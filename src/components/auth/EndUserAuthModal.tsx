@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Crown, Mail, Lock, User as UserIcon, LogIn, Chrome } from 'lucide-react';
+import { Mail, Lock, User as UserIcon, LogIn, Chrome } from 'lucide-react';
 import { registerEndUserAction } from '@/lib/actions/end-user-auth';
 import { toast } from 'sonner';
 
@@ -61,7 +61,7 @@ export function EndUserAuthModal({ isOpen, onClose, tenantId, tenantName, primar
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[400px] rounded-sm p-0 overflow-hidden border-none bg-white dark:bg-zinc-950">
+            <DialogContent className="sm:max-w-100 rounded-sm p-0 overflow-hidden border-none bg-white dark:bg-zinc-950">
                 <div className="relative p-8 pt-12">
                     {/* Background Accent */}
                     <div

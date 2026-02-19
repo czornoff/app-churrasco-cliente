@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { X, ChevronDown } from 'lucide-react';
 import { ITenantDocument } from '@/models/Schemas';
