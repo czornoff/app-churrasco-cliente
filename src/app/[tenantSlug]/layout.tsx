@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import connectDB from '@/lib/mongodb';
 import { Tenant } from '@/models/Schemas';
 import { ClienteMenu } from '@/models/ClienteMenu';
@@ -9,6 +10,25 @@ import { FaWhatsapp } from "react-icons/fa";
 interface TenantLayoutProps {
     children: React.ReactNode;
     params: Promise<{ tenantSlug: string }>;
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ tenantSlug: string }> }): Promise<Metadata> {
+    const { tenantSlug } = await params;
+    await connectDB();
+    const tenant = await Tenant.findOne({ slug: tenantSlug }).lean();
+
+    if (!tenant) return {};
+
+    const favicon = tenant.logoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(tenant.name)}&background=e53935&color=fff`;
+
+    return {
+        title: tenant.name,
+        description: `Seja bem-vindo(a) ao portal de churrasco de ${tenant.name}`,
+        icons: {
+            icon: favicon,
+            apple: favicon,
+        }
+    };
 }
 
 function formatWhatsAppLink(url: string) {

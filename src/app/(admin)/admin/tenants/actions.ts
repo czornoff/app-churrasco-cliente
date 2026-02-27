@@ -88,7 +88,11 @@ export async function updateTenantAction(prevState: ActionState, formData: FormD
         colorPrimary: formData.get('colorPrimary')?.toString(),
         versao: formData.get('versao')?.toString(),
         active: formData.get('active') === 'on',
-        limiteConsulta: Number(formData.get('limiteConsulta')) || 5
+        limiteConsulta: Number(formData.get('limiteConsulta')) || 5,
+        grCarnePessoa: Number(formData.get('grCarnePessoa')) || 400,
+        grAcompanhamentoPessoa: Number(formData.get('grAcompanhamentoPessoa')) || 250,
+        mlBebidaPessoa: Number(formData.get('mlBebidaPessoa')) || 1200,
+        grSobremesaPessoa: Number(formData.get('grSobremesaPessoa')) || 100
     };
 
     const result = tenantUpdateSchema.safeParse(rawData);
@@ -107,7 +111,7 @@ export async function updateTenantAction(prevState: ActionState, formData: FormD
         revalidatePath(`/admin/tenants/${id}`);
         revalidatePath('/admin/tenants');
     } catch (error) {
-        return { success: false, message: "Falha ao salvar no banco de dados.\n"+error.message, formData: rawData };
+        return { success: false, message: "Falha ao salvar no banco de dados.\n" + error.message, formData: rawData };
     }
 
     redirect('/admin/tenants');

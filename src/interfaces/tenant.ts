@@ -12,6 +12,10 @@ export interface ITenant {
     colorPrimary?: string;
     active: boolean;
     limiteConsulta: number;
+    grCarnePessoa?: number;
+    grAcompanhamentoPessoa?: number;
+    mlBebidaPessoa?: number;
+    grSobremesaPessoa?: number;
     versao?: string;
     createdAt?: string;
     updatedAt?: string;

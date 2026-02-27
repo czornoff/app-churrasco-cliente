@@ -24,4 +24,8 @@ export const tenantUpdateSchema = z.object({
     versao: z.string().optional(),
     active: z.boolean().optional(),
     limiteConsulta: z.number().min(1).optional(),
+    grCarnePessoa: z.number().min(0).optional(),
+    grAcompanhamentoPessoa: z.number().min(0).optional(),
+    mlBebidaPessoa: z.number().min(0).optional(),
+    grSobremesaPessoa: z.number().min(0).optional(),
 });

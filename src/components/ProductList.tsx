@@ -73,12 +73,12 @@ export async function ProductList({ tenantId }: { tenantId: string }) {
 
     return (
         <div className="pb-10">
-            {renderSection("🔥 Carnes", (cardapio.carnes || []) as IProductItem[], "carnes")}
-            {renderSection("🍹 Bebidas", (cardapio.bebidas || []) as IProductItem[], "bebidas")}
+            {renderSection("🥩 Carnes", (cardapio.carnes || []) as IProductItem[], "carnes")}
+            {renderSection("🍻 Bebidas", (cardapio.bebidas || []) as IProductItem[], "bebidas")}
             {renderSection("🥗 Acompanhamentos", (cardapio.acompanhamentos || []) as IProductItem[], "acompanhamentos")}
-            {renderSection("➕ Outros", (cardapio.outros || []) as IProductItem[], "outros")}
+            {renderSection("🧀 Outros", (cardapio.outros || []) as IProductItem[], "outros")}
             {renderSection("🍰 Sobremesas", (cardapio.sobremesas || []) as IProductItem[], "sobremesas")}
-            {renderSection("🛠️ Suprimentos", (cardapio.suprimentos || []) as IProductItem[], "suprimentos")}
+            {renderSection("🍴 Suprimentos", (cardapio.suprimentos || []) as IProductItem[], "suprimentos")}
         </div>
     );
 }

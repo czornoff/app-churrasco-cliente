@@ -23,6 +23,11 @@ export const authOptions: NextAuthOptions = {
                 const user = await User.findOne({ email: credentials?.email }).select("+password") as unknown as IUser;
 
                 if (user && user.password && await bcrypt.compare(credentials!.password, user.password)) {
+                    // Bloquear login se não estiver ativo
+                    if (user.status !== 'active') {
+                        return null;
+                    }
+
                     return {
                         id: user._id.toString(),
                         name: user.nome,
@@ -45,6 +50,11 @@ export const authOptions: NextAuthOptions = {
         async signIn({ user, account }) {
             await connectDB();
             const dbUser = await User.findOne({ email: user.email }) as unknown as IUser;
+
+            // Bloquear se o usuário já existe e não está ativo
+            if (dbUser && dbUser.status !== 'active') {
+                return false;
+            }
 
             // Se for Google e não existir, cria como END_USER (Ativo)
             if (account?.provider === "google") {

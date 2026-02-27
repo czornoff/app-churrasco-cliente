@@ -80,13 +80,13 @@ export default async function DynamicPage({ params }: PageProps) {
                 </h1>
                 <p className="text-zinc-500 dark:text-zinc-400">&nbsp;</p>
             </div>
-            
-            <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl border border-white dark:border-zinc-800/50 rounded-sm p-6 shadow-xl shadow-zinc-200/50 dark:shadow-black/20">
+
+            <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl border border-white dark:border-zinc-800/50 rounded-lg p-6 shadow-xl shadow-zinc-200/50 dark:shadow-black/20">
                 {/* Título */}
 
                 {/* Conteúdo de Texto */}
                 {(page.tipo === 'texto' || page.tipo === 'ambos') && page.texto && (
-                    <div 
+                    <div
                         className="prose prose-zinc"
                         dangerouslySetInnerHTML={{ __html: page.texto }}
                     />

@@ -10,6 +10,8 @@ interface FormattedProduct {
     preco: number;
     descricao?: string;
     imageUrl?: string;
+    gramasEmbalagem?: number;
+    mlEmbalagem?: number;
     unidade?: string;
     ativo: boolean;
 }
@@ -21,6 +23,8 @@ type UnifiedProduct = (IItem | FormattedProduct) & {
     ativo?: boolean;
     descricao?: string;
     imageUrl?: string;
+    gramasEmbalagem?: number;
+    mlEmbalagem?: number;
     unidade?: string;
 };
 
@@ -42,7 +46,7 @@ export default async function CardapioPage({ params }: CardapioPageProps) {
     const legacyProducts = await LegacyProduct.find({ tenantId: tenant._id }).sort({ createdAt: -1 }).lean();
 
     // Produtos do Cardapio - converter strings _id
-    const processarProdutos = (items: IItem[]): UnifiedProduct[] => 
+    const processarProdutos = (items: IItem[]): UnifiedProduct[] =>
         items
             .filter((item: IItem) => item.ativo === true)
             .map((item: IItem) => ({
@@ -78,13 +82,13 @@ export default async function CardapioPage({ params }: CardapioPageProps) {
 
     // Nomes amigáveis das categorias
     const categoriasNomes: Record<string, string> = {
-        carnes: '🔥 Carnes',
-        bebidas: '🥤 Bebidas',
-        acompanhamentos: '🌽 Acompanhamentos',
-        outros: '📦 Outros',
+        carnes: '🥩 Carnes',
+        bebidas: '🍻 Bebidas',
+        acompanhamentos: '🥗 Acompanhamentos',
+        outros: '🧀 Outros',
         sobremesas: '🍰 Sobremesas',
-        suprimentos: '⚙️ Suprimentos',
-        legados: '📚 Produtos Legados'
+        suprimentos: '🍴 Suprimentos',
+        legados: '🛒 Produtos Legados'
     };
 
     const categoriasOrdem = ['carnes', 'bebidas', 'acompanhamentos', 'outros', 'sobremesas', 'suprimentos', 'legados'];
@@ -97,7 +101,7 @@ export default async function CardapioPage({ params }: CardapioPageProps) {
                     🔥 Cardápio
                 </h1>
                 <p className="text-zinc-500 dark:text-zinc-400">
-                    Calcule a quantidade perfeita de alimentos para seu evento
+                    Veja a lista dos produtos disponíveis para seu evento.
                 </p>
             </div>
 
@@ -115,15 +119,15 @@ export default async function CardapioPage({ params }: CardapioPageProps) {
                                     </h2>
                                 </div>
 
-                                <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl border border-white dark:border-zinc-800/50 rounded-sm p-6 shadow-xl shadow-zinc-200/50 dark:shadow-black/20">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl border border-white dark:border-zinc-800/50 rounded-lg p-6 shadow-xl shadow-zinc-200/50 dark:shadow-black/20">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
                                         {produtos.map((item: UnifiedProduct) => (
                                             <div
                                                 key={item._id.toString()}
-                                                className="group bg-white dark:bg-zinc-800 rounded-sm overflow-hidden border border-zinc-200 dark:border-zinc-700 shadow-sm hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
+                                                className="group bg-white dark:bg-zinc-800 rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-700 shadow-sm hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
                                             >
                                                 {/* Product Image */}
-                                                <div className="relative w-full h-48 bg-zinc-100 dark:bg-zinc-700">
+                                                <div className="relative w-full h-36 bg-zinc-100 dark:bg-zinc-700">
                                                     <Image
                                                         unoptimized
                                                         src={item.imageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(item.nome)}&background=random`}
@@ -136,23 +140,28 @@ export default async function CardapioPage({ params }: CardapioPageProps) {
 
                                                 {/* Product Info */}
                                                 <div className="p-4 space-y-2">
-                                                    <h3 className="text-lg font-bold text-zinc-900 dark:text-white line-clamp-1">
+                                                    <h3 className="text-md font-bold text-zinc-900 dark:text-white mb-0 pb-0 line-clamp-1">
                                                         {item.nome}
                                                     </h3>
+                                                    {item.gramasEmbalagem > 0 && (
+                                                        <span className="text-xs text-zinc-500 dark:text-zinc-500 font-medium">
+                                                            por {item.gramasEmbalagem}g
+                                                        </span>
+                                                    )}
+                                                    {item.mlEmbalagem > 0 && (
+                                                        <span className="text-xs text-zinc-500 dark:text-zinc-500 font-medium">
+                                                            por {item.mlEmbalagem}ml
+                                                        </span>
+                                                    )}
                                                     {item.descricao && (
                                                         <p className="text-sm text-zinc-600 dark:text-zinc-400 line-clamp-2">
                                                             {item.descricao}
                                                         </p>
                                                     )}
-                                                    <div className="pt-2 flex items-center justify-between">
-                                                        <span className="text-2xl font-black" style={{ color: categoria }}>
+                                                    <div className="pt-2 flex items-center justify-end">
+                                                        <span className="text-xl font-black" style={{ color: categoria }}>
                                                             R$ {item.preco.toFixed(2)}
                                                         </span>
-                                                        {item.unidade && (
-                                                            <span className="text-xs text-zinc-500 dark:text-zinc-500 font-medium">
-                                                                por {item.unidade}
-                                                            </span>
-                                                        )}
                                                     </div>
                                                 </div>
                                             </div>
@@ -163,7 +172,7 @@ export default async function CardapioPage({ params }: CardapioPageProps) {
                         );
                     })
                 ) : (
-                    <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl border border-white dark:border-zinc-800/50 rounded-sm p-6 shadow-xl">
+                    <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl border border-white dark:border-zinc-800/50 rounded-lg p-6 shadow-xl">
                         <div className="flex flex-col items-center justify-center min-h-75 text-center space-y-4">
                             <UtensilsCrossed size={64} className="text-zinc-300 dark:text-zinc-700" />
                             <div>

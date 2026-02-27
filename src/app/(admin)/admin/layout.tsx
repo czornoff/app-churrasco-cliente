@@ -39,8 +39,8 @@ export default async function AdminLayout({ children }: { children: ReactNode })
                         {session?.user?.tenantIds && session.user.tenantIds.length > 1 && (
                             <>
                                 <div className="h-6 w-px bg-zinc-200 dark:bg-zinc-800 mx-2"></div>
-                                <TenantSelector 
-                                    tenantIds={session.user.tenantIds} 
+                                <TenantSelector
+                                    tenantIds={session.user.tenantIds}
                                     currentTenantId={session.user.tenantId}
                                     role={session.user.role}
                                 />

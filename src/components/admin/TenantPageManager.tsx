@@ -192,33 +192,30 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                             <button
                                 type="button"
                                 onClick={() => handleTipoChange('texto')}
-                                className={`px-4 py-2 rounded-md font-medium transition-colors ${
-                                    currentPage.tipo === 'texto'
+                                className={`px-4 py-2 rounded-lg font-medium transition-colors ${currentPage.tipo === 'texto'
                                         ? 'bg-orange-600 text-white'
                                         : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-600'
-                                }`}
+                                    }`}
                             >
                                 Apenas Texto
                             </button>
                             <button
                                 type="button"
                                 onClick={() => handleTipoChange('cards')}
-                                className={`px-4 py-2 rounded-md font-medium transition-colors ${
-                                    currentPage.tipo === 'cards'
+                                className={`px-4 py-2 rounded-lg font-medium transition-colors ${currentPage.tipo === 'cards'
                                         ? 'bg-orange-600 text-white'
                                         : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-600'
-                                }`}
+                                    }`}
                             >
                                 Apenas Cards
                             </button>
                             <button
                                 type="button"
                                 onClick={() => handleTipoChange('ambos')}
-                                className={`px-4 py-2 rounded-md font-medium transition-colors ${
-                                    currentPage.tipo === 'ambos'
+                                className={`px-4 py-2 rounded-lg font-medium transition-colors ${currentPage.tipo === 'ambos'
                                         ? 'bg-orange-600 text-white'
                                         : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-600'
-                                }`}
+                                    }`}
                             >
                                 Texto + Cards
                             </button>
@@ -259,9 +256,9 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                     />
                                 </div>
                                 <EmojiPicker
-                                    onEmojiClick={(emojiData) => 
+                                    onEmojiClick={(emojiData) =>
                                         setCurrentPage({ ...currentPage, emoji: emojiData.emoji })
-                                    } 
+                                    }
                                     width={'100%'}
                                     height={200}
                                     searchDisabled
@@ -287,7 +284,7 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                 <CardTitle>Conteúdo de Texto</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="border rounded-md overflow-hidden min-h-125">
+                                <div className="border rounded-lg overflow-hidden min-h-125">
                                     <DynamicRichTextEditor
                                         value={currentPage.texto || ''}
                                         onChange={(data) => setCurrentPage({ ...currentPage, texto: data })}
@@ -300,133 +297,133 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                     {/* Editor de Cards */}
                     {(currentPage.tipo === 'cards' || currentPage.tipo === 'ambos') && (
                         <>
-                        <div className="flex justify-between items-center mb-4">
-                            <div>
-                                <h4 className="text-lg font-bold">Cards Informativos</h4>
-                                <p className="text-sm text-muted-foreground">Adicione blocos de destaque para esta página.</p>
+                            <div className="flex justify-between items-center mb-4">
+                                <div>
+                                    <h4 className="text-lg font-bold">Cards Informativos</h4>
+                                    <p className="text-sm text-muted-foreground">Adicione blocos de destaque para esta página.</p>
+                                </div>
+                                <Button onClick={handleAddCard} variant="outline" className="border-dashed">
+                                    <Plus className="w-4 h-4 mr-2" /> Adicionar Card
+                                </Button>
                             </div>
-                            <Button onClick={handleAddCard} variant="outline" className="border-dashed">
-                                <Plus className="w-4 h-4 mr-2" /> Adicionar Card
-                            </Button>
-                        </div>
 
-                        {/* Card List */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {currentPage.cards?.map((card, index) => (
-                                <Card key={index} className="relative group hover:border-orange-200 transition-colors">
-                                    <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                                        <CardTitle className="text-sm font-medium">
-                                            {card.emoji} {card.titulo}
-                                        </CardTitle>
-                                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleEditCard(card, index)}>
-                                                <Pencil className="h-3 w-3" />
-                                            </Button>
-                                            <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500 hover:text-red-700 hover:bg-red-50" onClick={() => handleDeleteCard(index)}>
-                                                <Trash2 className="h-3 w-3" />
-                                            </Button>
-                                        </div>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
-                                            <div dangerouslySetInnerHTML={{ __html: card.texto.replace(/\n/g, '<br />') }} />
-                                        </p>
-                                        {card.extra && (
-                                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-secondary text-secondary-foreground">
-                                                {card.extra}
-                                            </span>
-                                        )}
-                                        {!card.ativo && (
-                                            <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
-                                                Inativo
-                                            </span>
-                                        )}
-                                    </CardContent>
-                                </Card>
-                            ))}
-                            {(!currentPage.cards || currentPage.cards.length === 0) && (
-                                <div className="col-span-full border-2 border-dashed rounded-lg p-12 text-center text-muted-foreground">
-                                    Nenhum card adicionado. Clique em Adicionar Card para começar.
+                            {/* Card List */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {currentPage.cards?.map((card, index) => (
+                                    <Card key={index} className="relative group hover:border-orange-200 transition-colors">
+                                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                                            <CardTitle className="text-sm font-medium">
+                                                {card.emoji} {card.titulo}
+                                            </CardTitle>
+                                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleEditCard(card, index)}>
+                                                    <Pencil className="h-3 w-3" />
+                                                </Button>
+                                                <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500 hover:text-red-700 hover:bg-red-50" onClick={() => handleDeleteCard(index)}>
+                                                    <Trash2 className="h-3 w-3" />
+                                                </Button>
+                                            </div>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
+                                                <div dangerouslySetInnerHTML={{ __html: card.texto.replace(/\n/g, '<br />') }} />
+                                            </p>
+                                            {card.extra && (
+                                                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-secondary text-secondary-foreground">
+                                                    {card.extra}
+                                                </span>
+                                            )}
+                                            {!card.ativo && (
+                                                <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                                                    Inativo
+                                                </span>
+                                            )}
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                                {(!currentPage.cards || currentPage.cards.length === 0) && (
+                                    <div className="col-span-full border-2 border-dashed rounded-lg p-12 text-center text-muted-foreground">
+                                        Nenhum card adicionado. Clique em Adicionar Card para começar.
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Card Editor Modal (Inline for simplicity, or could be a Dialog) */}
+                            {isCardModalOpen && editingCard && (
+                                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
+                                    <Card className="w-full max-w-md animate-in zoom-in-95">
+                                        <CardHeader>
+                                            <CardTitle>{editingCard._id ? 'Editar Card' : 'Novo Card'}</CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="space-y-4">
+                                            <div className="space-y-2">
+                                                <Label>Título</Label>
+                                                <Input
+                                                    value={editingCard.titulo || ''}
+                                                    onChange={e => setEditingCard({ ...editingCard, titulo: e.target.value })}
+                                                    placeholder="Título do card"
+                                                />
+                                            </div>
+
+                                            <div className="flex gap-4">
+                                                <div className="w-1/4 space-y-2">
+                                                    <Label>Ícone</Label>
+                                                    <Input
+                                                        value={editingCard.emoji || ''}
+                                                        onChange={e => setEditingCard({ ...editingCard, emoji: e.target.value })}
+                                                        className="text-center text-2xl"
+                                                    />
+                                                </div>
+                                                <div className="w-3/4">
+                                                    <EmojiPicker
+                                                        onEmojiClick={(emojiData) =>
+                                                            setEditingCard({ ...editingCard, emoji: emojiData.emoji })
+                                                        }
+                                                        width={'100%'}
+                                                        height={200}
+                                                        searchDisabled
+                                                        previewConfig={{ showPreview: false }}
+                                                        theme={resolvedTheme === 'dark' ? Theme.DARK : Theme.LIGHT}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label>Texto Descritivo</Label>
+                                                <div className="border rounded-lg overflow-hidden min-h-75">
+                                                    <DynamicRichTextEditor
+                                                        value={editingCard.texto || ''}
+                                                        onChange={(data) => setEditingCard({ ...editingCard, texto: data })}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <Label>Info Extra (Opcional)</Label>
+                                                <Input
+                                                    value={editingCard.extra || ''}
+                                                    onChange={e => setEditingCard({ ...editingCard, extra: e.target.value })}
+                                                    placeholder="Ex: R$ 99,90 ou 'Promoção'"
+                                                />
+                                            </div>
+
+                                            <div className="flex items-center gap-2 pt-2">
+                                                <Switch
+                                                    id="card-active"
+                                                    checked={editingCard.ativo}
+                                                    onCheckedChange={checked => setEditingCard({ ...editingCard, ativo: checked })}
+                                                />
+                                                <Label htmlFor="card-active">Card Visível</Label>
+                                            </div>
+
+                                            <div className="flex gap-2 justify-end pt-4">
+                                                <Button variant="outline" onClick={() => setIsCardModalOpen(false)}>Cancelar</Button>
+                                                <Button onClick={handleSaveCard} className="bg-orange-600 hover:bg-orange-700 text-white">Salvar Card</Button>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
                                 </div>
                             )}
-                        </div>
-
-                        {/* Card Editor Modal (Inline for simplicity, or could be a Dialog) */}
-                        {isCardModalOpen && editingCard && (
-                            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
-                                <Card className="w-full max-w-md animate-in zoom-in-95">
-                                    <CardHeader>
-                                        <CardTitle>{editingCard._id ? 'Editar Card' : 'Novo Card'}</CardTitle>
-                                    </CardHeader>
-                                    <CardContent className="space-y-4">
-                                        <div className="space-y-2">
-                                            <Label>Título</Label>
-                                            <Input
-                                                value={editingCard.titulo || ''}
-                                                onChange={e => setEditingCard({ ...editingCard, titulo: e.target.value })}
-                                                placeholder="Título do card"
-                                            />
-                                        </div>
-
-                                        <div className="flex gap-4">
-                                            <div className="w-1/4 space-y-2">
-                                                <Label>Ícone</Label>
-                                                <Input
-                                                    value={editingCard.emoji || ''}
-                                                    onChange={e => setEditingCard({ ...editingCard, emoji: e.target.value })}
-                                                    className="text-center text-2xl"
-                                                />
-                                            </div>
-                                            <div className="w-3/4">
-                                                <EmojiPicker
-                                                    onEmojiClick={(emojiData) => 
-                                                        setEditingCard({ ...editingCard, emoji: emojiData.emoji })
-                                                    } 
-                                                    width={'100%'}
-                                                    height={200}
-                                                    searchDisabled
-                                                    previewConfig={{ showPreview: false }}
-                                                    theme={resolvedTheme === 'dark' ? Theme.DARK : Theme.LIGHT}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-2">
-                                            <Label>Texto Descritivo</Label>
-                                            <div className="border rounded-md overflow-hidden min-h-75">
-                                                <DynamicRichTextEditor
-                                                    value={editingCard.texto || ''}
-                                                    onChange={(data) => setEditingCard({ ...editingCard, texto: data })}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-2">
-                                            <Label>Info Extra (Opcional)</Label>
-                                            <Input
-                                                value={editingCard.extra || ''}
-                                                onChange={e => setEditingCard({ ...editingCard, extra: e.target.value })}
-                                                placeholder="Ex: R$ 99,90 ou 'Promoção'"
-                                            />
-                                        </div>
-
-                                        <div className="flex items-center gap-2 pt-2">
-                                            <Switch
-                                                id="card-active"
-                                                checked={editingCard.ativo}
-                                                onCheckedChange={checked => setEditingCard({ ...editingCard, ativo: checked })}
-                                            />
-                                            <Label htmlFor="card-active">Card Visível</Label>
-                                        </div>
-
-                                        <div className="flex gap-2 justify-end pt-4">
-                                            <Button variant="outline" onClick={() => setIsCardModalOpen(false)}>Cancelar</Button>
-                                            <Button onClick={handleSaveCard} className="bg-orange-600 hover:bg-orange-700 text-white">Salvar Card</Button>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                        )}
 
                         </>
                     )}

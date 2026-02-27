@@ -25,7 +25,7 @@ export default function LoginPage() {
             {/* Footer - Part of the flex flow, but pushed to bottom */}
             <footer className="py-8 text-center bg-transparent">
                 <p className="text-[10px] text-zinc-400 dark:text-zinc-600 font-bold uppercase tracking-widest">
-                    MandeBem Sistemas © 2026
+                    MandeBem - Apps Inteligentes © 2026
                 </p>
             </footer>
         </div>

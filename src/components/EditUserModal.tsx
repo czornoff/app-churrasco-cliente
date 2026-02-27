@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { updateFullUserAction } from "@/lib/actions/user";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
@@ -15,6 +16,7 @@ import { TenantsMultiSelect } from "@/components/TenantsMultiSelect";
 import Image from "next/image";
 
 export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenantDocument[] }) {
+    const { data: session } = useSession();
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -66,6 +68,10 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
             setCities([]);
         }
     }, [selectedUf]);
+
+    const isSelf =
+        (session?.user?.id && user._id && session.user.id === user._id.toString()) ||
+        (session?.user?.email && user.email && session.user.email === user.email);
 
     async function handleUpdate(formData: FormData) {
         setLoading(true);
@@ -121,7 +127,7 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
                         <div className="space-y-2">
                             <Label>UF</Label>
                             <select
-                                className="w-full h-10 border rounded-md px-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
+                                className="w-full h-10 border rounded-lg px-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
                                 value={selectedUf}
                                 onChange={(e) => {
                                     setSelectedUf(e.target.value);
@@ -137,7 +143,7 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
                         <div className="space-y-2">
                             <Label>Cidade</Label>
                             <select
-                                className="w-full h-10 border rounded-md px-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
+                                className="w-full h-10 border rounded-lg px-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
                                 value={selectedCity}
                                 onChange={(e) => setSelectedCity(e.target.value)}
                                 disabled={!selectedUf}
@@ -164,11 +170,19 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
                         </div>
                         <div className="space-y-2">
                             <Label>Nível de Acesso (Role)</Label>
-                            <Select name="role" defaultValue={user.role}>
+                            <Select
+                                name="role"
+                                defaultValue={user.role}
+                                disabled={isSelf}
+                            >
                                 <SelectTrigger><SelectValue /></SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="SUPERADMIN">Super Admin</SelectItem>
-                                    <SelectItem value="TENANT_OWNER">Dono do Estabelecimento</SelectItem>
+                                    {session?.user?.role === 'SUPERADMIN' && (
+                                        <SelectItem value="SUPERADMIN">Super Admin</SelectItem>
+                                    )}
+                                    {(session?.user?.role === 'SUPERADMIN' || session?.user?.role === 'TENANT_OWNER') && (
+                                        <SelectItem value="TENANT_OWNER">Dono do Estabelecimento</SelectItem>
+                                    )}
                                     <SelectItem value="END_USER">Usuário Final</SelectItem>
                                 </SelectContent>
                             </Select>
@@ -177,7 +191,11 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
                         {/* Status e Estabelecimentos */}
                         <div className="space-y-2">
                             <Label>Status</Label>
-                            <Select name="status" defaultValue={user.status}>
+                            <Select
+                                name="status"
+                                defaultValue={user.status}
+                                disabled={isSelf}
+                            >
                                 <SelectTrigger><SelectValue /></SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="active">Ativo</SelectItem>

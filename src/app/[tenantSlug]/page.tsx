@@ -53,7 +53,7 @@ export default async function TenantHome({ params }: { params: Promise<{ tenantS
                         <Link href={`/${tenant.slug}/calculadora`}>
                             <Button
                                 size="lg"
-                                className="rounded-full px-8 h-14 font-black text-sm uppercase tracking-widest shadow-xl hover:scale-105 transition-all w-full sm:w-auto"
+                                className="rounded-lg px-8 h-14 font-black text-sm uppercase tracking-widest shadow-xl hover:scale-105 transition-all w-full sm:w-auto"
                                 style={{ backgroundColor: primaryColor }}
                             >
                                 Calcular Churrasco
@@ -64,7 +64,7 @@ export default async function TenantHome({ params }: { params: Promise<{ tenantS
                             <Button
                                 size="lg"
                                 variant="outline"
-                                className="rounded-full px-8 h-14 font-black text-sm uppercase tracking-widest border-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 w-full sm:w-auto bg-transparent border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white"
+                                className="rounded-lg px-8 h-14 font-black text-sm uppercase tracking-widest border-2 hover:bg-zinc-100 dark:hover:bg-zinc-900 w-full sm:w-auto bg-transparent border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white"
                             >
                                 Ver Cardápio
                             </Button>
@@ -91,8 +91,8 @@ export default async function TenantHome({ params }: { params: Promise<{ tenantS
             {/* Location Section */}
             {tenant.address && (
                 <section className="px-6 py-16 max-w-4xl mx-auto w-full">
-                    <LocationMap 
-                        address={tenant.address} 
+                    <LocationMap
+                        address={tenant.address}
                         name={tenant.name}
                         isEditable={false}
                     />

@@ -15,6 +15,8 @@ export interface IUser extends Document {
     cidade?: string;
     genero: 'masculino' | 'feminino' | 'outros' | 'undefined';
     birthday?: Date;
+    resetPasswordToken?: string;
+    resetPasswordExpires?: Date;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -72,7 +74,9 @@ const UserSchema = new Schema<IUser>({
         enum: ['masculino', 'feminino', 'outros', 'undefined'],
         default: 'undefined'
     },
-    birthday: { type: Date }
+    birthday: { type: Date },
+    resetPasswordToken: { type: String, select: false },
+    resetPasswordExpires: { type: Date, select: false }
 }, {
     timestamps: true
 });

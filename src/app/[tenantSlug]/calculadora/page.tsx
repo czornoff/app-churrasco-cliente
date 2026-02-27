@@ -34,9 +34,16 @@ export default async function CalculadoraPage({ params }: CalculadoraPageProps) 
                     </p>
                 </div>
 
-                <CalculadoraChurrasco 
-                    produtos={produtos} 
+                <CalculadoraChurrasco
+                    produtos={produtos}
                     primaryColor={primaryColor}
+                    tenantId={tenantRaw._id.toString()}
+                    params={{
+                        grCarnePessoa: tenant.grCarnePessoa,
+                        grAcompanhamentoPessoa: tenant.grAcompanhamentoPessoa,
+                        mlBebidaPessoa: tenant.mlBebidaPessoa,
+                        grSobremesaPessoa: tenant.grSobremesaPessoa,
+                    }}
                 />
             </section>
         </>

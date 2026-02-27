@@ -122,7 +122,7 @@ export function ProfileForm({ initialData }: { initialData: IUser }) {
                 </div>
                 <div className="space-y-2">
                     <Label>Gênero</Label>
-                    <select name="genero" className="w-full h-10 border rounded-md px-3 text-sm" defaultValue={initialData?.genero}>
+                    <select name="genero" className="w-full h-10 border rounded-lg px-3 text-sm" defaultValue={initialData?.genero}>
                         <option value="undefined">Prefiro não dizer</option>
                         <option value="masculino">Masculino</option>
                         <option value="feminino">Feminino</option>
@@ -136,7 +136,7 @@ export function ProfileForm({ initialData }: { initialData: IUser }) {
                     <Label>UF</Label>
                     <select
                         name="UF"
-                        className="w-full h-10 border rounded-md px-3 text-sm"
+                        className="w-full h-10 border rounded-lg px-3 text-sm"
                         value={selectedUf}
                         onChange={(e) => {
                             setSelectedUf(e.target.value);
@@ -153,7 +153,7 @@ export function ProfileForm({ initialData }: { initialData: IUser }) {
                     <Label>Cidade</Label>
                     <select
                         name="cidade"
-                        className="w-full h-10 border rounded-md px-3 text-sm"
+                        className="w-full h-10 border rounded-lg px-3 text-sm"
                         value={selectedCity}
                         onChange={(e) => setSelectedCity(e.target.value)}
                         disabled={!selectedUf}

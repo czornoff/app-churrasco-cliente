@@ -24,13 +24,14 @@ export default async function AdminTenantsPage() {
         redirect("/login");
     }
 
-    // TENANT_OWNER não pode acessar lista de tenants
-    if (session?.user?.role === 'TENANT_OWNER') {
-        redirect(`/admin/tenants/${session.user.tenantId}`);
-    }
+    // TENANT_OWNER vê apenas seus estabelecimentos
+    const isTenantOwner = session?.user?.role === 'TENANT_OWNER';
+    const filter = isTenantOwner && session.user.tenantIds
+        ? { _id: { $in: session.user.tenantIds } }
+        : {};
 
     await connectDB()
-    const tenants = await Tenant.find({}).sort({ active: -1 }).sort({ createdAt: -1 }).lean()
+    const tenants = await Tenant.find(filter).sort({ active: -1 }).sort({ createdAt: -1 }).lean()
 
     return (
         <div className="space-y-6">
@@ -46,11 +47,11 @@ export default async function AdminTenantsPage() {
                 </div>
             </div>
 
-            {/* Formulário de Cadastro */}
-            <CreateTenantForm />
+            {/* Formulário de Cadastro - Apenas SuperAdmin */}
+            {!isTenantOwner && <CreateTenantForm />}
 
             {/* Listagem de Estabelecimentos em Tabela */}
-            <div className="bg-white dark:bg-zinc-800 rounded-sm shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm overflow-hidden">
                 <Table>
                     <TableHeader className="bg-zinc-50 dark:bg-zinc-700">
                         <TableRow>
@@ -93,8 +94,8 @@ export default async function AdminTenantsPage() {
                                         <Badge
                                             variant="outline"
                                             className={`font-medium rounded-[0.4em] ${tenant.active
-                                                    ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800"
-                                                    : "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800"
+                                                ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800"
+                                                : "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800"
                                                 }`}
                                         >
                                             {tenant.active ? "Ativo" : "Inativo"}

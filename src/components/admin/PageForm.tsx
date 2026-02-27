@@ -198,7 +198,7 @@ export function PageForm({ initialData, isEditing = false }: PageFormProps) {
                             <CardTitle className="text-lg">Conteúdo (Texto/HTML)</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="min-h-75 border rounded-md overflow-hidden">
+                            <div className="min-h-75 border rounded-lg overflow-hidden">
                                 <DynamicRichTextEditor
                                     value={formData.texto}
                                     onChange={(data) => setFormData(prev => ({ ...prev, texto: data }))}

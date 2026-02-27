@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useActionState, useEffect, useTransition } from "react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ITenant } from "@/interfaces/tenant";
@@ -32,6 +33,7 @@ export default function EditTenantForm(
         children: React.ReactNode
     }
 ) {
+    const { data: session } = useSession();
     const searchParams = useSearchParams();
     const tabFromUrl = searchParams.get("tab");
     const [activeTab, setActiveTab] = useState(tabFromUrl || "geral");
@@ -75,7 +77,9 @@ export default function EditTenantForm(
                         <TabsTrigger value="cardapio"><ScanBarcode className="w-3 h-3 mr-2" /> Produtos</TabsTrigger>
                         <TabsTrigger value="menus"><List className="w-3 h-3 mr-2" /> Menu App</TabsTrigger>
                         <TabsTrigger value="paginas"><FileText className="w-3 h-3 mr-2" /> Páginas</TabsTrigger>
-                        <TabsTrigger value="config"><ShieldCheck className="w-3 h-3 mr-2" /> Sistema</TabsTrigger>
+                        {session?.user?.role === 'SUPERADMIN' && (
+                            <TabsTrigger value="config"><ShieldCheck className="w-3 h-3 mr-2" /> Sistema</TabsTrigger>
+                        )}
                     </TabsList>
                 </div>
 
@@ -130,7 +134,7 @@ export default function EditTenantForm(
                                 <div>
                                     <h3 className="text-lg font-medium text-zinc-800 dark:text-zinc-200">
                                         Identidade Visual
-                                        </h3>
+                                    </h3>
                                     <p className="text-zinc-500 dark:text-zinc-400 text-sm">
                                         Defina as informações básicas e a aparência do seu estabelecimento no MandeBem.
                                     </p>
@@ -170,6 +174,34 @@ export default function EditTenantForm(
                                         * Esta imagem será exibida no topo do seu cardápio.
                                     </p>
                                 </div>
+
+                                {/* Seção de Parâmetros de Cálculo */}
+                                <div className="md:col-span-2 pt-6">
+                                    <h3 className="text-lg font-medium text-zinc-800 dark:text-zinc-200">
+                                        Parâmetros de Consumo (por Pessoa)
+                                    </h3>
+                                    <p className="text-zinc-500 dark:text-zinc-400 text-sm mb-4">
+                                        Defina o consumo base para um homem adulto. Mulheres serão 75% e crianças 50% desses valores.
+                                    </p>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        <div className="space-y-2">
+                                            <Label>Carne (gramas)</Label>
+                                            <Input type="number" name="grCarnePessoa" defaultValue={(state?.formData?.grCarnePessoa as number) || tenant.grCarnePessoa || 400} />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>Acomp./Outro (gramas)</Label>
+                                            <Input type="number" name="grAcompanhamentoPessoa" defaultValue={(state?.formData?.grAcompanhamentoPessoa as number) || tenant.grAcompanhamentoPessoa || 250} />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>Bebida (ml)</Label>
+                                            <Input type="number" name="mlBebidaPessoa" defaultValue={(state?.formData?.mlBebidaPessoa as number) || tenant.mlBebidaPessoa || 1200} />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label>Sobremesa (gramas)</Label>
+                                            <Input type="number" name="grSobremesaPessoa" defaultValue={(state?.formData?.grSobremesaPessoa as number) || tenant.grSobremesaPessoa || 100} />
+                                        </div>
+                                    </div>
+                                </div>
                             </CardContent>
                         </Card>
                     </TabsContent>
@@ -180,7 +212,7 @@ export default function EditTenantForm(
                                 <div>
                                     <h3 className="text-lg font-medium text-zinc-800 dark:text-zinc-200">
                                         Canais de Atendimento
-                                        </h3>
+                                    </h3>
                                     <p className="text-zinc-500 dark:text-zinc-400 text-sm">
                                         Configure os meios de contato e redes sociais para seus clientes.
                                     </p>
@@ -207,8 +239,8 @@ export default function EditTenantForm(
                                         <MapPin className="w-4 h-4" />
                                         Endereço Completo (Localização)
                                     </Label>
-                                    <Textarea 
-                                        name="address" 
+                                    <Textarea
+                                        name="address"
                                         placeholder="Ex: Rua das Flores, 123, São Paulo, SP"
                                         defaultValue={(state?.formData?.address as string) || tenant.address}
                                         onChange={(e) => setAddressValue(e.target.value)}
@@ -227,40 +259,42 @@ export default function EditTenantForm(
                         </Card>
                     </TabsContent>
 
-                    <TabsContent value="config" forceMount className="data-[state=inactive]:hidden">
-                        <Card>
-                            <div className="px-6">
-                                <div>
-                                    <h3 className="text-lg font-medium text-zinc-800 dark:text-zinc-200">
-                                        Configurações Administrativas
+                    {session?.user?.role === 'SUPERADMIN' && (
+                        <TabsContent value="config" forceMount className="data-[state=inactive]:hidden">
+                            <Card>
+                                <div className="px-6">
+                                    <div>
+                                        <h3 className="text-lg font-medium text-zinc-800 dark:text-zinc-200">
+                                            Configurações Administrativas
                                         </h3>
-                                    <p className="text-zinc-500 dark:text-zinc-400 text-sm">
-                                        Configure os limites e versão do sistema.
-                                    </p>
+                                        <p className="text-zinc-500 dark:text-zinc-400 text-sm">
+                                            Configure os limites e versão do sistema.
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                            <CardContent className="grid gap-4 md:grid-cols-2">
-                                <div className="space-y-2">
-                                    <Label>Limite de Consultas Gratuitas</Label>
-                                    <Input type="number" name="limiteConsulta" defaultValue={(state?.formData?.limiteConsulta as number) || tenant.limiteConsulta} />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label>Versão do Sistema</Label>
-                                    <Input name="versao" defaultValue={(state?.formData?.versao as string) || tenant.versao} />
-                                </div>
-                                <div className="flex items-center space-x-2 pt-8">
-                                    <input
-                                        type="checkbox"
-                                        name="active"
-                                        id="active"
-                                        defaultChecked={(state?.formData?.active as boolean) || tenant.active}
-                                        className="h-4 w-4 rounded border-zinc-300 text-orange-600 focus:ring-orange-500"
-                                    />
-                                    <Label htmlFor="active" className="text-sm font-medium">Conta Ativa (Acesso liberado)</Label>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
+                                <CardContent className="grid gap-4 md:grid-cols-2">
+                                    <div className="space-y-2">
+                                        <Label>Limite de Consultas Gratuitas</Label>
+                                        <Input type="number" name="limiteConsulta" defaultValue={(state?.formData?.limiteConsulta as number) || tenant.limiteConsulta} />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Versão do Sistema</Label>
+                                        <Input name="versao" defaultValue={(state?.formData?.versao as string) || tenant.versao} />
+                                    </div>
+                                    <div className="flex items-center space-x-2 pt-8">
+                                        <input
+                                            type="checkbox"
+                                            name="active"
+                                            id="active"
+                                            defaultChecked={(state?.formData?.active as boolean) || tenant.active}
+                                            className="h-4 w-4 rounded border-zinc-300 text-orange-600 focus:ring-orange-500"
+                                        />
+                                        <Label htmlFor="active" className="text-sm font-medium">Conta Ativa (Acesso liberado)</Label>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+                    )}
                     {activeTab !== "cardapio" && activeTab !== "menus" && activeTab !== "paginas" ? (
 
                         /* Botão Salvar (Aparece em todas as outras abas) */

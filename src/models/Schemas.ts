@@ -14,6 +14,10 @@ export interface ITenantDocument extends Document {
     address?: string;
     versao: string;
     limiteConsulta: number;
+    grCarnePessoa: number;
+    grAcompanhamentoPessoa: number;
+    mlBebidaPessoa: number;
+    grSobremesaPessoa: number;
     ownerId?: Types.ObjectId;
     active: boolean;
     createdAt: Date;
@@ -38,6 +42,10 @@ const TenantSchema = new Schema<ITenantDocument>({
     address: { type: String, default: '' },
     versao: { type: String, default: '1.0.1' },
     limiteConsulta: { type: Number, default: 5 },
+    grCarnePessoa: { type: Number, default: 400 },
+    grAcompanhamentoPessoa: { type: Number, default: 250 },
+    mlBebidaPessoa: { type: Number, default: 1200 },
+    grSobremesaPessoa: { type: Number, default: 100 },
     ownerId: { type: Schema.Types.ObjectId, ref: 'User' },
     active: { type: Boolean, default: true },
 }, { timestamps: true });

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Users, UserCircle, UserCog, LayoutDashboard } from "lucide-react";
+import { Users, UserCircle, UserCog, LayoutDashboard, History } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 
@@ -10,6 +10,7 @@ const navItems = [
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/tenants", label: "Estabelecimentos", icon: Users },
     { href: "/admin/users", label: "Usuários", icon: UserCog },
+    { href: "/admin/calculations", label: "Histórico", icon: History },
     { href: "/admin/perfil", label: "Meu Perfil", icon: UserCircle },
 ];
 
@@ -19,9 +20,9 @@ export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
 
     // Filtra itens baseado no role do usuário
     const visibleItems = navItems.filter(item => {
-        // TENANT_OWNER só vê "Meu Perfil"
+        // TENANT_OWNER vê Estabelecimentos, Usuários, Histórico e Perfil
         if (session?.user?.role === 'TENANT_OWNER') {
-            return item.label === 'Meu Perfil';
+            return true;
         }
         // Super admin vê todos os itens
         return true;
@@ -58,7 +59,7 @@ export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
                                     href={item.href}
                                     onClick={onItemClick}
                                     className={cn(
-                                        "flex items-center justify-between group px-4 py-3 rounded-xl transition-all duration-200",
+                                        "flex items-center justify-between group px-4 py-3 rounded-lg transition-all duration-200",
                                         isActive
                                             ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm"
                                             : "text-zinc-500 dark:text-zinc-500 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 hover:text-zinc-900 dark:hover:text-zinc-300"
@@ -83,7 +84,7 @@ export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
 
             {/* Version Footer */}
             <div className="p-6 border-t border-zinc-100 dark:border-zinc-800/50">
-                <div className="bg-zinc-50 dark:bg-zinc-800/50 rounded-xl p-3 text-center border border-zinc-100 dark:border-zinc-800">
+                <div className="bg-zinc-50 dark:bg-zinc-800/50 rounded-lg p-3 text-center border border-zinc-100 dark:border-zinc-800">
                     <p className="text-[10px] text-zinc-400 dark:text-zinc-600 font-bold uppercase tracking-widest">
                         versão 2.1.0
                     </p>

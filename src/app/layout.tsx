@@ -15,8 +15,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-    title: "Cliente Cálculo de Churrasco",
-    description: "Aplicativo Cálculo de Churrasco",
+    title: "MandeBem - Apps Inteligentes",
+    description: "A solução inteligente para organizar seu churrasco sem desperdícios.",
+    appleWebApp: {
+        capable: true,
+        statusBarStyle: "default",
+        title: "Calculadora de Churrasco",
+    },
+    formatDetection: {
+        telephone: false,
+    },
+    icons: {
+        icon: '/icon-192.png',
+        apple: '/icon-192.png',
+    }
+};
+
+export const viewport = {
+    themeColor: "#e53935",
 };
 
 export default function RootLayout({

@@ -1,12 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { saveCalculationAction } from '@/lib/actions/calculation';
+
 
 interface Produto {
     _id: string;
@@ -41,19 +44,38 @@ interface ResultadoCalculo {
         preco: number;
         quantidade: number;
         quantidadeEmbalagem: number;
+        tamanhoEmbalagem: number;
         totalPreco: number;
         categoria?: string;
         subCategoriaBebida?: 'alcoolica' | 'nao-alcoolica';
+        unidade: string;
     }>;
     totalCusto: number;
 }
 
-interface CalculadoraChurascoProps {
+interface CalculadoraChurrascoProps {
     produtos: Produto[];
     primaryColor: string;
+    tenantId: string;
+    params?: {
+        grCarnePessoa?: number;
+        grAcompanhamentoPessoa?: number;
+        mlBebidaPessoa?: number;
+        grSobremesaPessoa?: number;
+    };
 }
 
-export function CalculadoraChurrasco({ produtos, primaryColor }: CalculadoraChurascoProps) {
+export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params }: CalculadoraChurrascoProps) {
+    const { data: session } = useSession();
+
+    // Parâmetros dinâmicos do tenant com fallbacks
+    const config = {
+        carne: params?.grCarnePessoa ?? 400,
+        acompanhamento: params?.grAcompanhamentoPessoa ?? 250,
+        bebida: params?.mlBebidaPessoa ?? 1200,
+        sobremesa: params?.grSobremesaPessoa ?? 100
+    };
+
     const [formData, setFormData] = useState<CalculadoraFormData>({
         homens: 1,
         mulheres: 1,
@@ -115,11 +137,11 @@ export function CalculadoraChurrasco({ produtos, primaryColor }: CalculadoraChur
         }
 
         // Agrupar produtos selecionados por categoria e calcular fatores
-        const produtosPorCategoria: Record<string, typeof produtos> = {};
+        const produtosPorCategoriaMap: Record<string, Produto[]> = {};
         const totalPorCategoria: Record<string, number> = {};
-        
+
         // Para bebidas, vamos separar por subcategoria
-        const produtosPorSubcategoriaBebida: Record<string, typeof produtos> = {};
+        const produtosPorSubcategoriaBebida: Record<string, Produto[]> = {};
         const totalPorSubcategoriaBebida: Record<string, number> = {};
 
         formData.produtosSelecionados.forEach(produtoId => {
@@ -127,14 +149,14 @@ export function CalculadoraChurrasco({ produtos, primaryColor }: CalculadoraChur
             if (!produto) return;
 
             const categoria = produto.categoria?.toLowerCase() || '';
-            if (!produtosPorCategoria[categoria]) {
-                produtosPorCategoria[categoria] = [];
+            if (!produtosPorCategoriaMap[categoria]) {
+                produtosPorCategoriaMap[categoria] = [];
                 totalPorCategoria[categoria] = 0;
             }
-            produtosPorCategoria[categoria].push(produto);
+            produtosPorCategoriaMap[categoria].push(produto);
 
-            // Somar os valores por adulto de cada categoria
-            if (categoria === 'carnes' || categoria === 'acompanhamentos' || categoria === 'outros' || categoria === 'sobremesas') {
+            // Somar os valores por adulto de cada categoria (fatores internos de distribuição)
+            if (['carnes', 'acompanhamentos', 'outros', 'sobremesas'].includes(categoria)) {
                 totalPorCategoria[categoria] += produto.gramasPorAdulto ?? 0;
             } else if (categoria === 'bebidas') {
                 const subCategoria = produto.subCategoriaBebida || 'nao-alcoolica';
@@ -147,6 +169,14 @@ export function CalculadoraChurrasco({ produtos, primaryColor }: CalculadoraChur
             }
         });
 
+        // REGRA: Se houver carnes mas NÃO houver acompanhamentos ou outros, aumentar consumo em 20%
+        const hasCarnes = !!produtosPorCategoriaMap['carnes'];
+        const hasAcompanhamentos = !!produtosPorCategoriaMap['acompanhamentos'];
+        const hasOutros = !!produtosPorCategoriaMap['outros'];
+        const hasAlcoolica = (produtosPorSubcategoriaBebida['alcoolica']?.length || 0) > 0;
+
+        const multiplicadorCarnes = (hasCarnes && !hasAcompanhamentos && !hasOutros) ? 1.2 : 1.0;
+
         const produtosCalculo = formData.produtosSelecionados
             .map(produtoId => {
                 const produto = produtos.find(p => p._id === produtoId);
@@ -156,94 +186,79 @@ export function CalculadoraChurrasco({ produtos, primaryColor }: CalculadoraChur
                 let quantidadeEmbalagens = 0;
                 const categoria = produto.categoria?.toLowerCase() || '';
 
-                // Calcular quantidade baseado na categoria com proporções
+                // Calcular quantidade baseado na categoria com proporções dinâmicas
                 if (categoria === 'carnes') {
-                    // Carnes: 300g total por equivalente de pessoa
-                    const totalCarnes = pessoasEquivalentes * 300;
-                    const totalSelecionados = totalPorCategoria['carnes'] || 0;
-                    const fator = totalSelecionados > 0 ? (produto.gramasPorAdulto ?? 0) / totalSelecionados : 0;
-                    quantidadeNecessaria = totalCarnes * fator;
-                } else if (categoria === 'acompanhamentos') {
-                    // Acompanhamentos: 200g total por equivalente de pessoa
-                    const totalSelecionados = totalPorCategoria['acompanhamentos'] || 0;
-                    if (totalSelecionados < 200) {
-                        // Se a soma é menor que 200g, usar valor individual
+                    const totalCarnesBase = pessoasEquivalentes * config.carne * multiplicadorCarnes;
+                    const totalDesteProduto = totalPorCategoria['carnes'] || 0;
+                    const fator = totalDesteProduto > 0 ? (produto.gramasPorAdulto ?? 0) / totalDesteProduto : 0;
+                    quantidadeNecessaria = totalCarnesBase * fator;
+                } else if (categoria === 'acompanhamentos' || categoria === 'outros') {
+                    const baseConsumo = config.acompanhamento;
+                    const totalDesteGrupo = (totalPorCategoria['acompanhamentos'] || 0) + (totalPorCategoria['outros'] || 0);
+
+                    if (totalDesteGrupo < baseConsumo) {
+                        // Se a soma é menor que a base, usar valor individual
                         quantidadeNecessaria = pessoasEquivalentes * (produto.gramasPorAdulto ?? 0);
                     } else {
-                        // Se a soma é 200g ou mais, aplicar fator proporcional
-                        const totalAcompanhamentos = pessoasEquivalentes * 200;
-                        const fator = totalSelecionados > 0 ? (produto.gramasPorAdulto ?? 0) / totalSelecionados : 0;
-                        quantidadeNecessaria = totalAcompanhamentos * fator;
+                        // Se a soma atinge a base, aplicar fator proporcional
+                        const totalConsumoBase = pessoasEquivalentes * baseConsumo;
+                        const fator = totalDesteGrupo > 0 ? (produto.gramasPorAdulto ?? 0) / totalDesteGrupo : 0;
+                        quantidadeNecessaria = totalConsumoBase * fator;
                     }
-                } else if (categoria === 'outros' || categoria === 'sobremesas') {
-                    // Usar gramasPorAdulto como proporcional do total dessa categoria
-                    const totalSelecionados = totalPorCategoria[categoria] || 0;
+                } else if (categoria === 'sobremesas') {
+                    const baseConsumo = config.sobremesa;
+                    const totalSelecionados = totalPorCategoria['sobremesas'] || 0;
                     const fator = totalSelecionados > 0 ? (produto.gramasPorAdulto ?? 0) / totalSelecionados : 0;
-                    quantidadeNecessaria = pessoasEquivalentes * (produto.gramasPorAdulto ?? 0) * fator;
+                    quantidadeNecessaria = pessoasEquivalentes * baseConsumo * fator;
                 } else if (categoria === 'bebidas') {
-                    // Bebidas usam ml - calcular baseado em subcategoria
                     const subCategoria = produto.subCategoriaBebida || 'nao-alcoolica';
                     const mlPorAdulto = produto.mlPorAdulto ?? 0;
-                    
+                    const baseBebida = config.bebida;
+
                     if (subCategoria === 'alcoolica') {
-                        // Bebidas alcoólicas: apenas pessoas que bebem
                         const totalSelecionados = totalPorSubcategoriaBebida['alcoolica'] || 0;
-                        
                         if (totalSelecionados > 0) {
-                            // Se há múltiplos produtos, distribuir proporcionalmente
-                            const mlTotalConsumido = formData.pessoasQueBebem * 1200; // 1200ml base por pessoa que bebe
+                            const mlTotalConsumido = formData.pessoasQueBebem * baseBebida;
                             const fator = mlPorAdulto / totalSelecionados;
                             quantidadeNecessaria = mlTotalConsumido * fator;
                         } else {
-                            // Um único produto: usar mlPorAdulto direto
                             quantidadeNecessaria = mlPorAdulto * formData.pessoasQueBebem;
                         }
                     } else {
-                        // Bebidas não-alcoólicas: usa sempre distribuição
-                        const pessoasQueBebemRefri = formData.pessoasQueBebem * 0.1;
-                        const pessoasQueNaoBebem = totalPessoas - formData.pessoasQueBebem;
-                        const pessoasEquivalentes = pessoasQueNaoBebem + pessoasQueBebemRefri;
-                        const mlTotalConsumido = pessoasEquivalentes * 1200; // 1200ml base
-                        
+                        let eqBebidaNaoAlcool = totalPessoas;
+
+                        // Se houver álcool, aplicamos a regra de que quem bebe álcool também consome 10% de refri/suco
+                        if (hasAlcoolica) {
+                            const pessoasQueBebemRefri = formData.pessoasQueBebem * 0.1;
+                            const pessoasQueNaoBebem = totalPessoas - formData.pessoasQueBebem;
+                            eqBebidaNaoAlcool = pessoasQueNaoBebem + pessoasQueBebemRefri;
+                        }
+
+                        const mlTotalConsumido = eqBebidaNaoAlcool * baseBebida;
                         const totalSelecionados = totalPorSubcategoriaBebida['nao-alcoolica'] || 0;
                         const fator = totalSelecionados > 0 ? mlPorAdulto / totalSelecionados : 0;
                         quantidadeNecessaria = mlTotalConsumido * fator;
                     }
                 } else if (categoria === 'suprimentos') {
-                    // Suprimentos têm lógica especial
                     if (produto.tipoSuprimento === 'CARVAO') {
-                        // Carvão: kg por kg de produto final
-                        const totalCarnes = pessoasEquivalentes * 300;
+                        const totalCarnes = pessoasEquivalentes * config.carne * multiplicadorCarnes;
                         const kgProdutoFinal = totalCarnes / 1000;
                         quantidadeNecessaria = kgProdutoFinal * (produto.qtdePorAdulto ?? 2.5);
                     } else if (produto.tipoSuprimento === 'ACENDEDOR') {
-                        // Acendedor: 1 por hora
                         quantidadeNecessaria = formData.horasEvento * (produto.qtdePorAdulto ?? 1);
                     } else {
-                        // Outros suprimentos: quantidade por pessoa equivalente
                         quantidadeNecessaria = pessoasEquivalentes * (produto.qtdePorAdulto ?? 0);
                     }
                 } else {
-                    // Fallback
                     quantidadeNecessaria = pessoasEquivalentes;
                 }
 
-                // Calcular quantidade de embalagens (arredondar para cima)
-                if (categoria === 'bebidas') {
-                    if (produto.mlEmbalagem && produto.mlEmbalagem > 0) {
-                        quantidadeEmbalagens = Math.ceil(quantidadeNecessaria / produto.mlEmbalagem);
-                    } else {
-                        quantidadeEmbalagens = Math.ceil(quantidadeNecessaria);
-                    }
-                } else {
-                    if (produto.gramasEmbalagem && produto.gramasEmbalagem > 0) {
-                        quantidadeEmbalagens = Math.ceil(quantidadeNecessaria / produto.gramasEmbalagem);
-                    } else {
-                        quantidadeEmbalagens = Math.ceil(quantidadeNecessaria);
-                    }
-                }
+                // Arredondar embalagens
+                const divisorEmbalagem = (categoria === 'bebidas') ? (produto.mlEmbalagem || 1) : (produto.gramasEmbalagem || 1);
+                quantidadeEmbalagens = Math.ceil(quantidadeNecessaria / divisorEmbalagem);
 
                 const totalPreco = quantidadeEmbalagens * produto.preco;
+                const unidade = categoria === 'bebidas' ? 'ml' : categoria === 'suprimentos' ? '' : 'g';
 
                 return {
                     produtoId: produto._id,
@@ -251,9 +266,11 @@ export function CalculadoraChurrasco({ produtos, primaryColor }: CalculadoraChur
                     preco: produto.preco,
                     quantidade: Math.round(quantidadeNecessaria * 100) / 100,
                     quantidadeEmbalagem: quantidadeEmbalagens,
+                    tamanhoEmbalagem: (categoria === 'bebidas') ? (produto.mlEmbalagem || 0) : (produto.gramasEmbalagem || 0),
                     totalPreco: Math.round(totalPreco * 100) / 100,
                     categoria: categoria,
                     subCategoriaBebida: produto.subCategoriaBebida,
+                    unidade: unidade
                 };
             })
             .filter(Boolean) as Array<{
@@ -262,21 +279,41 @@ export function CalculadoraChurrasco({ produtos, primaryColor }: CalculadoraChur
                 preco: number;
                 quantidade: number;
                 quantidadeEmbalagem: number;
+                tamanhoEmbalagem: number;
                 totalPreco: number;
                 categoria?: string;
                 subCategoriaBebida?: 'alcoolica' | 'nao-alcoolica';
+                unidade: string;
             }>;
 
         const totalCusto = produtosCalculo.reduce((sum, p) => sum + p.totalPreco, 0);
 
-        setResultado({
+        const resultadoCalculo = {
             totalPessoas,
             pessoasAdultas,
             pessoasQueBebem: formData.pessoasQueBebem,
             produtosCalculo,
             totalCusto,
-        });
+        };
+
+        setResultado(resultadoCalculo);
+
+        // Salvar se estiver logado
+        if (session?.user) {
+            saveCalculationAction({
+                tenantId,
+                userId: (session.user as any).id || undefined,
+                totalPeople: {
+                    men: formData.homens,
+                    women: formData.mulheres,
+                    children: formData.criancas
+                },
+                items: produtosCalculo,
+                totalPrice: totalCusto
+            });
+        }
     };
+
 
     const toggleCategory = (categoria: string) => {
         setExpandedCategories(prev => ({
@@ -508,7 +545,14 @@ export function CalculadoraChurrasco({ produtos, primaryColor }: CalculadoraChur
                                                 <td className="p-2 text-right text-zinc-600 dark:text-zinc-400 text-xs">
                                                     {item.quantidade.toFixed(0)}{item.categoria === 'bebidas' ? 'ml' : item.categoria === 'suprimentos' ? '' : 'g'}
                                                 </td>
-                                                <td className="p-2 text-center text-zinc-900 dark:text-white font-medium">{item.quantidadeEmbalagem}</td>
+                                                <td className="p-2 text-center text-zinc-900 dark:text-white font-medium">
+                                                    {item.quantidadeEmbalagem}
+                                                    {item.tamanhoEmbalagem > 0 && (
+                                                        <span className="text-xs text-zinc-500 font-normal ml-1">
+                                                            ({item.tamanhoEmbalagem}{item.unidade})
+                                                        </span>
+                                                    )}
+                                                </td>
                                                 <td className="p-2 text-right text-zinc-900 dark:text-white">
                                                     R$ {item.preco.toFixed(2)}
                                                 </td>
@@ -535,10 +579,11 @@ export function CalculadoraChurrasco({ produtos, primaryColor }: CalculadoraChur
                         {/* Dica */}
                         <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg border border-blue-200 dark:border-blue-900">
                             <p className="text-xs text-blue-900 dark:text-blue-100">
-                                <strong>💡 Cálculo Proporcional:</strong> A quantidade distribuída entre produtos é proporcional aos valores cadastrados. 
-                                Carnes: distribuído de 300g total. Acompanhamentos: se soma &lt; 200g, usa valor individual; senão distribui de 200g. 
-                                Bebidas Alcoólicas: apenas para quem bebe. Bebidas Não-Alcoólicas: para quem não bebe + 10% de quem bebe. 
-                                Mulheres comem 75% e Crianças 50% dos valores de homens. As embalagens são arredondadas para cima.
+                                <strong>💡 Cálculo Personalizado:</strong> As quantidades são baseadas nos parâmetros definidos pelo estabelecimento.
+                                Se selecionar **apenas carnes**, o consumo base é aumentado em 20%.
+                                Acompanhamentos e outros itens dividem a base de consumo. Bebidas são calculadas por ml.
+                                Mulheres consomem 75% e crianças 50% dos valores base de homens adultas.
+                                Embalagens são arredondadas para cima conforme o cadastro do produto.
                             </p>
                         </div>
                     </CardContent>

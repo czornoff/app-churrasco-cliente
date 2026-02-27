@@ -11,7 +11,7 @@ import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
     const session = await getServerSession(authOptions);
-    
+
     // Se não houver sessão, redirecionar para login
     if (!session?.user) {
         redirect('/login');
@@ -21,12 +21,12 @@ export default async function DashboardPage() {
     if (!session.user.role) {
         redirect('/login');
     }
-    
+
     // Redirecionar END_USER - não pode acessar admin
     if (session.user.role === 'END_USER') {
         redirect('/');
     }
-    
+
     // Se for TENANT_OWNER, redirecionar para edição do seu primeiro tenant
     if (session.user.role === 'TENANT_OWNER') {
         if (!session.user.tenantIds || session.user.tenantIds.length === 0) {
@@ -34,12 +34,12 @@ export default async function DashboardPage() {
         }
         redirect(`/admin/tenants/${session.user.tenantIds[0]}`);
     }
-    
+
     // Somente SUPERADMIN chega até aqui
     if (session.user.role !== 'SUPERADMIN') {
         redirect('/');
     }
-    
+
     await connectDB();
 
     // Busca métricas em paralelo para melhor performance
@@ -95,12 +95,12 @@ export default async function DashboardPage() {
 
             <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {stats.map((stat, index) => (
-                    <Card key={index} className="border border-zinc-200/50 dark:border-zinc-800/50 shadow-sm hover:shadow-xl hover:shadow-zinc-200/20 dark:hover:shadow-black/20 transition-all duration-300 rounded-3xl overflow-hidden group">
+                    <Card key={index} className="border border-zinc-200/50 dark:border-zinc-800/50 shadow-sm hover:shadow-xl hover:shadow-zinc-200/20 dark:hover:shadow-black/20 transition-all duration-300 rounded-lg overflow-hidden group">
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                             <CardTitle className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-[0.2em]">
                                 {stat.title}
                             </CardTitle>
-                            <div className={`p-2.5 rounded-2xl ${stat.bg} ${stat.color} transition-all group-hover:scale-110 group-hover:rotate-3 duration-500`}>
+                            <div className={`p-2.5 rounded-lg ${stat.bg} ${stat.color} transition-all group-hover:scale-110 group-hover:rotate-3 duration-500`}>
                                 <stat.icon size={20} />
                             </div>
                         </CardHeader>
@@ -138,7 +138,7 @@ export default async function DashboardPage() {
                     </div>
                     <div className="flex shrink-0">
                         <Link href="/admin/tenants">
-                            <Button className="bg-orange-500 hover:bg-orange-300 text-zinc-950 font-black dark:text-white px-10 py-8 rounded-2xl text-base transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/5">
+                            <Button className="bg-orange-500 hover:bg-orange-300 text-zinc-950 font-black dark:text-white px-10 py-8 rounded-lg text-base transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/5">
                                 Novo Estabelecimento
                             </Button>
                         </Link>

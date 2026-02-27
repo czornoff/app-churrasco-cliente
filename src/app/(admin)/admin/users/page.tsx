@@ -6,8 +6,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DeleteUserButton } from "@/components/DeleteUserButton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Chrome, Lock, Mail, MapPin, Plus, Users } from "lucide-react";
+import { Chrome, Lock, Mail, MapPin, Plus, Users, History } from "lucide-react";
 import { EditUserModal } from "@/components/EditUserModal";
+import { ToggleStatusButton } from "@/components/ToggleStatusButton";
 import Image from "next/image";
 import { IUser } from "@/interfaces/user";
 import { getServerSession } from "next-auth";
@@ -17,20 +18,26 @@ import { redirect } from "next/navigation";
 export default async function UsersPage() {
     const session = await getServerSession(authOptions);
 
-    if (!session) {
-        redirect("/login");
-    }
+    const isSuperAdmin = session?.user?.role === 'SUPERADMIN';
+    const isTenantOwner = session?.user?.role === 'TENANT_OWNER';
 
-    // TENANT_OWNER não pode gerenciar usuários
-    if (session?.user?.role === 'TENANT_OWNER') {
-        redirect(`/admin/tenants/${session.user.tenantId}`);
+    if (!session || (!isSuperAdmin && !isTenantOwner)) {
+        redirect("/admin");
     }
 
     await connectDB();
 
-    // Buscamos os usuários e estabelecimentos
-    const users = await User.find().sort({ createdAt: -1 }).lean() as unknown as IUser[];
-    const tenants = await Tenant.find().sort({ name: 1 }).lean() as unknown as ITenantDocument[];
+    // Filtros por permissão
+    const userFilter = isTenantOwner && session.user.tenantIds
+        ? { tenantIds: { $in: session.user.tenantIds } }
+        : {};
+
+    const tenantFilter = isTenantOwner && session.user.tenantIds
+        ? { _id: { $in: session.user.tenantIds } }
+        : {};
+
+    const users = await User.find(userFilter).sort({ createdAt: -1 }).lean() as unknown as IUser[];
+    const tenants = await Tenant.find(tenantFilter).sort({ name: 1 }).lean() as unknown as ITenantDocument[];
 
     return (
         <div className="space-y-6">
@@ -38,14 +45,15 @@ export default async function UsersPage() {
                 <div className="flex items-left gap-2">
                     <Users className="h-8 w-8 text-orange-600" />
                     <div>
-                        <h1 className="text-2xl font-bold text-zinc-800 dark:text-zinc-200">Gerenciar Usuários</h1>
+                        <h1 className="text-2xl font-bold text-zinc-800 dark:text-zinc-200">
+                            Gerenciar Usuários
+                        </h1>
                         <p className="text-zinc-500 dark:text-zinc-200 text-sm">
                             Administre permissões, status e informações de perfil de todos os usuários.
                         </p>
                     </div>
                 </div>
 
-                {/* Botão Adicionar Usuário */}
                 <Link href="/admin/register">
                     <Button className="bg-orange-600 hover:bg-orange-700 flex items-center gap-2 text-white">
                         <Plus size={18} />
@@ -54,8 +62,7 @@ export default async function UsersPage() {
                 </Link>
             </div>
 
-            <div className="bg-white dark:bg-zinc-800 rounded-sm shadow-sm overflow-hidden">
-
+            <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm overflow-hidden">
                 <Table>
                     <TableHeader className="bg-zinc-50 dark:bg-zinc-700">
                         <TableRow>
@@ -71,7 +78,6 @@ export default async function UsersPage() {
                     <TableBody>
                         {users.map((user) => (
                             <TableRow key={user._id.toString()} className="hover:bg-zinc-50/50 transition-colors">
-                                {/* Informações Básicas */}
                                 <TableCell className="flex items-center gap-3">
                                     <Image
                                         unoptimized
@@ -80,7 +86,6 @@ export default async function UsersPage() {
                                         width={100}
                                         height={100}
                                         className="w-9 h-9 rounded-full border-2 border-zinc-600 shadow-sm"
-
                                     />
                                     <div className="flex flex-col">
                                         <span className="font-semibold text-zinc-700 dark:text-zinc-400 leading-none mb-1">
@@ -92,14 +97,12 @@ export default async function UsersPage() {
                                     </div>
                                 </TableCell>
 
-                                {/* Nível de Acesso */}
                                 <TableCell>
                                     <Badge variant="outline" className="font-medium bg-zinc-50 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-400 border-zinc-200 rounded-[0.4em] dark:border-zinc-600">
                                         {user.role === 'SUPERADMIN' ? ' SuperAdmin' : (user.role === 'TENANT_OWNER' ? ' Dono do Estabelecimento' : 'Usuário Final')}
                                     </Badge>
                                 </TableCell>
 
-                                {/* Método de Login */}
                                 <TableCell>
                                     {user.googleId ? (
                                         <div className="flex items-center gap-1.5 text-blue-600 font-medium text-xs">
@@ -112,7 +115,6 @@ export default async function UsersPage() {
                                     )}
                                 </TableCell>
 
-                                {/* Localização Rápida */}
                                 <TableCell>
                                     <span className="text-xs text-zinc-600 flex items-center gap-1">
                                         <MapPin size={12} className="text-zinc-400" />
@@ -120,7 +122,6 @@ export default async function UsersPage() {
                                     </span>
                                 </TableCell>
 
-                                {/* Estabelecimentos Atribuídos */}
                                 <TableCell>
                                     <div className="flex flex-wrap gap-1">
                                         {user.tenantIds && user.tenantIds.length > 0 ? (
@@ -138,7 +139,6 @@ export default async function UsersPage() {
                                     </div>
                                 </TableCell>
 
-                                {/* Status com Cores */}
                                 <TableCell>
                                     <Badge
                                         variant="outline"
@@ -151,8 +151,14 @@ export default async function UsersPage() {
                                     </Badge>
                                 </TableCell>
 
-                                {/* Coluna de Ações com o Modal Integrado */}
-                                <TableCell className="text-right">
+                                <TableCell className="text-right flex items-center justify-end gap-1">
+                                    <Link href={`/admin/users/${user._id.toString()}/calculations`}>
+                                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Ver Histórico de Churrascos">
+                                            <History size={16} className="text-orange-600" />
+                                        </Button>
+                                    </Link>
+
+
                                     <EditUserModal
                                         user={JSON.parse(JSON.stringify(user))}
                                         tenants={JSON.parse(JSON.stringify(tenants))}
@@ -169,7 +175,7 @@ export default async function UsersPage() {
             </div>
 
             {users.length === 0 && (
-                <div className="text-center py-20 bg-white rounded-xl border-2 border-dashed border-zinc-200">
+                <div className="text-center py-20 bg-white rounded-lg border-2 border-dashed border-zinc-200">
                     <p className="text-zinc-400 font-medium">Nenhum usuário cadastrado no sistema.</p>
                 </div>
             )}
