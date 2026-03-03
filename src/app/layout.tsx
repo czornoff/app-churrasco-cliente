@@ -14,6 +14,8 @@ const geistMono = Geist_Mono({
     subsets: ["latin"],
 });
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
 export const metadata: Metadata = {
     title: "MandeBem - Apps Inteligentes",
     description: "A solução inteligente para organizar seu churrasco sem desperdícios.",
@@ -26,14 +28,16 @@ export const metadata: Metadata = {
         telephone: false,
     },
     icons: {
-        icon: '/icon-192.png',
-        apple: '/icon-192.png',
+        icon: `${basePath}/icon-192.png`,
+        apple: `${basePath}/icon-192.png`,
     }
 };
 
 export const viewport = {
     themeColor: "#e53935",
 };
+
+import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 
 export default function RootLayout({
     children,
@@ -48,6 +52,7 @@ export default function RootLayout({
                 <Providers>
                     {children}
                     <Toaster position="bottom-right" richColors />
+                    <PWAInstallPrompt />
                 </Providers>
             </body>
         </html>

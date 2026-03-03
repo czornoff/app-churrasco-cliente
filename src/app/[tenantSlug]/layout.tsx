@@ -24,6 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ tenantSlu
     return {
         title: tenant.name,
         description: `Seja bem-vindo(a) ao portal de churrasco de ${tenant.name}`,
+        manifest: `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/pwa/manifest?tenant=${tenantSlug}`,
         icons: {
             icon: favicon,
             apple: favicon,
