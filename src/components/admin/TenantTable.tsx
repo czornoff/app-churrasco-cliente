@@ -1,0 +1,102 @@
+'use client'
+
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { ExternalLink, Edit } from "lucide-react"
+import Link from "next/link"
+import Image from "next/image"
+import { DeleteTenantButton } from "@/components/DeleteTenantButton"
+import { ITenantDocument } from "@/models/Schemas"
+
+interface TenantTableProps {
+    tenants: any[]; // Using any because of ITenantDocument type issues in client components if not serialized
+    onEdit: (tenant: any) => void;
+}
+
+export function TenantTable({ tenants, onEdit }: TenantTableProps) {
+    return (
+        <div className="border border-zinc-200/50 dark:border-zinc-600/50 shadow-sm hover:shadow-lg transition-all duration-300 rounded-lg bg-white dark:bg-zinc-800 overflow-hidden">
+            <Table>
+                <TableHeader className="bg-zinc-200 dark:bg-zinc-700">
+                    <TableRow>
+                        <TableHead className="w-70 px-6 py-3">Estabelecimento</TableHead>
+                        <TableHead className="px-6 py-3">Slug / URL</TableHead>
+                        <TableHead className="px-6 py-3">Status</TableHead>
+                        <TableHead className="text-right px-6 py-3 text-center">Ações</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {tenants.length > 0 ? (
+                        tenants.map((tenant) => (
+                            <TableRow key={tenant._id.toString()} className="hover:bg-zinc-50/50 dark:hover:bg-zinc-700/50 transition-colors">
+                                <TableCell className="flex items-center gap-3 px-6 py-3">
+                                    <Image
+                                        unoptimized
+                                        src={((tenant.logoUrl && !tenant.logoUrl.includes('mandebem.com') && !tenant.logoUrl.includes('placeholder')) ? tenant.logoUrl.trim() : null) || `https://ui-avatars.com/api/?name=${encodeURIComponent(tenant.name || "Estabelecimento")}&background=random`}
+                                        alt={tenant.name || "Estabelecimento"}
+                                        width={100}
+                                        height={100}
+                                        className="w-9 h-9 rounded-full border-2 border-zinc-600 shadow-sm object-cover"
+                                    />
+                                    <div className="flex flex-col">
+                                        <span className="font-semibold text-zinc-700 dark:text-zinc-400 leading-none mb-1">
+                                            {tenant.name}
+                                        </span>
+                                    </div>
+                                </TableCell>
+
+                                <TableCell className="px-6 py-3 text-left">
+                                    <Button variant="ghost" size="sm" asChild className="h-8 w-auto px-2 text-blue-600 hover:text-blue-600">
+                                        <Link href={`/${tenant.slug}`} target="_blank">
+                                            <ExternalLink size={14} />
+                                            <span className="text-xs text-blue-600 dark:text-blue-400 font-mono">
+                                                mandebem.com/{tenant.slug}
+                                            </span>
+                                        </Link>
+                                    </Button>
+                                </TableCell>
+
+                                <TableCell className="px-6 py-3">
+                                    <Badge
+                                        variant="outline"
+                                        className={`font-medium rounded-lg ${tenant.active
+                                            ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800"
+                                            : "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800"
+                                            }`}
+                                    >
+                                        {tenant.active ? "Ativo" : "Inativo"}
+                                    </Badge>
+                                </TableCell>
+
+                                <TableCell className="text-center px-6 py-3">
+                                    <div className="flex items-center justify-center gap-2">
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => onEdit(tenant)}
+                                            className="h-8 w-8 p-0 text-orange-600 hover:text-orange-600"
+                                        >
+                                            <Edit size={14} />
+                                        </Button>
+
+                                        <DeleteTenantButton
+                                            tenantId={tenant._id.toString()}
+                                            tenantName={tenant.name}
+                                        />
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    ) : (
+                        <TableRow>
+                            <TableCell colSpan={4} className="text-center py-20">
+                                <p className="text-muted-foreground italic">Nenhum estabelecimento cadastrado no sistema.</p>
+                            </TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
+        </div>
+    );
+}

@@ -119,7 +119,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                             return (
                                 <Link key={item._id} href={href} target={!isInternalLink(item.url) ? "_blank" : undefined}>
                                     <Button variant="ghost" className="rounded-lg px-4 font-bold text-xs uppercase tracking-widest transition-all text-zinc-600 dark:text-zinc-100 hover:text-zinc-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5">
-                                        <Icon size={14} className="mr-2" />
+                                        <Icon size={14} className="mr" />
                                         {item.nome}
                                     </Button>
                                 </Link>

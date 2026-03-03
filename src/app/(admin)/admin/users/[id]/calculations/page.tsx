@@ -29,27 +29,29 @@ export default async function UserCalculationsAdminPage({ params }: PageProps) {
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center gap-4">
-                <Link href="/admin/users">
-                    <Button variant="outline" size="icon" className="rounded-xl">
-                        <ChevronLeft size={20} />
-                    </Button>
-                </Link>
+            <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <History className="h-8 w-8 text-orange-600" />
                     <div>
-                        <h1 className="text-2xl font-bold text-zinc-800 dark:text-zinc-200 uppercase tracking-tight">
-                            Histórico: {user.nome}
+                        <h1 className="text-2xl font-bold text-zinc-800 dark:text-zinc-200">
+                            Histórico de {user.nome}
                         </h1>
                         <p className="text-zinc-500 text-sm font-medium">
                             Visualização administrativa de todos os churrascos calculados.
                         </p>
                     </div>
                 </div>
+                <Link href="/admin/users">
+                    <Button variant="outline" size="icon" className="rounded-lg">
+                        <ChevronLeft size={20} />
+                    </Button>
+                </Link>
             </div>
 
-            <div className="bg-white dark:bg-zinc-800 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-700 overflow-hidden p-2">
-                <ClientAdminUserCalculations calculations={JSON.parse(JSON.stringify(calculations))} />
+            <div className="max-w-6xl mx-auto space-y-6">
+                <div className="border border-zinc-200/50 dark:border-zinc-600/50 shadow-sm hover:shadow-lg hover:shadow-zinc/60 dark:hover:shadow-zinc/20 transition-all duration-300 rounded-lg bg-white dark:bg-zinc-900 overflow-hidden">
+                    <ClientAdminUserCalculations calculations={JSON.parse(JSON.stringify(calculations))} />
+                </div>
             </div>
         </div>
     );

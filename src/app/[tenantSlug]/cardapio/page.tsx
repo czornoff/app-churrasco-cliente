@@ -96,8 +96,8 @@ export default async function CardapioPage({ params }: CardapioPageProps) {
 
     return (
         <section className="max-w-6xl mx-auto px-6 py-12 mt-12">
-            <div className="mb-8 space-y-2">
-                <h1 className="text-4xl font-black text-zinc-900 dark:text-white">
+            <div className="my-4 space-y-2">
+                <h1 className="text-3xl font-black text-zinc-900 dark:text-white uppercase">
                     🔥 Cardápio
                 </h1>
                 <p className="text-zinc-500 dark:text-zinc-400">
@@ -113,13 +113,11 @@ export default async function CardapioPage({ params }: CardapioPageProps) {
 
                         return (
                             <div key={cat} className="space-y-4">
-                                <div className="border-b border-zinc-200 dark:border-zinc-700 pb-3">
-                                    <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">
-                                        {categoriasNomes[cat]}
-                                    </h2>
-                                </div>
+                                <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">
+                                    {categoriasNomes[cat]}
+                                </h2>
 
-                                <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl border border-white dark:border-zinc-800/50 rounded-lg p-6 shadow-xl shadow-zinc-200/50 dark:shadow-black/20">
+                                <div className="border border-zinc-200/50 dark:border-zinc-600/50 shadow-sm hover:shadow-lg hover:shadow-zinc/60 dark:hover:shadow-zinc/20 transition-all duration-300 rounded-lg space-y-6 bg-white dark:bg-zinc-800 p-6">
                                     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
                                         {produtos.map((item: UnifiedProduct) => (
                                             <div

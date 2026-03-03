@@ -31,7 +31,7 @@ export default async function ProfilePage() {
                 </div>
             </div>
 
-            <div className="max-w-lg">
+            <div className="max-w-6xl mx-auto">
                 <ProfileForm initialData={JSON.parse(JSON.stringify(userData))} />
             </div>
         </div>

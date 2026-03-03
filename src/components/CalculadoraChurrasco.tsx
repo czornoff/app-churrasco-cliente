@@ -337,13 +337,13 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
     return (
         <div className="space-y-8">
             {/* Seção de Entrada de Dados */}
-            <Card className="border-zinc-200 dark:border-zinc-800">
+            <Card className="border border-zinc-200/50 dark:border-zinc-600/50 shadow-sm hover:shadow-lg hover:shadow-zinc/60 dark:hover:shadow-zinc/20 transition-all duration-300 rounded-lg bg-white dark:bg-zinc-800">
                 <CardHeader>
-                    <CardTitle>Informações do Evento</CardTitle>
+                    <CardTitle className="text-xl">Informações do Evento</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     {/* Linha 1: Pessoas */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
                         <div className="space-y-2">
                             <Label htmlFor="homens">Homens</Label>
                             <Input
@@ -388,31 +388,32 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                                 className="text-center"
                             />
                         </div>
-                    </div>
 
-                    {/* Linha 2: Duração */}
-                    <div className="space-y-2">
-                        <Label htmlFor="horasEvento">Duração do Evento (horas)</Label>
-                        <Input
-                            id="horasEvento"
-                            type="number"
-                            min="1"
-                            max="24"
-                            value={formData.horasEvento}
-                            onChange={(e) => handleInputChange('horasEvento', parseInt(e.target.value) || 1)}
-                            className="w-full md:w-32"
-                        />
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                            Quanto maior a duração, maior a quantidade de bebida necessária
-                        </p>
+
+                        {/* Linha 2: Duração */}
+                        <div className="space-y-2">
+                            <Label htmlFor="horasEvento">Duração do Evento (horas)</Label>
+                            <Input
+                                id="horasEvento"
+                                type="number"
+                                min="1"
+                                max="24"
+                                value={formData.horasEvento}
+                                onChange={(e) => handleInputChange('horasEvento', parseInt(e.target.value) || 1)}
+                                className="w-full md:w-32"
+                            />
+                            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                                Quanto maior a duração, maior a quantidade de bebida necessária
+                            </p>
+                        </div>
                     </div>
                 </CardContent>
             </Card>
 
             {/* Seção de Seleção de Produtos */}
-            <Card className="border-zinc-200 dark:border-zinc-800">
+            <Card className="border border-zinc-200/50 dark:border-zinc-600/50 shadow-sm hover:shadow-lg hover:shadow-zinc/60 dark:hover:shadow-zinc/20 transition-all duration-300 rounded-lg bg-white dark:bg-zinc-800">
                 <CardHeader>
-                    <CardTitle>Selecione os Produtos</CardTitle>
+                    <CardTitle className="text-xl">Selecione os Produtos</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">

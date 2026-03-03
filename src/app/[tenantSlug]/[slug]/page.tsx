@@ -72,16 +72,14 @@ export default async function DynamicPage({ params }: PageProps) {
 
     return (
         <section className="max-w-6xl mx-auto px-6 py-12 mt-12">
-            {/* Conteúdo Principal */}
-            <div className="mb-4 space-y-2">
-                <h1 className="text-4xl font-black text-zinc-900 dark:text-white">
-                    {page.emoji && <span className="text-4xl">{page.emoji}</span>}
-                    {page.titulo}
+            <div className="my-4 space-y-2">
+                <h1 className="text-3xl font-black text-zinc-900 dark:text-white uppercase">
+                    {page.emoji && <span className="text-3xl">{page.emoji}</span>} {page.titulo}
                 </h1>
                 <p className="text-zinc-500 dark:text-zinc-400">&nbsp;</p>
             </div>
 
-            <div className="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl border border-white dark:border-zinc-800/50 rounded-lg p-6 shadow-xl shadow-zinc-200/50 dark:shadow-black/20">
+            <div className="border border-zinc-200/50 dark:border-zinc-600/50 shadow-sm hover:shadow-lg hover:shadow-zinc/60 dark:hover:shadow-zinc/20 transition-all duration-300 rounded-lg space-y-6 bg-white dark:bg-zinc-800 p-6">
                 {/* Título */}
 
                 {/* Conteúdo de Texto */}

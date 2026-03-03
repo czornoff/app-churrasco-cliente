@@ -18,7 +18,8 @@ export function LocationMap({ address = '' }: LocationMapProps) {
         // Buscar API Key do backend
         const fetchApiKey = async () => {
             try {
-                const response = await fetch('/api/config/maps');
+                const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+                const response = await fetch(`${basePath}/api/config/maps`);
                 const data = await response.json();
                 setApiKey(data.apiKey || '');
             } catch (error) {
@@ -77,7 +78,7 @@ export function LocationMap({ address = '' }: LocationMapProps) {
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <Button className="bg-orange-500 hover:bg-orange-300 font-black text-white px-10 py-4 rounded-lg text-base transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/5">
+                    <Button className="bg-orange-500 hover:bg-orange-300 font-bold text-white px-10 py-4 rounded-lg text-base transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/5">
                         Abrir em Google Maps
                     </Button>
                 </a>

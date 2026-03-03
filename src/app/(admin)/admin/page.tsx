@@ -1,7 +1,7 @@
 import connectDB from "@/lib/mongodb";
 import { User } from "@/models/User";
 import { Tenant } from "@/models/Schemas";
-import { Users, Store, Activity, ArrowRight, ShieldCheck } from "lucide-react";
+import { Users, Store, Activity, ArrowRight, ShieldCheck, Plus } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -92,59 +92,61 @@ export default async function DashboardPage() {
                     </div>
                 </div>
             </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {stats.map((stat, index) => (
-                    <Card key={index} className="border border-zinc-200/50 dark:border-zinc-800/50 shadow-sm hover:shadow-xl hover:shadow-zinc-200/20 dark:hover:shadow-black/20 transition-all duration-300 rounded-lg overflow-hidden group">
-                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                            <CardTitle className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-[0.2em]">
-                                {stat.title}
-                            </CardTitle>
-                            <div className={`p-2.5 rounded-lg ${stat.bg} ${stat.color} transition-all group-hover:scale-110 group-hover:rotate-3 duration-500`}>
-                                <stat.icon size={20} />
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-4xl font-black text-zinc-900 dark:text-white mb-1 tracking-tighter">{stat.value}</div>
-                            <p className="text-xs text-zinc-400 dark:text-zinc-500 font-medium mb-6">
-                                {stat.description}
-                            </p>
-                            <Link
-                                href={stat.link}
-                                className="flex items-center gap-2 text-xs font-black text-zinc-600 dark:text-zinc-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors uppercase tracking-widest"
-                            >
-                                Ver detalhes
-                                <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
-                            </Link>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-
-            {/* Quick Actions or System Status */}
-            <Card className="border-none shadow-2xl rounded-[2.5rem] bg-zinc-100 text-zinc-900 overflow-hidden relative group dark:bg-zinc-900 dark:text-zinc-100">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl -mr-32 -mt-32 transition-colors group-hover:bg-orange-500/20 duration-1000"></div>
-
-                <div className="p-10 md:p-14 flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
-                    <div className="space-y-4 text-center md:text-left">
-                        <div className="inline-flex items-center gap-2 bg-zinc-800/20 dark:bg-white/10 px-4 py-1.5 rounded-full text-orange-700 dark:text-orange-400 text-xs font-black uppercase tracking-widest backdrop-blur-md border border-white/10">
-                            <ShieldCheck size={16} />
-                            <span>Sistema Seguro</span>
-                        </div>
-                        <h2 className="text-3xl md:text-4xl font-black tracking-tight max-w-xl">Gerencie suas unidades com facilidade</h2>
-                        <p className="text-zinc-400 text-sm md:text-base max-w-md font-medium leading-relaxed">
-                            Utilize o menu lateral para gerenciar usuários, visualizar estabelecimentos ou editar as configurações do seu perfil administrativo.
-                        </p>
-                    </div>
-                    <div className="flex shrink-0">
-                        <Link href="/admin/tenants">
-                            <Button className="bg-orange-500 hover:bg-orange-300 text-zinc-950 font-black dark:text-white px-10 py-8 rounded-lg text-base transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/5">
-                                Novo Estabelecimento
-                            </Button>
-                        </Link>
-                    </div>
+            <div className="max-w-6xl mx-auto space-y-6">
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {stats.map((stat, index) => (
+                        <Card key={index} className="border border-zinc-200/50 dark:border-zinc-600/50 shadow-sm hover:shadow-lg hover:shadow-zinc/60 dark:hover:shadow-zinc/20 transition-all duration-300 rounded-lg overflow-hidden group">
+                            <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                                <CardTitle className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-[0.2em]">
+                                    {stat.title}
+                                </CardTitle>
+                                <div className={`p-2.5 rounded-lg ${stat.bg} ${stat.color} transition-all group-hover:scale-110 group-hover:rotate-3 duration-500`}>
+                                    <stat.icon size={20} />
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-4xl font-black text-zinc-900 dark:text-white mb-1 tracking-tighter">{stat.value}</div>
+                                <p className="text-xs text-zinc-400 dark:text-zinc-500 font-medium mb-6">
+                                    {stat.description}
+                                </p>
+                                <Link
+                                    href={stat.link}
+                                    className="flex items-center gap-2 text-xs font-black text-zinc-600 dark:text-zinc-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors uppercase tracking-widest"
+                                >
+                                    Ver detalhes
+                                    <ArrowRight size={14} className="transition-transform group-hover:translate-x-1" />
+                                </Link>
+                            </CardContent>
+                        </Card>
+                    ))}
                 </div>
-            </Card>
+
+                {/* Quick Actions or System Status */}
+                <Card className="border border-zinc-200/50 dark:border-zinc-600/50 shadow-sm hover:shadow-lg hover:shadow-zinc/60 dark:hover:shadow-zinc/20 transition-all duration-300 rounded-lg text-zinc-900 relative group overflow-hidden">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl -mr-32 -mt-32 transition-colors group-hover:bg-orange-500/20 duration-1000"></div>
+
+                    <div className="p-10 md:p-14 flex flex-col md:flex-row items-center justify-between gap-10 relative z-10">
+                        <div className="space-y-4 text-center md:text-left">
+                            <div className="inline-flex items-center gap-2 bg-zinc-800/20 dark:bg-white/10 px-4 py-1.5 rounded-full text-orange-700 dark:text-orange-400 text-xs font-black uppercase tracking-widest backdrop-blur-md border border-white/10">
+                                <ShieldCheck size={16} />
+                                <span>Sistema Seguro</span>
+                            </div>
+                            <h2 className="text-3xl md:text-4xl font-black tracking-tight max-w-xl">Gerencie suas unidades com facilidade</h2>
+                            <p className="text-zinc-400 text-sm md:text-base max-w-md font-medium leading-relaxed">
+                                Utilize o menu lateral para gerenciar usuários, visualizar estabelecimentos ou editar as configurações do seu perfil administrativo.
+                            </p>
+                        </div>
+                        <div className="flex shrink-0">
+                            <Link href="/admin/tenants">
+                                <Button className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4">
+                                    <Plus size={18} />
+                                    Novo Estabelecimento
+                                </Button>
+                            </Link>
+                        </div>
+                    </div>
+                </Card>
+            </div>
         </div>
     );
 }

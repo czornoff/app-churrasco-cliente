@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Edit2, BadgeCheck } from "lucide-react";
+import { Edit, BadgeCheck, Save } from "lucide-react";
 import { IUser } from "@/interfaces/user";
 import { ITenantDocument } from "@/models/Schemas";
 import { CloudinaryUpload } from "@/components/CldUploadWidget";
@@ -89,179 +89,183 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                    <Edit2 size={14} className="text-zinc-500" />
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-orange-600 hover:text-orange-600">
+                    <Edit size={14} />
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
-                        Editar Usuário: {user.nome}
-                        {user.googleId && <BadgeCheck className="text-blue-500" size={18} />}
-                    </DialogTitle>
-                </DialogHeader>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto rounded-lg border-none shadow-2xl bg-zinc-50 dark:bg-zinc-950 p-0">
+                <div className="bg-orange-600 p-8 text-white">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2">
+                            Editar Usuário: <span className="font-black text-2xl">{user.nome}</span>
+                            {user.googleId && <BadgeCheck className="text-blue-500" size={18} />}
+                        </DialogTitle>
+                    </DialogHeader>
+                </div>
 
-                <form action={handleUpdate} className="space-y-4 py-4">
-                    <div className="grid grid-cols-2 gap-4">
-                        {/* Nome e Email */}
-                        <div className="space-y-2">
-                            <Label>Nome</Label>
-                            <Input name="nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>E-mail</Label>
-                            <Input name="email" type="email" defaultValue={user.email} required />
+                <div className="px-8 space-y-2">
+                    <form action={handleUpdate} className="space-y-4 py-4">
+                        <div className="grid grid-cols-2 gap-4">
+                            {/* Nome e Email */}
+                            <div className="space-y-2">
+                                <Label>Nome</Label>
+                                <Input name="nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
+                            </div>
+                            <div className="space-y-2">
+                                <Label>E-mail</Label>
+                                <Input name="email" type="email" defaultValue={user.email} required />
+                            </div>
+
+                            {/* WhatsApp e Aniversário */}
+                            <div className="space-y-2">
+                                <Label>WhatsApp</Label>
+                                <Input name="whatsApp" value={whatsApp} onChange={handleWhatsAppChange} placeholder="(11) 99999-9999" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Data de Nascimento</Label>
+                                <Input name="birthday" type="date" defaultValue={formattedBirthday} />
+                            </div>
+
+                            {/* UF e Cidade */}
+                            <div className="space-y-2">
+                                <Label>UF</Label>
+                                <select
+                                    className="w-full h-10 border rounded-lg px-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
+                                    value={selectedUf}
+                                    onChange={(e) => {
+                                        setSelectedUf(e.target.value);
+                                        setSelectedCity("");
+                                    }}
+                                >
+                                    <option value="">UF</option>
+                                    {ufs.map(uf => (
+                                        <option key={uf.sigla} value={uf.sigla}>{uf.sigla}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Cidade</Label>
+                                <select
+                                    className="w-full h-10 border rounded-lg px-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
+                                    value={selectedCity}
+                                    onChange={(e) => setSelectedCity(e.target.value)}
+                                    disabled={!selectedUf}
+                                >
+                                    <option value="">Selecione a cidade</option>
+                                    {cities.map(city => (
+                                        <option key={city.nome} value={city.nome}>{city.nome}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Gênero e Role */}
+                            <div className="space-y-2">
+                                <Label>Gênero</Label>
+                                <Select name="genero" defaultValue={user.genero}>
+                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="undefined">Não definido</SelectItem>
+                                        <SelectItem value="masculino">Masculino</SelectItem>
+                                        <SelectItem value="feminino">Feminino</SelectItem>
+                                        <SelectItem value="outros">Outros</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-2">
+                                <Label>Nível de Acesso (Role)</Label>
+                                <Select
+                                    name="role"
+                                    defaultValue={user.role}
+                                    disabled={isSelf}
+                                >
+                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                        {session?.user?.role === 'SUPERADMIN' && (
+                                            <SelectItem value="SUPERADMIN">Super Admin</SelectItem>
+                                        )}
+                                        {(session?.user?.role === 'SUPERADMIN' || session?.user?.role === 'TENANT_OWNER') && (
+                                            <SelectItem value="TENANT_OWNER">Dono do Estabelecimento</SelectItem>
+                                        )}
+                                        <SelectItem value="END_USER">Usuário Final</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            {/* Status e Estabelecimentos */}
+                            <div className="space-y-2">
+                                <Label>Status</Label>
+                                <Select
+                                    name="status"
+                                    defaultValue={user.status}
+                                    disabled={isSelf}
+                                >
+                                    <SelectTrigger><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="active">Ativo</SelectItem>
+                                        <SelectItem value="inactive">Inativo</SelectItem>
+                                        <SelectItem value="banned">Banido</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
 
-                        {/* WhatsApp e Aniversário */}
-                        <div className="space-y-2">
-                            <Label>WhatsApp</Label>
-                            <Input name="whatsApp" value={whatsApp} onChange={handleWhatsAppChange} placeholder="(11) 99999-9999" />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Data de Nascimento</Label>
-                            <Input name="birthday" type="date" defaultValue={formattedBirthday} />
-                        </div>
-
-                        {/* UF e Cidade */}
-                        <div className="space-y-2">
-                            <Label>UF</Label>
-                            <select
-                                className="w-full h-10 border rounded-lg px-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
-                                value={selectedUf}
-                                onChange={(e) => {
-                                    setSelectedUf(e.target.value);
-                                    setSelectedCity("");
-                                }}
-                            >
-                                <option value="">UF</option>
-                                {ufs.map(uf => (
-                                    <option key={uf.sigla} value={uf.sigla}>{uf.sigla}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Cidade</Label>
-                            <select
-                                className="w-full h-10 border rounded-lg px-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
-                                value={selectedCity}
-                                onChange={(e) => setSelectedCity(e.target.value)}
-                                disabled={!selectedUf}
-                            >
-                                <option value="">Selecione a cidade</option>
-                                {cities.map(city => (
-                                    <option key={city.nome} value={city.nome}>{city.nome}</option>
-                                ))}
-                            </select>
+                        {/* Estabelecimentos (Multi-select) - Full Width */}
+                        <div className="space-y-2 pt-2">
+                            <Label>Estabelecimentos (Tenants)</Label>
+                            <TenantsMultiSelect
+                                tenants={tenants}
+                                selectedIds={selectedTenantIds}
+                                onChange={setSelectedTenantIds}
+                            />
                         </div>
 
-                        {/* Gênero e Role */}
-                        <div className="space-y-2">
-                            <Label>Gênero</Label>
-                            <Select name="genero" defaultValue={user.genero}>
-                                <SelectTrigger><SelectValue /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="undefined">Não definido</SelectItem>
-                                    <SelectItem value="masculino">Masculino</SelectItem>
-                                    <SelectItem value="feminino">Feminino</SelectItem>
-                                    <SelectItem value="outros">Outros</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Nível de Acesso (Role)</Label>
-                            <Select
-                                name="role"
-                                defaultValue={user.role}
-                                disabled={isSelf}
-                            >
-                                <SelectTrigger><SelectValue /></SelectTrigger>
-                                <SelectContent>
-                                    {session?.user?.role === 'SUPERADMIN' && (
-                                        <SelectItem value="SUPERADMIN">Super Admin</SelectItem>
-                                    )}
-                                    {(session?.user?.role === 'SUPERADMIN' || session?.user?.role === 'TENANT_OWNER') && (
-                                        <SelectItem value="TENANT_OWNER">Dono do Estabelecimento</SelectItem>
-                                    )}
-                                    <SelectItem value="END_USER">Usuário Final</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-
-                        {/* Status e Estabelecimentos */}
-                        <div className="space-y-2">
-                            <Label>Status</Label>
-                            <Select
-                                name="status"
-                                defaultValue={user.status}
-                                disabled={isSelf}
-                            >
-                                <SelectTrigger><SelectValue /></SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="active">Ativo</SelectItem>
-                                    <SelectItem value="inactive">Inativo</SelectItem>
-                                    <SelectItem value="banned">Banido</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
-
-                    {/* Estabelecimentos (Multi-select) - Full Width */}
-                    <div className="space-y-2 pt-2">
-                        <Label>Estabelecimentos (Tenants)</Label>
-                        <TenantsMultiSelect
-                            tenants={tenants}
-                            selectedIds={selectedTenantIds}
-                            onChange={setSelectedTenantIds}
-                        />
-                    </div>
-
-                    {/* Avatar e outros itens */}
-                    <div className="col-span-2 space-y-3 pt-2">
-                        <Label>Avatar do Usuário</Label>
-                        <div className="p-4 border rounded-lg bg-zinc-200 dark:bg-zinc-800">
-                            {user.googleId ? (
-                                <div className="flex items-start gap-4">
-                                    <div className="relative w-20 h-20 shrink-0 rounded-full overflow-hidden border-2 border-orange-100 bg-white shadow-sm min-w-20 min-h-20">
-                                        <Image
-                                            unoptimized
-                                            src={((user.avatar && !user.avatar.includes('mandebem.com') && !user.avatar.includes('placeholder')) ? user.avatar.trim() : null) || `https://ui-avatars.com/api/?name=${encodeURIComponent(nome || "User")}&background=random`}
-                                            alt="Avatar Preview"
-                                            width={80}
-                                            height={80}
-                                            className="object-cover"
+                        {/* Avatar e outros itens */}
+                        <div className="col-span-2 space-y-3 pt-2">
+                            <Label>Avatar do Usuário</Label>
+                            <div className="p-4 border rounded-lg bg-zinc-200 dark:bg-zinc-800">
+                                {user.googleId ? (
+                                    <div className="flex items-start gap-4">
+                                        <div className="relative w-20 h-20 shrink-0 rounded-full overflow-hidden border-2 border-orange-100 bg-white shadow-sm min-w-20 min-h-20">
+                                            <Image
+                                                unoptimized
+                                                src={((user.avatar && !user.avatar.includes('mandebem.com') && !user.avatar.includes('placeholder')) ? user.avatar.trim() : null) || `https://ui-avatars.com/api/?name=${encodeURIComponent(nome || "User")}&background=random`}
+                                                alt="Avatar Preview"
+                                                width={80}
+                                                height={80}
+                                                className="object-cover"
+                                            />
+                                        </div>
+                                        <div className="flex-1 space-y-1">
+                                            <p className="text-sm font-medium text-zinc-700 flex items-center gap-1.5">
+                                                Sincronizado via Google <BadgeCheck size={14} className="text-blue-500" />
+                                            </p>
+                                            <p className="text-xs text-zinc-500 italic">
+                                                O avatar é gerenciado pela conta do Google Suite.
+                                            </p>
+                                            <input type="hidden" name="avatar" value={user.avatar} />
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-3">
+                                        <CloudinaryUpload
+                                            name="avatar"
+                                            defaultValue={user.avatar}
+                                            isAvatar={true}
+                                            fallbackUrl={`https://ui-avatars.com/api/?name=${encodeURIComponent(nome || "User")}&background=random`}
                                         />
                                     </div>
-                                    <div className="flex-1 space-y-1">
-                                        <p className="text-sm font-medium text-zinc-700 flex items-center gap-1.5">
-                                            Sincronizado via Google <BadgeCheck size={14} className="text-blue-500" />
-                                        </p>
-                                        <p className="text-xs text-zinc-500 italic">
-                                            O avatar é gerenciado pela conta do Google Suite.
-                                        </p>
-                                        <input type="hidden" name="avatar" value={user.avatar} />
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="space-y-3">
-                                    <CloudinaryUpload
-                                        name="avatar"
-                                        defaultValue={user.avatar}
-                                        isAvatar={true}
-                                        fallbackUrl={`https://ui-avatars.com/api/?name=${encodeURIComponent(nome || "User")}&background=random`}
-                                    />
-                                </div>
-                            )}
+                                )}
+                            </div>
                         </div>
-                    </div>
 
-                    <DialogFooter className="mt-6">
-                        <Button type="button" variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
-                        <Button type="submit" className="bg-orange-600 hover:bg-orange-700" disabled={loading}>
-                            {loading ? "Salvando..." : "Salvar Alterações"}
-                        </Button>
-                    </DialogFooter>
-                </form>
+                        <DialogFooter className="sm:justify-start">
+                            <Button type="submit" className="bg-orange-600 hover:bg-orange-700 text-white" disabled={loading}>
+                                {loading ? "Salvando..." : <><Save className="mr-2 h-5 w-5" /> Salvar Alterações</>}
+                            </Button>
+                            <Button type="button" variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
+                        </DialogFooter>
+                    </form>
+                </div>
             </DialogContent>
         </Dialog>
     );

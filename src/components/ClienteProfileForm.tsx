@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { IUser } from "@/interfaces/user";
 import { CloudinaryUpload } from "@/components/CldUploadWidget";
-import { BadgeCheck, CheckCircle } from "lucide-react";
+import { BadgeCheck, CheckCircle, Save } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 
@@ -219,10 +219,9 @@ export function ClienteProfileForm({ initialData, tenantSlug, primaryColor }: Cl
             <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-12 font-black text-xs uppercase tracking-widest text-white shadow-xl hover:opacity-90 transition-all rounded-lg"
-                style={{ backgroundColor: primaryColor }}
+                className="bg-orange-600 hover:bg-orange-700 text-white"
             >
-                {isLoading ? 'Salvando...' : 'Salvar Alterações'}
+                {isLoading ? 'Salvando...' : <><Save className="mr-2 h-5 w-5" /> Salvar Alterações</>}
             </Button>
         </form>
     );

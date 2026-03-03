@@ -35,7 +35,8 @@ export function PublicTenantSelector({ currentTenantSlug, colorPrimary }: Public
             if (!session?.user?.tenantIds || session.user.tenantIds.length <= 1) return;
 
             try {
-                const response = await fetch(`/api/tenants?ids=${session.user.tenantIds.join(',')}`);
+                const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+                const response = await fetch(`${basePath}/api/tenants?ids=${session.user.tenantIds.join(',')}`);
                 const data = await response.json();
                 setTenants(data.tenants || []);
 
@@ -77,9 +78,9 @@ export function PublicTenantSelector({ currentTenantSlug, colorPrimary }: Public
     return (
         <div className="w-full max-w-xs">
             <Select value={currentTenantId || ''} onValueChange={handleTenantChange} disabled={loading}>
-                <SelectTrigger 
+                <SelectTrigger
                     className="w-full text-xs md:text-sm py-1"
-                    style={{ 
+                    style={{
                         borderColor: colorPrimary,
                     }}
                 >

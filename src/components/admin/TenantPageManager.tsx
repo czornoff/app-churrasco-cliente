@@ -4,11 +4,22 @@ import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Pencil, Trash2, Plus, FileText, ChevronLeft } from 'lucide-react';
+import { Edit, Trash2, Plus, FileText, ChevronLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import EmojiPicker, { Theme } from 'emoji-picker-react';
 import DynamicRichTextEditor from '@/components/DynamicRichTextEditor';
 
@@ -53,7 +64,8 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
 
     const fetchPages = async () => {
         try {
-            const res = await fetch(`/api/admin/pages?tenantId=${tenantId}`);
+            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+            const res = await fetch(`${basePath}/api/admin/pages?tenantId=${tenantId}`);
             if (!res.ok) throw new Error('Failed to fetch pages');
             const data = await res.json();
             setPages(data);
@@ -65,10 +77,10 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm('Tem certeza que deseja excluir esta página?')) return;
 
         try {
-            const res = await fetch(`/api/admin/pages?id=${id}&tenantId=${tenantId}`, {
+            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+            const res = await fetch(`${basePath}/api/admin/pages?id=${id}&tenantId=${tenantId}`, {
                 method: 'DELETE',
             });
             if (!res.ok) throw new Error('Failed to delete');
@@ -87,7 +99,8 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                 tenantId
             };
 
-            const res = await fetch('/api/admin/pages', {
+            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+            const res = await fetch(`${basePath}/api/admin/pages`, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
@@ -175,13 +188,13 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
     if (view === 'editor') {
         return (
             <div className="space-y-6 animate-in slide-in-from-right duration-300">
-                <div className="flex items-center gap-4">
-                    <Button variant="ghost" size="icon" onClick={() => setView('list')}>
-                        <ChevronLeft />
-                    </Button>
+                <div className="flex items-center gap-4 justify-between">
                     <h3 className="text-xl font-bold text-zinc-800 dark:text-zinc-200">
                         {currentPage._id ? 'Editar Item' : 'Novo Item'}
                     </h3>
+                    <Button variant="ghost" size="icon" onClick={() => setView('list')} className="bg-zinc-100 dark:bg-zinc-800 hover:dark:bg-zinc-700 hover:bg-zinc-100 rounded-lg border border-zinc-200 dark:border-zinc-800 transition-all">
+                        <ChevronLeft />
+                    </Button>
                 </div>
 
                 <div className="space-y-6">
@@ -193,8 +206,8 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                 type="button"
                                 onClick={() => handleTipoChange('texto')}
                                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${currentPage.tipo === 'texto'
-                                        ? 'bg-orange-600 text-white'
-                                        : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-600'
+                                    ? 'bg-orange-600 text-white'
+                                    : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-600'
                                     }`}
                             >
                                 Apenas Texto
@@ -203,8 +216,8 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                 type="button"
                                 onClick={() => handleTipoChange('cards')}
                                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${currentPage.tipo === 'cards'
-                                        ? 'bg-orange-600 text-white'
-                                        : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-600'
+                                    ? 'bg-orange-600 text-white'
+                                    : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-600'
                                     }`}
                             >
                                 Apenas Cards
@@ -213,8 +226,8 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                 type="button"
                                 onClick={() => handleTipoChange('ambos')}
                                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${currentPage.tipo === 'ambos'
-                                        ? 'bg-orange-600 text-white'
-                                        : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-600'
+                                    ? 'bg-orange-600 text-white'
+                                    : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-600'
                                     }`}
                             >
                                 Texto + Cards
@@ -317,7 +330,7 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                             </CardTitle>
                                             <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleEditCard(card, index)}>
-                                                    <Pencil className="h-3 w-3" />
+                                                    <Edit className="h-3 w-3" />
                                                 </Button>
                                                 <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500 hover:text-red-700 hover:bg-red-50" onClick={() => handleDeleteCard(index)}>
                                                     <Trash2 className="h-3 w-3" />
@@ -446,7 +459,7 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h3 className="text-lg font-medium text-zinc-800 dark:text-zinc-200">Páginas Customizadas</h3>
+                    <h3 className="text-lg font-medium text-zinc-800 dark:text-zinc-200">Páginas</h3>
                     <p className="text-zinc-500 dark:text-zinc-400 text-sm">
                         Crie páginas com conteúdo rico (texto, imagens, etc).
                     </p>
@@ -457,59 +470,92 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                 </Button>
             </div>
 
-            <Card className="border-zinc-200 dark:border-zinc-800">
-                <CardContent className="p-0">
-                    {loading ? (
-                        <div className="p-8 text-center text-zinc-500">Carregando...</div>
-                    ) : pages.length === 0 ? (
-                        <div className="p-12 text-center flex flex-col items-center gap-4">
-                            <div className="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center">
-                                <FileText className="text-orange-600 dark:text-orange-400" />
-                            </div>
-                            <div>
-                                <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">Nenhuma página criada</h3>
-                                <p className="text-zinc-500 text-sm mt-1">Crie páginas para informar seus clientes.</p>
-                            </div>
+            {loading ? (
+                <div className="p-8 text-center text-zinc-500">Carregando...</div>
+            ) : pages.length === 0 ? (
+                <Card className="border-zinc-200 dark:border-zinc-800">
+                    <CardContent className="p-12 text-center flex flex-col items-center gap-4">
+                        <div className="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center">
+                            <FileText className="text-orange-600 dark:text-orange-400" />
                         </div>
-                    ) : (
-                        <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
-                            {pages.map((page) => (
-                                <div key={page._id} className="p-4 flex items-center justify-between hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors">
-                                    <div className="flex flex-col gap-1">
-                                        <div className="flex items-center gap-2">
-                                            <span className="font-medium text-zinc-900 dark:text-zinc-100">{page.titulo}</span>
+                        <div>
+                            <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">Nenhuma página criada</h3>
+                            <p className="text-zinc-500 text-sm mt-1">Crie páginas para informar seus clientes.</p>
+                        </div>
+                    </CardContent>
+                </Card>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {pages.map((page) => (
+                        <Card key={page._id} className="group hover:border-orange-500/50 transition-all duration-300 shadow-sm hover:shadow-md p-2">
+                            <CardContent className="flex flex-col h-full justify-between gap-4 px-2">
+                                <div className="space-y-1">
+                                    <div className="flex items-start justify-between">
+                                        <div className="flex flex-col gap-1">
+                                            <span className="font-bold text-zinc-900 dark:text-zinc-100 text-base leading-tight">
+                                                {page.titulo}
+                                            </span>
                                             {!page.ativo && (
-                                                <span className="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold uppercase">Inativo</span>
+                                                <span className="w-fit text-[9px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                                                    Inativo
+                                                </span>
                                             )}
                                         </div>
-                                        <div className="flex items-center gap-1 text-xs text-zinc-500 font-mono">
-                                            /{page.slug}
-                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-8 w-8 text-zinc-500 hover:text-orange-600"
-                                            onClick={() => openEdit(page)}
-                                        >
-                                            <Pencil size={16} />
-                                        </Button>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-8 w-8 text-zinc-500 hover:text-red-600"
-                                            onClick={() => handleDelete(page._id!)}
-                                        >
-                                            <Trash2 size={16} />
-                                        </Button>
+
+                                    <div className="flex items-center gap-1.5 text-xs text-zinc-500 font-mono break-all bg-zinc-100 dark:bg-zinc-900 p-2 rounded border border-zinc-200 dark:border-zinc-800">
+                                        <FileText size={12} className="shrink-0" />
+                                        <span className="truncate">/{page.slug}</span>
                                     </div>
                                 </div>
-                            ))}
-                        </div>
-                    )}
-                </CardContent>
-            </Card>
+
+                                <div className="flex items-center justify-end gap-2 pt-2 border-t border-zinc-100 dark:border-zinc-800">
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-8 px-2 text-zinc-500 hover:text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-950/30"
+                                        onClick={() => openEdit(page)}
+                                    >
+                                        <Edit size={14} className="mr-1" />
+                                        <span className="text-xs font-semibold">Editar</span>
+                                    </Button>
+
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-8 px-2 text-zinc-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
+                                            >
+                                                <Trash2 size={14} className="mr-1" />
+                                                <span className="text-xs font-semibold">Excluir</span>
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    Esta ação não pode ser desfeita. Isso excluirá permanentemente a página
+                                                    <span className="font-bold text-zinc-900"> {page.titulo}</span>.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                <AlertDialogAction
+                                                    onClick={() => handleDelete(page._id!)}
+                                                    className="bg-red-600 hover:bg-red-700"
+                                                >
+                                                    Sim, excluir página
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

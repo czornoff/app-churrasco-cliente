@@ -27,17 +27,14 @@ export default async function MeusChurrascosPage({ params }: PageProps) {
 
     const calculations = await getCalculationsByUserIdAction((session.user as any).id, tenant._id.toString());
 
+    const primaryColor = tenant?.colorPrimary || '#e53935';
+
     return (
-        <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 pt-24 pb-12">
-            <div className="max-w-5xl mx-auto px-6">
-                <div className="flex items-center gap-4 mb-8">
-                    <Link href={`/${tenantSlug}`}>
-                        <Button variant="ghost" size="icon" className="rounded-full">
-                            <ArrowLeft size={20} />
-                        </Button>
-                    </Link>
+        <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 pt-32 pb-12">
+            <div className="max-w-6xl mx-auto px-6 space-y-8">
+                <div className="flex items-center justify-between gap-4 mb-8">
                     <div className="flex items-center gap-3">
-                        <div className="p-3 rounded-2xl bg-orange-100 dark:bg-orange-900/30">
+                        <div className="p-3 rounded-lg bg-orange-100 dark:bg-orange-900/30">
                             <History className="w-8 h-8 text-orange-600" />
                         </div>
                         <div>
@@ -49,9 +46,16 @@ export default async function MeusChurrascosPage({ params }: PageProps) {
                             </p>
                         </div>
                     </div>
+                    <Link href={`/${tenantSlug}`}>
+                        <Button variant="ghost" size="icon" className="rounded-full">
+                            <ArrowLeft size={20} />
+                        </Button>
+                    </Link>
                 </div>
 
-                <div className="bg-white dark:bg-zinc-900 rounded-3xl p-4 shadow-sm border border-zinc-200 dark:border-zinc-800">
+                <div className="h-0.5 w-full rounded-full opacity-60" style={{ backgroundColor: primaryColor }} />
+
+                <div className="bg-white dark:bg-zinc-900 rounded-lg py-4 shadow-sm border border-zinc-200 dark:border-zinc-800">
                     <ClientMeusChurrascos calculations={JSON.parse(JSON.stringify(calculations))} />
                 </div>
             </div>

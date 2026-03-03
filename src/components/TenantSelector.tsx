@@ -34,7 +34,8 @@ export function TenantSelector({ tenantIds = [], currentTenantId, role }: Tenant
             if (!tenantIds || tenantIds.length <= 1) return;
 
             try {
-                const response = await fetch(`/api/tenants?ids=${tenantIds.join(',')}`);
+                const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+                const response = await fetch(`${basePath}/api/tenants?ids=${tenantIds.join(',')}`);
                 const data = await response.json();
                 setTenants(data.tenants || []);
             } catch (error) {
@@ -49,7 +50,8 @@ export function TenantSelector({ tenantIds = [], currentTenantId, role }: Tenant
         setLoading(true);
         try {
             // Passo 1: Atualizar o tenant ativo no banco de dados
-            const response = await fetch('/api/user/set-active-tenant', {
+            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+            const response = await fetch(`${basePath}/api/user/set-active-tenant`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,14 +60,15 @@ export function TenantSelector({ tenantIds = [], currentTenantId, role }: Tenant
             });
 
             const result = await response.json();
-            
+
             if (result.success) {
                 setSelectedValue(tenantId);
-                
+
                 // Passo 2: Refrescar a sessão do NextAuth
-                const sessionRefresh = await fetch('/api/auth/session-refresh');
+                const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+                const sessionRefresh = await fetch(`${basePath}/api/auth/session-refresh`);
                 const sessionData = await sessionRefresh.json();
-                
+
                 if (sessionData.success) {
                     // Atualizar a sessão localmente
                     await update({
@@ -73,7 +76,7 @@ export function TenantSelector({ tenantIds = [], currentTenantId, role }: Tenant
                         tenantIds: sessionData.user.tenantIds
                     });
                 }
-                
+
                 // Passo 3: Fazer o redirecionamento apropriado
                 if (role === 'TENANT_OWNER') {
                     // TENANT_OWNER vai para /admin/tenants/[id]

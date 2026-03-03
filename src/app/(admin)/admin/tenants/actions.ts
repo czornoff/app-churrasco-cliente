@@ -117,9 +117,8 @@ export async function updateTenantAction(prevState: ActionState, formData: FormD
     redirect('/admin/tenants');
 }
 
-export async function deleteTenantAction(formData: FormData) {
+export async function deleteTenantAction(id: string) {
     await connectDB();
-    const id = formData.get('id');
     try {
         if (id) {
             await Tenant.findByIdAndDelete(id);

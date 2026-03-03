@@ -45,7 +45,7 @@ interface ProdutoFormatado {
     subCategoriaBebida?: 'alcoolica' | 'nao-alcoolica';
 }
 
-export async function saveProductAction(formData: FormData) {
+export async function saveProductAction(prevState: any, formData: FormData) {
     await connectDB();
 
     const tenantId = formData.get("tenantId") as string;
@@ -53,7 +53,6 @@ export async function saveProductAction(formData: FormData) {
     const productId = formData.get("productId") as string;
     const nome = formData.get("nome") as string;
 
-    // Mapeamento rigoroso para os arrays do seu CardapioSchema
     const categoryMap: Record<string, string> = {
         carnes: "carnes",
         bebidas: "bebidas",
@@ -66,13 +65,11 @@ export async function saveProductAction(formData: FormData) {
     const targetArray = categoryMap[category];
 
     if (!targetArray) {
-        throw new Error("Categoria inválida ou não selecionada");
+        return { success: false, message: "Categoria inválida ou não selecionada" };
     }
 
-    // Montagem do objeto conforme os campos do seu ProductForm
     const rawImageUrl = formData.get("imageUrl") as string || "";
 
-    // Lógica agressiva de fallback
     const imageUrl = (rawImageUrl && !rawImageUrl.includes('mandebem.com') && !rawImageUrl.includes('placeholder'))
         ? rawImageUrl.trim()
         : `https://ui-avatars.com/api/?name=${encodeURIComponent(nome || "Produto")}&background=random&size=512`;
@@ -84,7 +81,6 @@ export async function saveProductAction(formData: FormData) {
         ativo: formData.get("ativo") === "on"
     };
 
-    // Adicionar campos específicos baseado na categoria
     if (category === 'carnes' || category === 'acompanhamentos' || category === 'outros' || category === 'sobremesas') {
         productData.gramasPorAdulto = Number(formData.get("gramasPorAdulto")) || 0;
         productData.gramasEmbalagem = Number(formData.get("gramasEmbalagem")) || 0;
@@ -92,7 +88,7 @@ export async function saveProductAction(formData: FormData) {
         productData.mlPorAdulto = Number(formData.get("mlPorAdulto")) || 0;
         productData.mlEmbalagem = Number(formData.get("mlEmbalagem")) || 0;
         const subCategoriaBebida = formData.get("subCategoriaBebida") as string;
-        
+
         if (subCategoriaBebida === 'alcoolica' || subCategoriaBebida === 'nao-alcoolica') {
             productData.subCategoriaBebida = subCategoriaBebida;
         } else {
@@ -101,62 +97,49 @@ export async function saveProductAction(formData: FormData) {
     } else if (category === 'suprimentos') {
         productData.qtdePorAdulto = Number(formData.get("qtdePorAdulto")) || 0;
         const tipoSuprimento = formData.get("tipoSuprimento") as string;
-        if (tipoSuprimento === 'CARVAO' || tipoSuprimento === 'ACENDEDOR') {
+        if (tipoSuprimento) {
             productData.tipoSuprimento = tipoSuprimento;
         }
     }
 
     try {
         if (productId) {
-            // Buscar o cardápio para validar a categoria atual
             const currentCardapio = await Cardapio.findOne({ tenantId }) as unknown as CardapioDocument | null;
 
             if (!currentCardapio) {
-                throw new Error("Cardápio não encontrado");
+                return { success: false, message: "Cardápio não encontrado" };
             }
 
-            // Encontrar em qual categoria o produto existe atualmente
             const categories = ["carnes", "bebidas", "acompanhamentos", "outros", "sobremesas", "suprimentos"];
             const oldCategory = categories.find(cat =>
                 (currentCardapio[cat] as ProductItem[]).some((p) => p._id?.toString() === productId)
             );
 
             if (oldCategory && oldCategory !== targetArray) {
-                // --- TROCA DE CATEGORIA ---
                 const oldItem = (currentCardapio[oldCategory] as ProductItem[]).find((p) => p._id?.toString() === productId);
 
-                // Remove do array antigo
                 await Cardapio.updateOne(
                     { tenantId },
                     { $pull: { [oldCategory]: { _id: new Types.ObjectId(productId) } } }
                 );
 
-                // Adiciona no array novo
                 await Cardapio.updateOne(
                     { tenantId },
                     { $push: { [targetArray]: { ...oldItem, ...productData, _id: new Types.ObjectId(productId) } } }
                 );
             } else {
-                // --- MESMA CATEGORIA ---
                 const updateFields: Record<string, unknown> = {};
                 Object.entries(productData).forEach(([key, value]) => {
                     updateFields[`${targetArray}.$.${key}`] = value;
                 });
 
-                const result = await Cardapio.findOneAndUpdate(
+                await Cardapio.findOneAndUpdate(
                     { tenantId, [`${targetArray}._id`]: new Types.ObjectId(productId) },
                     { $set: updateFields },
                     { new: true }
                 );
-                
-                if (result) {
-                    const produtoAtualizado = result[targetArray]?.find((p: ProductItem) => p._id?.toString() === productId);
-                    if (produtoAtualizado) {
-                    }
-                } 
             }
         } else {
-            // --- LÓGICA DE CRIAÇÃO ---
             await Cardapio.findOneAndUpdate(
                 { tenantId },
                 { $push: { [targetArray]: productData } },
@@ -165,11 +148,11 @@ export async function saveProductAction(formData: FormData) {
         }
     } catch (error) {
         console.error("Erro ao salvar/editar:", error);
-        throw new Error("Falha na operação");
+        return { success: false, message: "Falha na operação" };
     }
 
     revalidatePath(`/admin/tenants/${tenantId}`);
-    redirect(`/admin/tenants/${tenantId}?tab=cardapio`);
+    return { success: true, message: "Produto salvo com sucesso!" };
 }
 
 export async function deleteProductAction(tenantId: string, category: string, productId: string) {

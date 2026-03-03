@@ -23,7 +23,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
             {/* Main Content Area */}
             <main className="flex-1 min-h-screen flex flex-col relative overflow-x-hidden">
                 {/* Fixed Header with Glassmorphism */}
-                <header className="fixed top-0 right-0 z-40 left-0 md:left-72 h-16 md:h-20 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-zinc-200/50 dark:border-zinc-800/50 flex items-center justify-between px-4 md:px-10 transition-colors duration-300">
+                <header className="fixed top-0 right-0 z-40 left-0 md:left-52 h-16 md:h-20 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-zinc-200/50 dark:border-zinc-800/50 flex items-center justify-between px-4 md:px-10 transition-colors duration-300">
                     <div className="flex items-center gap-4">
                         {/* Mobile Navigator (Strictly small screens) */}
                         <MobileNav />

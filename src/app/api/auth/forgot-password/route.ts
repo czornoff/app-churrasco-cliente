@@ -30,7 +30,8 @@ export async function POST(request: Request) {
         });
 
         const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
-        const resetUrl = `${baseUrl}/reset-password?token=${token}`;
+        const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+        const resetUrl = `${baseUrl}${basePath}/reset-password?token=${token}`;
 
         await sendEmail({
             to: user.email,

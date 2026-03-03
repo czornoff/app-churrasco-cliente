@@ -71,7 +71,8 @@ function ResetPasswordContent() {
 
         setIsLoading(true);
         try {
-            const res = await fetch("/api/auth/reset-password", {
+            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+            const res = await fetch(`${basePath}/api/auth/reset-password`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ token, password }),
@@ -162,7 +163,7 @@ function ResetPasswordContent() {
 export default function ResetPasswordPage() {
     return (
         <div className="min-h-screen w-full flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 p-4">
-            <div className="w-full max-w-md bg-white dark:bg-zinc-900 rounded-xl border border-zinc-100 dark:border-zinc-800 shadow-2xl p-8 animate-in fade-in zoom-in-95 duration-500">
+            <div className="w-full max-w-md bg-white dark:bg-zinc-900 rounded-lg border border-zinc-100 dark:border-zinc-800 shadow-2xl p-8 animate-in fade-in zoom-in-95 duration-500">
                 <Suspense fallback={
                     <div className="flex items-center justify-center h-40">
                         <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />

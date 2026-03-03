@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { IUser } from "@/interfaces/user";
 import { CloudinaryUpload } from "@/components/CldUploadWidget";
-import { BadgeCheck } from "lucide-react";
+import { BadgeCheck, Save } from "lucide-react";
 import Image from "next/image";
 
 export function ProfileForm({ initialData }: { initialData: IUser }) {
@@ -65,7 +65,7 @@ export function ProfileForm({ initialData }: { initialData: IUser }) {
         <form action={async (formData) => {
             await updateProfileAction(formData);
             alert("Perfil atualizado com sucesso!");
-        }} className="space-y-6 max-w-lg bg-white dark:bg-zinc-800 p-6 rounded-lg shadow-sm">
+        }} className="border border-zinc-200/50 dark:border-zinc-600/50 shadow-sm hover:shadow-lg hover:shadow-zinc/60 dark:hover:shadow-zinc/20 transition-all duration-300 rounded-lg space-y-6 bg-white dark:bg-zinc-800 p-6">
 
             <div className="space-y-4 border-b pb-6 mb-2">
                 <Label className="text-zinc-700 dark:text-zinc-200 font-bold">Minha Foto</Label>
@@ -166,8 +166,8 @@ export function ProfileForm({ initialData }: { initialData: IUser }) {
                 </div>
             </div>
 
-            <Button type="submit" className="w-full bg-orange-600 hover:bg-orange-700 text-white">
-                Salvar Alterações
+            <Button type="submit" className="bg-orange-600 hover:bg-orange-700 text-white">
+                <Save className="mr-2 h-5 w-5" /> Salvar Alterações
             </Button>
         </form>
     );

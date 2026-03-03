@@ -31,7 +31,7 @@ export function DeleteUserButton({ userId, userName }: { userId: string, userNam
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:text-red-600 hover:bg-red-50 text-zinc-500">
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-red-600 hover:text-red-600">
                     <Trash2 size={14} />
                 </Button>
             </AlertDialogTrigger>

@@ -77,7 +77,8 @@ export function LoginForm() {
         e.preventDefault();
         setLoading(true);
         try {
-            await fetch('/api/auth/forgot-password', {
+            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+            await fetch(`${basePath}/api/auth/forgot-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: forgotEmail }),
@@ -96,7 +97,7 @@ export function LoginForm() {
             {/* === FORGOT SENT === */}
             {view === 'forgot-sent' ? (
                 <div className="text-center space-y-6">
-                    <div className="w-16 h-16 rounded-xl bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center mx-auto">
+                    <div className="w-16 h-16 rounded-lg bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center mx-auto">
                         <Send size={28} className="text-orange-600" />
                     </div>
                     <div>

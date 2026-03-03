@@ -21,12 +21,14 @@ export default withAuth(
 
         // 2. Redirecionar END_USER se tentar acessar /admin
         if (pathname.startsWith("/admin") && token?.role === 'END_USER') {
-            return NextResponse.redirect(new URL("/", req.url));
+            const baseUrl = process.env.NEXT_PUBLIC_BASE_PATH || "";
+            return NextResponse.redirect(new URL(baseUrl || "/", req.url));
         }
 
         // 3. Redirecionar usuário logado para fora do /login
         if (pathname === "/login" && token) {
-            return NextResponse.redirect(new URL("/admin", req.url));
+            const baseUrl = process.env.NEXT_PUBLIC_BASE_PATH || "";
+            return NextResponse.redirect(new URL(`${baseUrl}/admin`, req.url));
         }
 
         // 4. Lógica do seu Proxy (Tenant Slug) - Opcional se não houver conflito

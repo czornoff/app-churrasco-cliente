@@ -9,7 +9,7 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { ArrowLeft, Save, Plus, Trash2, GripVertical } from 'lucide-react';
+import { ChevronLeft, Save, Plus, Trash2, GripVertical } from 'lucide-react';
 import Link from 'next/link';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import DynamicRichTextEditor from '@/components/DynamicRichTextEditor';
@@ -88,7 +88,8 @@ export function PageForm({ initialData, isEditing = false }: PageFormProps) {
         setLoading(true);
 
         try {
-            const endpoint = '/api/admin/pages';
+            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+            const endpoint = `${basePath}/api/admin/pages`;
             const method = isEditing ? 'PUT' : 'POST';
             const body = isEditing ? { ...formData, _id: initialData?._id } : formData;
 
@@ -113,14 +114,12 @@ export function PageForm({ initialData, isEditing = false }: PageFormProps) {
     return (
         <div className="max-w-4xl mx-auto space-y-6">
             <div className="flex items-center gap-4">
-                <Link href="/admin/pages">
-                    <Button variant="ghost" size="icon">
-                        <ArrowLeft size={20} />
-                    </Button>
-                </Link>
                 <h1 className="text-2xl font-bold text-zinc-800 dark:text-zinc-200">
-                    {isEditing ? 'Editar Página' : 'Nova Página Customizada'}
+                    {isEditing ? 'Editar Página' : 'Nova Página'}
                 </h1>
+                <Button variant="ghost" size="icon" onClick={() => router.push('/admin/pages')} className="bg-zinc-100 dark:bg-zinc-800 hover:dark:bg-zinc-700 hover:bg-zinc-100 rounded-lg border border-zinc-200 dark:border-zinc-800 transition-all">
+                    <ChevronLeft />
+                </Button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">

@@ -69,7 +69,8 @@ export function EndUserAuthModal({ isOpen, onClose, tenantId, tenantName, primar
         e.preventDefault();
         setIsLoading(true);
         try {
-            const res = await fetch('/api/auth/forgot-password', {
+            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+            const res = await fetch(`${basePath}/api/auth/forgot-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: forgotEmail }),
@@ -106,7 +107,7 @@ export function EndUserAuthModal({ isOpen, onClose, tenantId, tenantName, primar
                     {view === 'forgot-sent' ? (
                         <div className="text-center space-y-6">
                             <div
-                                className="mx-auto w-14 h-14 rounded-xl flex items-center justify-center text-white shadow-lg"
+                                className="mx-auto w-14 h-14 rounded-lg flex items-center justify-center text-white shadow-lg"
                                 style={{ backgroundColor: primaryColor }}
                             >
                                 <Send size={26} />

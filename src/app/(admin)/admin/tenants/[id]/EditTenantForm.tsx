@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { MaskedInput } from "@/components/ui/masked-input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Save, Palette, Globe, ShieldCheck, ScanBarcode, Plus, List, FileText, MapPin } from "lucide-react";
+import { Save, Palette, Globe, ShieldCheck, ScanBarcode, Plus, List, FileText, MapPin, Edit, ChevronLeft } from "lucide-react";
 import { ColorPicker } from "@/components/ColorPicker";
 import { CloudinaryUpload } from "@/components/CldUploadWidget"
 import { toast } from "sonner";
@@ -26,11 +26,13 @@ export default function EditTenantForm(
     {
         tenant,
         id,
-        children
+        children,
+        onBack
     }: {
         tenant: ITenant,
         id: string,
-        children: React.ReactNode
+        children?: React.ReactNode,
+        onBack?: () => void
     }
 ) {
     const { data: session } = useSession();
@@ -64,7 +66,21 @@ export default function EditTenantForm(
     }, [state]);
 
     return (
-        <div className="w-full">
+        <div className="w-full animate-in slide-in-from-right duration-300">
+            {onBack && (
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-4">
+                        <h2 className="text-2xl font-bold flex items-center gap-2">
+                            <Edit className="w-6 h-6 text-slate-400" />
+                            {tenant.name}
+                        </h2>
+                    </div>
+                    <Button variant="ghost" size="icon" onClick={onBack} className="bg-zinc-100 dark:bg-zinc-800 hover:dark:bg-zinc-700 hover:bg-zinc-100 rounded-lg border border-zinc-200 dark:border-zinc-800 transition-all">
+                        <ChevronLeft className="w-5 h-5" />
+                        <span className="sr-only">Voltar</span>
+                    </Button>
+                </div>
+            )}
             <Tabs
                 value={activeTab}
                 onValueChange={setActiveTab}
@@ -83,28 +99,9 @@ export default function EditTenantForm(
                     </TabsList>
                 </div>
 
-                <TabsContent value="cardapio" forceMount className="data-[state=inactive]:hidden">
-                    <Card>
+                <TabsContent value="cardapio" forceMount className="data-[state=inactive]:hidden pt-4">
+                    <Card className="border-none shadow-none">
                         <CardContent>
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <h3 className="text-lg font-medium text-zinc-800 dark:text-zinc-200">Produtos</h3>
-                                    <p className="text-zinc-500 dark:text-zinc-400 text-sm">
-                                        Crie e gerencie os produtos do seu estabelecimento
-                                    </p>
-                                </div>
-                                {activeTab === "cardapio" ? (
-                                    <Button
-                                        asChild
-                                        className="bg-orange-600  hover:bg-orange-700 text-white font-bold"
-                                    >
-                                        <Link href={`/admin/${tenant.slug}/produtos/novo`}>
-                                            <Plus className="mr-2 h-4 w-4" />
-                                            Novo Item
-                                        </Link>
-                                    </Button>
-                                ) : null}
-                            </div>
                             {children}
                         </CardContent>
                     </Card>
@@ -302,7 +299,7 @@ export default function EditTenantForm(
                             <Button
                                 type="submit"
                                 disabled={isPending}
-                                className="bg-orange-600 hover:bg-orange-700 w-full md:w-auto px-12 py-6 text-white"
+                                className="bg-orange-600 hover:bg-orange-700 w-full md:w-auto px-12 text-white"
                             >
                                 {isPending ? "Salvando..." : <><Save className="mr-2 h-5 w-5" /> Salvar Alterações</>}
                             </Button>

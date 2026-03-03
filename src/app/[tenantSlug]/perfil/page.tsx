@@ -8,6 +8,7 @@ import { ClienteProfileForm } from "@/components/ClienteProfileForm";
 import { IUser } from "@/interfaces/user";
 import { UserCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface PerfilPageProps {
     params: Promise<{ tenantSlug: string }>;
@@ -34,40 +35,33 @@ export default async function ClientePerfilPage({ params }: PerfilPageProps) {
 
     return (
         <div className="min-h-screen pt-32 pb-16 px-6">
-            <div className="max-w-lg mx-auto space-y-8">
-
-                {/* Voltar */}
-                <Link
-                    href={`/${tenantSlug}`}
-                    className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors"
-                >
-                    <ArrowLeft size={14} />
-                    Voltar
-                </Link>
-
-                {/* Header */}
-                <div className="flex items-center gap-3">
-                    <div
-                        className="w-10 h-10 rounded-lg flex items-center justify-center text-white shadow-lg"
-                        style={{ backgroundColor: primaryColor }}
-                    >
-                        <UserCircle size={20} />
+            <div className="max-w-6xl mx-auto px-6 space-y-8">
+                <div className="flex items-center justify-between gap-4 mb-8">
+                    <div className="flex items-center gap-3">
+                        <div className="p-3 rounded-lg bg-orange-100 dark:bg-orange-900/30">
+                            <UserCircle className="w-8 h-8 text-orange-600" />
+                        </div>
+                        <div>
+                            <h1 className="text-3xl font-black text-zinc-900 dark:text-white uppercase tracking-tighter">
+                                Meu Perfil
+                            </h1>
+                            <p className="text-zinc-500 dark:text-zinc-400 font-medium">
+                                Atualize suas informações pessoais
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        <h1 className="text-2xl font-black text-zinc-900 dark:text-white tracking-tight">
-                            Meu Perfil
-                        </h1>
-                        <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium">
-                            Atualize suas informações pessoais
-                        </p>
-                    </div>
+                    <Link href={`/${tenantSlug}`}>
+                        <Button variant="ghost" size="icon" className="rounded-full">
+                            <ArrowLeft size={20} />
+                        </Button>
+                    </Link>
                 </div>
 
                 {/* Accent line */}
                 <div className="h-0.5 w-full rounded-full opacity-60" style={{ backgroundColor: primaryColor }} />
 
                 {/* Form */}
-                <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-100 dark:border-zinc-800 shadow-sm p-6">
+                <div className="bg-white dark:bg-zinc-900 rounded-lg border border-zinc-100 dark:border-zinc-800 shadow-sm p-6">
                     <ClienteProfileForm
                         initialData={JSON.parse(JSON.stringify(userData))}
                         tenantSlug={tenantSlug}
@@ -75,6 +69,6 @@ export default async function ClientePerfilPage({ params }: PerfilPageProps) {
                     />
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

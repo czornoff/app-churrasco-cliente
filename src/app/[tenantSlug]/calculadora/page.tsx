@@ -25,9 +25,9 @@ export default async function CalculadoraPage({ params }: CalculadoraPageProps) 
 
             {/* Conteúdo Principal */}
             <section className="max-w-6xl mx-auto px-6 py-12 mt-12">
-                <div className="mb-4 space-y-2">
-                    <h1 className="text-4xl font-black text-zinc-900 dark:text-white">
-                        🔥 Calculadora de Churrasco
+                <div className="my-4 space-y-2">
+                    <h1 className="text-3xl font-black text-zinc-900 dark:text-white uppercase">
+                        🔥 Calculadora
                     </h1>
                     <p className="text-zinc-500 dark:text-zinc-400">
                         Calcule a quantidade perfeita de alimentos para seu evento

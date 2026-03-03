@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Chrome, Lock, Mail, MapPin, Plus, Users, History } from "lucide-react";
 import { EditUserModal } from "@/components/EditUserModal";
-import { ToggleStatusButton } from "@/components/ToggleStatusButton";
 import Image from "next/image";
 import { IUser } from "@/interfaces/user";
 import { getServerSession } from "next-auth";
@@ -55,130 +54,132 @@ export default async function UsersPage() {
                 </div>
 
                 <Link href="/admin/register">
-                    <Button className="bg-orange-600 hover:bg-orange-700 flex items-center gap-2 text-white">
+                    <Button className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4">
                         <Plus size={18} />
                         Novo Usuário
                     </Button>
                 </Link>
             </div>
 
-            <div className="bg-white dark:bg-zinc-800 rounded-lg shadow-sm overflow-hidden">
-                <Table>
-                    <TableHeader className="bg-zinc-50 dark:bg-zinc-700">
-                        <TableRow>
-                            <TableHead className="w-70">Usuário</TableHead>
-                            <TableHead>Nível / Cargo</TableHead>
-                            <TableHead>Método</TableHead>
-                            <TableHead>Localização</TableHead>
-                            <TableHead>Estabelecimentos</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead className="text-right">Ações</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {users.map((user) => (
-                            <TableRow key={user._id.toString()} className="hover:bg-zinc-50/50 transition-colors">
-                                <TableCell className="flex items-center gap-3">
-                                    <Image
-                                        unoptimized
-                                        src={(user.avatar && user.avatar.trim()) || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome || "User")}&background=random`}
-                                        alt={user.nome}
-                                        width={100}
-                                        height={100}
-                                        className="w-9 h-9 rounded-full border-2 border-zinc-600 shadow-sm"
-                                    />
-                                    <div className="flex flex-col">
-                                        <span className="font-semibold text-zinc-700 dark:text-zinc-400 leading-none mb-1">
-                                            {user.nome}
-                                        </span>
-                                        <span className="text-xs text-zinc-700 dark:text-zinc-400 flex items-center gap-1">
-                                            <Mail size={12} /> {user.email}
-                                        </span>
-                                    </div>
-                                </TableCell>
-
-                                <TableCell>
-                                    <Badge variant="outline" className="font-medium bg-zinc-50 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-400 border-zinc-200 rounded-[0.4em] dark:border-zinc-600">
-                                        {user.role === 'SUPERADMIN' ? ' SuperAdmin' : (user.role === 'TENANT_OWNER' ? ' Dono do Estabelecimento' : 'Usuário Final')}
-                                    </Badge>
-                                </TableCell>
-
-                                <TableCell>
-                                    {user.googleId ? (
-                                        <div className="flex items-center gap-1.5 text-blue-600 font-medium text-xs">
-                                            <Chrome size={14} /> Google
-                                        </div>
-                                    ) : (
-                                        <div className="flex items-center gap-1.5 text-zinc-500 font-medium text-xs">
-                                            <Lock size={14} /> Senha
-                                        </div>
-                                    )}
-                                </TableCell>
-
-                                <TableCell>
-                                    <span className="text-xs text-zinc-600 flex items-center gap-1">
-                                        <MapPin size={12} className="text-zinc-400" />
-                                        {user.cidade ? `${user.cidade} - ${user.UF}` : "Não informado"}
-                                    </span>
-                                </TableCell>
-
-                                <TableCell>
-                                    <div className="flex flex-wrap gap-1">
-                                        {user.tenantIds && user.tenantIds.length > 0 ? (
-                                            user.tenantIds.map(tenantId => {
-                                                const tenant = tenants.find(t => t._id.toString() === tenantId.toString());
-                                                return tenant ? (
-                                                    <Badge key={tenantId.toString()} className="text-xs bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200">
-                                                        {tenant.name}
-                                                    </Badge>
-                                                ) : null;
-                                            })
-                                        ) : (
-                                            <span className="text-xs text-zinc-400">Nenhum</span>
-                                        )}
-                                    </div>
-                                </TableCell>
-
-                                <TableCell>
-                                    <Badge
-                                        variant="outline"
-                                        className={`font-medium rounded-[0.4em] ${user.status === 'active'
-                                            ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800"
-                                            : "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800"
-                                            }`}
-                                    >
-                                        {user.status === 'active' ? 'Ativo' : user.status === 'banned' ? 'Banido' : 'Inativo'}
-                                    </Badge>
-                                </TableCell>
-
-                                <TableCell className="text-right flex items-center justify-end gap-1">
-                                    <Link href={`/admin/users/${user._id.toString()}/calculations`}>
-                                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Ver Histórico de Churrascos">
-                                            <History size={16} className="text-orange-600" />
-                                        </Button>
-                                    </Link>
-
-
-                                    <EditUserModal
-                                        user={JSON.parse(JSON.stringify(user))}
-                                        tenants={JSON.parse(JSON.stringify(tenants))}
-                                    />
-                                    <DeleteUserButton
-                                        userId={user._id.toString()}
-                                        userName={user.nome}
-                                    />
-                                </TableCell>
+            <div className="max-w-6xl mx-auto space-y-6">
+                <div className="border border-zinc-200/50 dark:border-zinc-600/50 shadow-sm hover:shadow-lg hover:shadow-zinc/60 dark:hover:shadow-zinc/20 transition-all duration-300 rounded-lg bg-white dark:bg-zinc-800 overflow-hidden">
+                    <Table>
+                        <TableHeader className="bg-zinc-200 dark:bg-zinc-700">
+                            <TableRow>
+                                <TableHead className="w-70 px-6 py-3">Usuário</TableHead>
+                                <TableHead className="px-6 py-3">Nível / Cargo</TableHead>
+                                <TableHead className="px-6 py-3">Método</TableHead>
+                                <TableHead className="px-6 py-3">Localização</TableHead>
+                                <TableHead className="px-6 py-3">Estabelecimentos</TableHead>
+                                <TableHead className="px-6 py-3">Status</TableHead>
+                                <TableHead className="text-center px-6 py-3">Ações</TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </div>
+                        </TableHeader>
+                        <TableBody>
+                            {users.map((user) => (
+                                <TableRow key={user._id.toString()} className="hover:bg-zinc-50/50 dark:hover:bg-zinc-700/50 transition-colors">
+                                    <TableCell className="flex items-center gap-3 px-6 py-3">
+                                        <Image
+                                            unoptimized
+                                            src={(user.avatar && user.avatar.trim()) || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome || "User")}&background=random`}
+                                            alt={user.nome}
+                                            width={100}
+                                            height={100}
+                                            className="w-9 h-9 rounded-full border-2 border-zinc-600 shadow-sm"
+                                        />
+                                        <div className="flex flex-col">
+                                            <span className="font-semibold text-zinc-700 dark:text-zinc-400 leading-none mb-1">
+                                                {user.nome}
+                                            </span>
+                                            <span className="text-xs text-zinc-700 dark:text-zinc-400 flex items-center gap-1">
+                                                <Mail size={12} /> {user.email}
+                                            </span>
+                                        </div>
+                                    </TableCell>
 
-            {users.length === 0 && (
-                <div className="text-center py-20 bg-white rounded-lg border-2 border-dashed border-zinc-200">
-                    <p className="text-zinc-400 font-medium">Nenhum usuário cadastrado no sistema.</p>
+                                    <TableCell className="px-6 py-3">
+                                        <Badge variant="outline" className="font-medium bg-zinc-50 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-400 border-zinc-200 rounded-lg dark:border-zinc-600">
+                                            {user.role === 'SUPERADMIN' ? ' SuperAdmin' : (user.role === 'TENANT_OWNER' ? ' Dono do Estabelecimento' : 'Usuário Final')}
+                                        </Badge>
+                                    </TableCell>
+
+                                    <TableCell className="px-6 py-3">
+                                        {user.googleId ? (
+                                            <div className="flex items-center gap-1.5 text-blue-600 font-medium text-xs">
+                                                <Chrome size={14} /> Google
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center gap-1.5 text-zinc-500 font-medium text-xs">
+                                                <Lock size={14} /> Senha
+                                            </div>
+                                        )}
+                                    </TableCell>
+
+                                    <TableCell className="px-6 py-3">
+                                        <span className="text-xs text-zinc-600 flex items-center gap-1">
+                                            <MapPin size={12} className="text-zinc-400" />
+                                            {user.cidade ? `${user.cidade} - ${user.UF}` : "Não informado"}
+                                        </span>
+                                    </TableCell>
+
+                                    <TableCell className="px-6 py-3">
+                                        <div className="flex flex-wrap gap-1">
+                                            {user.tenantIds && user.tenantIds.length > 0 ? (
+                                                user.tenantIds.map(tenantId => {
+                                                    const tenant = tenants.find(t => t._id.toString() === tenantId.toString());
+                                                    return tenant ? (
+                                                        <Badge key={tenantId.toString()} className="text-xs bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200">
+                                                            {tenant.name}
+                                                        </Badge>
+                                                    ) : null;
+                                                })
+                                            ) : (
+                                                <span className="text-xs text-zinc-400">Nenhum</span>
+                                            )}
+                                        </div>
+                                    </TableCell>
+
+                                    <TableCell className="px-6 py-3">
+                                        <Badge
+                                            variant="outline"
+                                            className={`font-medium rounded-lg ${user.status === 'active'
+                                                ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800"
+                                                : "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800"
+                                                }`}
+                                        >
+                                            {user.status === 'active' ? 'Ativo' : user.status === 'banned' ? 'Banido' : 'Inativo'}
+                                        </Badge>
+                                    </TableCell>
+
+                                    <TableCell className="text-center flex items-center justify-center gap-1 px-6 py-3">
+                                        <Link href={`/admin/users/${user._id.toString()}/calculations`}>
+                                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="Ver Histórico de Churrascos">
+                                                <History size={16} className="text-blue-600" />
+                                            </Button>
+                                        </Link>
+
+                                        <EditUserModal
+                                            user={JSON.parse(JSON.stringify(user))}
+                                            tenants={JSON.parse(JSON.stringify(tenants))}
+                                        />
+
+                                        <DeleteUserButton
+                                            userId={user._id.toString()}
+                                            userName={user.nome}
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
                 </div>
-            )}
+
+                {users.length === 0 && (
+                    <div className="text-center py-20 bg-white rounded-lg border-2 border-dashed border-zinc-200">
+                        <p className="text-zinc-400 font-medium">Nenhum usuário cadastrado no sistema.</p>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

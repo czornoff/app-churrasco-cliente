@@ -46,7 +46,8 @@ export function MenuForm({ initialData, isEditing = false }: MenuFormProps) {
         setLoading(true);
 
         try {
-            const endpoint = '/api/admin/menu';
+            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+            const endpoint = `${basePath}/api/admin/menu`;
             const method = isEditing ? 'PUT' : 'POST';
             const body = isEditing ? { ...formData, _id: initialData?._id } : formData;
 
@@ -123,9 +124,8 @@ export function MenuForm({ initialData, isEditing = false }: MenuFormProps) {
                         </div>
 
                         <div className="flex justify-end pt-4">
-                            <Button type="submit" className="bg-orange-600 hover:bg-orange-700" disabled={loading}>
-                                <Save className="mr-2 h-4 w-4" />
-                                {loading ? 'Salvando...' : 'Salvar Alterações'}
+                            <Button type="submit" className="bg-orange-600 hover:bg-orange-700 text-white p-2" disabled={loading}>
+                                {loading ? 'Salvando...' : <><Save className="mr-2 h-5 w-5" /> Salvar Alterações</>}
                             </Button>
                         </div>
                     </form>

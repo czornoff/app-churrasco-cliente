@@ -3,7 +3,7 @@ import { Tenant } from "@/models/Schemas";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Edit } from "lucide-react";
 import Link from "next/link";
-import EditTenantForm from "./EditTenantForm"; 
+import EditTenantForm from "./EditTenantForm";
 import { ProductList } from "@/components/ProductList";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -23,7 +23,7 @@ export default async function EditTenantPage({ params }: { params: Promise<{ id:
     }
 
     await connectDB();
-    
+
     const tenantRaw = await Tenant.findById(id).lean();
 
     if (!tenantRaw) {
@@ -35,14 +35,14 @@ export default async function EditTenantPage({ params }: { params: Promise<{ id:
 
     return (
         <div className="w-full lg:w-8/12 mx-auto p-6 space-y-6">
-        {/* HEADER */}
-            <div className="flex items-center justify-between">
+            {/* HEADER */}
+            <div className="flex justify-between">
+                <Edit className="w-8 h-8 text-slate-400 shrink-0" />
                 <h1 className="text-2xl font-bold italic text-slate-700 flex items-center gap-3">
-                    <Edit className="w-8 h-8 text-slate-400 shrink-0" />
                     <div className="flex flex-col line-height-tight">
                         <span>{tenant.name}</span>
                         <span className="text-xs text-slate-500 font-mono font-normal not-italic tracking-wider">
-                        /{tenant.slug}
+                            /{tenant.slug}a
                         </span>
                     </div>
                 </h1>

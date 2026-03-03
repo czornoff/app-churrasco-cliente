@@ -19,7 +19,7 @@ export default async function Home() {
             <div className="flex-1 flex flex-col items-center justify-center max-w-3xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 py-8">
                 {/* Logo / Icon Area */}
                 <div className="flex justify-center">
-                    <div className="relative bg-white dark:bg-zinc-900 p-0 rounded-3xl shadow-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
+                    <div className="relative bg-white dark:bg-zinc-900 p-0 rounded-lg shadow-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
                         <img
                             src="/icon-512.png"
                             alt="Logo"
@@ -40,27 +40,27 @@ export default async function Home() {
 
                 {/* Features Row */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-8 max-w-2xl mx-auto">
-                    <div className="p-4 bg-white dark:bg-zinc-900/50 rounded-2xl border border-zinc-200 dark:border-zinc-800 flex items-center gap-3">
+                    <div className="p-4 bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 flex items-center gap-3">
                         <Users className="text-orange-600" size={20} />
                         <span className="text-sm font-bold text-zinc-600 dark:text-zinc-300">Total de Pessoas</span>
                     </div>
-                    <div className="p-4 bg-white dark:bg-zinc-900/50 rounded-2xl border border-zinc-200 dark:border-zinc-800 flex items-center gap-3">
+                    <div className="p-4 bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 flex items-center gap-3">
                         <Calculator className="text-orange-600" size={20} />
                         <span className="text-sm font-bold text-zinc-600 dark:text-zinc-300">Quantidades Exatas</span>
                     </div>
-                    <div className="p-4 bg-white dark:bg-zinc-900/50 rounded-2xl border border-zinc-200 dark:border-zinc-800 flex items-center gap-3">
+                    <div className="p-4 bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 flex items-center gap-3">
                         <Clock10 className="text-orange-600" size={20} />
                         <span className="text-sm font-bold text-zinc-600 dark:text-zinc-300">Quantidade de Horas</span>
                     </div>
-                    <div className="p-4 bg-white dark:bg-zinc-900/50 rounded-2xl border border-zinc-200 dark:border-zinc-800 flex items-center gap-3">
+                    <div className="p-4 bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 flex items-center gap-3">
                         <History className="text-orange-600" size={20} />
                         <span className="text-sm font-bold text-zinc-600 dark:text-zinc-300">Histórico de Consultas</span>
                     </div>
-                    <div className="p-4 bg-white dark:bg-zinc-900/50 rounded-2xl border border-zinc-200 dark:border-zinc-800 flex items-center gap-3">
+                    <div className="p-4 bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 flex items-center gap-3">
                         <BookAudio className="text-orange-600" size={20} />
                         <span className="text-sm font-bold text-zinc-600 dark:text-zinc-300">Cardápio de Produtos</span>
                     </div>
-                    <div className="p-4 bg-white dark:bg-zinc-900/50 rounded-2xl border border-zinc-200 dark:border-zinc-800 flex items-center gap-3">
+                    <div className="p-4 bg-white dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800 flex items-center gap-3">
                         <MapPin className="text-orange-600" size={20} />
                         <span className="text-sm font-bold text-zinc-600 dark:text-zinc-300">Lojas Locais</span>
                     </div>
