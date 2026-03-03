@@ -1,8 +1,13 @@
 'use client'
 
+import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Calculator, Calendar, Users, Flame, Info } from "lucide-react";
+import { Calculator, Calendar, Users, Flame, Info, Mail, MessageCircle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { sendCalculationEmailAction } from "@/lib/actions/email";
 
 interface CalculationDetailModalProps {
     isOpen: boolean;
@@ -11,9 +16,63 @@ interface CalculationDetailModalProps {
 }
 
 export function CalculationDetailModal({ isOpen, onClose, calculation }: CalculationDetailModalProps) {
+    const [emailDestino, setEmailDestino] = useState('');
+    const [isSendingEmail, setIsSendingEmail] = useState(false);
+
     if (!calculation) return null;
 
     const totalPessoas = calculation.totalPeople.men + calculation.totalPeople.women + calculation.totalPeople.children;
+
+    const handleShareWhatsApp = () => {
+        let text = `*🔥 Detalhes do Churrasco*\n`;
+        text += `Data: ${new Date(calculation.createdAt).toLocaleDateString('pt-BR')}\n\n`;
+        text += `*👥 Convidados:*\n`;
+        text += `Homens: ${calculation.totalPeople.men}\n`;
+        text += `Mulheres: ${calculation.totalPeople.women}\n`;
+        text += `Crianças: ${calculation.totalPeople.children}\n`;
+        text += `*Total:* ${totalPessoas} pessoas\n\n`;
+
+        text += `*🥩 Lista de Compras:*\n`;
+        calculation.items.forEach((item: any) => {
+            text += `- ${item.nome}: ${item.quantidadeEmbalagem} emb.`;
+            if (item.tamanhoEmbalagem > 0) {
+                text += ` (${item.tamanhoEmbalagem}${item.unidade})`;
+            }
+            text += ` - R$ ${item.totalPreco.toFixed(2)}\n`;
+        });
+
+        text += `\n*💰 Estimativa de Custo:* ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(calculation.totalPrice)}`;
+
+        const encodedText = encodeURIComponent(text);
+        window.open(`https://api.whatsapp.com/send/?text=${encodedText}`, '_blank');
+    };
+
+    const handleSendEmail = async () => {
+        if (!emailDestino) {
+            toast.error('Informe um e-mail para receber o detalhamento');
+            return;
+        }
+
+        setIsSendingEmail(true);
+        try {
+            const res = await sendCalculationEmailAction({
+                calculationId: calculation._id.toString(),
+                tenantId: calculation.tenantId.toString(),
+                userEmail: emailDestino,
+            });
+
+            if (res.success) {
+                toast.success('Detalhamento enviado com sucesso!');
+                setEmailDestino('');
+            } else {
+                toast.error(res.error || 'Falha ao enviar e-mail');
+            }
+        } catch (error) {
+            toast.error('Erro ao enviar e-mail');
+        } finally {
+            setIsSendingEmail(false);
+        }
+    };
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
@@ -102,6 +161,43 @@ export function CalculationDetailModal({ isOpen, onClose, calculation }: Calcula
                             <p className="text-4xl font-black text-zinc-900 dark:text-white">
                                 {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(calculation.totalPrice)}
                             </p>
+                        </div>
+                    </div>
+
+                    {/* Compartilhar */}
+                    <div className="pt-6 border-t border-zinc-200 dark:border-zinc-800">
+                        <h4 className="font-semibold text-zinc-900 dark:text-white mb-4 text-sm flex items-center gap-2">
+                            <Mail size={16} className="text-orange-600" />
+                            Compartilhar Cálculo
+                        </h4>
+
+                        <div className="space-y-4">
+                            <Button
+                                onClick={handleShareWhatsApp}
+                                variant="outline"
+                                className="w-full border-[#25D366] text-[#25D366] hover:bg-[#25D366] hover:text-white"
+                            >
+                                <MessageCircle size={16} className="mr-2" />
+                                Compartilhar via WhatsApp
+                            </Button>
+
+                            <div className="flex gap-3">
+                                <Input
+                                    type="email"
+                                    placeholder="Ou envie para um e-mail"
+                                    value={emailDestino}
+                                    onChange={(e) => setEmailDestino(e.target.value)}
+                                    className="flex-1 bg-white dark:bg-zinc-800"
+                                    disabled={isSendingEmail}
+                                />
+                                <Button
+                                    onClick={handleSendEmail}
+                                    disabled={isSendingEmail || !emailDestino}
+                                    className="bg-orange-600 hover:bg-orange-700 text-white"
+                                >
+                                    {isSendingEmail ? 'Enviando...' : 'Reenviar E-mail'}
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </div>

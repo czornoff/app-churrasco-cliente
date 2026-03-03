@@ -14,7 +14,7 @@ export async function GET(req: Request) {
 
     if (!id && tenantSlug) {
         const tenant = await Tenant.findOne({ slug: tenantSlug, active: true }).select("_id");
-        if (tenant) id = tenant._id;
+        if (tenant) id = tenant._id.toString();
     }
 
     if (!id) {

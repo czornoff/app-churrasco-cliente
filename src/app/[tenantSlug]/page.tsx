@@ -94,7 +94,6 @@ export default async function TenantHome({ params }: { params: Promise<{ tenantS
                     <LocationMap
                         address={tenant.address}
                         name={tenant.name}
-                        isEditable={false}
                     />
                 </section>
             )}

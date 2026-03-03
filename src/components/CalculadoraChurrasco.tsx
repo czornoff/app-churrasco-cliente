@@ -6,9 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Trash2, Mail, MessageCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { saveCalculationAction } from '@/lib/actions/calculation';
+import { sendCalculationEmailAction } from '@/lib/actions/email';
 
 
 interface Produto {
@@ -62,6 +63,7 @@ interface CalculadoraChurrascoProps {
         grAcompanhamentoPessoa?: number;
         mlBebidaPessoa?: number;
         grSobremesaPessoa?: number;
+        whatsApp?: string;
     };
 }
 
@@ -86,7 +88,45 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
     });
 
     const [resultado, setResultado] = useState<ResultadoCalculo | null>(null);
+    const [emailDestino, setEmailDestino] = useState(session?.user?.email || '');
+    const [isSendingEmail, setIsSendingEmail] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
+
+    const handleSendEmail = async () => {
+        if (!emailDestino) {
+            toast.error('Informe um e-mail para receber o orçamento');
+            return;
+        }
+        if (!resultado) return;
+
+        setIsSendingEmail(true);
+        try {
+            const res = await sendCalculationEmailAction({
+                tenantId,
+                userEmail: emailDestino,
+                calculationData: {
+                    eventName: formData.produtosSelecionados.length + ' itens selecionados',
+                    totalPeople: {
+                        men: formData.homens,
+                        women: formData.mulheres,
+                        children: formData.criancas,
+                    },
+                    items: resultado.produtosCalculo,
+                    totalPrice: resultado.totalCusto
+                }
+            });
+
+            if (res.success) {
+                toast.success('Lista de compras e orçamento enviados com sucesso!');
+            } else {
+                toast.error(res.error || 'Falha ao enviar e-mail');
+            }
+        } catch (error) {
+            toast.error('Erro ao enviar e-mail');
+        } finally {
+            setIsSendingEmail(false);
+        }
+    };
 
     // Agrupar produtos por categoria
     const produtosPorCategoria = produtos.reduce((acc, produto) => {
@@ -320,6 +360,46 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
             ...prev,
             [categoria]: !prev[categoria],
         }));
+    };
+
+    const handleShareWhatsApp = (toTenant: boolean = false) => {
+        if (!resultado) return;
+
+        let total = formData.homens + formData.mulheres + formData.criancas;
+        const fire = String.fromCodePoint(0x1F525);
+        const people = String.fromCodePoint(0x1F465);
+        const meat = String.fromCodePoint(0x1F969);
+        const money = String.fromCodePoint(0x1F4B0);
+
+        let text = `*${fire} Orçamento Calculadora de Churrasco*\n\n`;
+        text += `*${people} Convidados:*\n`;
+        text += `Homens: ${formData.homens}\n`;
+        text += `Mulheres: ${formData.mulheres}\n`;
+        text += `Crianças: ${formData.criancas}\n`;
+        text += `*Total:* ${total} pessoas\n\n`;
+
+        text += `*${meat} Lista de Compras:*\n`;
+        resultado.produtosCalculo.forEach(item => {
+            text += `- ${item.nome}: ${item.quantidadeEmbalagem} emb.`;
+            if (item.tamanhoEmbalagem > 0) {
+                text += ` (${item.tamanhoEmbalagem}${item.unidade})`;
+            }
+            text += ` - R$ ${item.totalPreco.toFixed(2)}\n`;
+        });
+
+        text += `\n*${money} Total Estimado:* R$ ${resultado.totalCusto.toFixed(2)}`;
+
+        const encodedText = encodeURIComponent(text);
+
+        if (toTenant && params?.whatsApp) {
+            const numbersOnly = params.whatsApp.replace(/\D/g, '');
+            // Verifica se tem DDI, se não adiciona o do Brasil (55)
+            const finalNumber = numbersOnly.length <= 11 ? `55${numbersOnly}` : numbersOnly;
+            window.open(`https://wa.me/${finalNumber}?text=${encodedText}`, '_blank');
+        } else {
+            // Abre para escolher o contato no próprio WhatsApp
+            window.open(`https://wa.me/?text=${encodedText}`, '_blank');
+        }
     };
 
     const resetarCalculadora = () => {
@@ -587,6 +667,61 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                                 Embalagens são arredondadas para cima conforme o cadastro do produto.
                             </p>
                         </div>
+
+                        {/* Envio por E-mail */}
+                        <div className="pt-6 border-t border-emerald-200 dark:border-emerald-900">
+                            <h4 className="font-semibold text-zinc-900 dark:text-white mb-2">Compartilhar Resultado</h4>
+                            <p className="text-sm text-zinc-500 mb-4">
+                                Envie a lista de compras para você ou solicite um orçamento diretamente conosco.
+                            </p>
+
+                            {/* Botoes WhatsApp */}
+                            <div className="flex flex-col sm:flex-row gap-3 mb-4">
+                                <Button
+                                    onClick={() => handleShareWhatsApp(false)}
+                                    variant="outline"
+                                    className="flex-1 border-[#25D366] text-[#25D366] hover:bg-[#25D366] hover:text-white"
+                                >
+                                    <MessageCircle size={16} className="mr-2" />
+                                    WhatsApp (Lista)
+                                </Button>
+                                {params?.whatsApp && (
+                                    <Button
+                                        onClick={() => handleShareWhatsApp(true)}
+                                        className="flex-1 bg-[#25D366] hover:bg-[#128C7E] text-white"
+                                    >
+                                        <MessageCircle size={16} className="mr-2" />
+                                        WhatsApp (Loja)
+                                    </Button>
+                                )}
+                            </div>
+
+                            {/* Email */}
+                            <div className="flex gap-3">
+                                <Input
+                                    type="email"
+                                    placeholder="Seu melhor e-mail para orçamento"
+                                    value={emailDestino}
+                                    onChange={(e) => setEmailDestino(e.target.value)}
+                                    className="flex-1 bg-white dark:bg-zinc-800"
+                                    disabled={isSendingEmail}
+                                />
+                                <Button
+                                    onClick={handleSendEmail}
+                                    disabled={isSendingEmail || !emailDestino}
+                                    className="text-white"
+                                    style={{ backgroundColor: primaryColor }}
+                                >
+                                    {isSendingEmail ? 'Enviando...' : (
+                                        <>
+                                            <Mail size={16} className="mr-2" />
+                                            E-mail
+                                        </>
+                                    )}
+                                </Button>
+                            </div>
+                        </div>
+
                     </CardContent>
                 </Card>
             )}

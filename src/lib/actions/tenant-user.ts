@@ -1,17 +1,18 @@
+import mongoose from "mongoose";
 import connectDB from "@/lib/mongodb";
 import { User } from "@/models/User";
 
 export async function addUserToTenantAction(userId: string, tenantId: string) {
     try {
         await connectDB();
-        
+
         const user = await User.findById(userId);
         if (!user) {
             return { success: false, message: "Usuário não encontrado" };
         }
 
         // Verifica se o usuário já está associado a este tenant
-        if (user.tenantIds?.some(id => id.toString() === tenantId)) {
+        if (user.tenantIds?.some((id: any) => id.toString() === tenantId)) {
             return { success: false, message: "Usuário já está associado a este estabelecimento" };
         }
 
@@ -19,15 +20,15 @@ export async function addUserToTenantAction(userId: string, tenantId: string) {
         if (!user.tenantIds) {
             user.tenantIds = [];
         }
-        user.tenantIds.push(tenantId);
+        user.tenantIds.push(new mongoose.Types.ObjectId(tenantId) as any);
 
         // Define como tenant primário se for o primeiro
         if (!user.tenantId) {
-            user.tenantId = tenantId;
+            user.tenantId = new mongoose.Types.ObjectId(tenantId) as any;
         }
 
         await user.save();
-        
+
         return { success: true, message: "Usuário adicionado ao estabelecimento com sucesso" };
     } catch (error) {
         console.error("Erro ao adicionar usuário ao tenant:", error);
@@ -38,7 +39,7 @@ export async function addUserToTenantAction(userId: string, tenantId: string) {
 export async function removeUserFromTenantAction(userId: string, tenantId: string) {
     try {
         await connectDB();
-        
+
         const user = await User.findById(userId);
         if (!user) {
             return { success: false, message: "Usuário não encontrado" };
@@ -53,7 +54,7 @@ export async function removeUserFromTenantAction(userId: string, tenantId: strin
         }
 
         await user.save();
-        
+
         return { success: true, message: "Usuário removido do estabelecimento com sucesso" };
     } catch (error) {
         console.error("Erro ao remover usuário do tenant:", error);
@@ -64,7 +65,7 @@ export async function removeUserFromTenantAction(userId: string, tenantId: strin
 export async function setActiveTenantAction(userId: string, tenantId: string) {
     try {
         await connectDB();
-        
+
         const user = await User.findById(userId);
         if (!user) {
             return { success: false, message: "Usuário não encontrado" };
@@ -76,9 +77,9 @@ export async function setActiveTenantAction(userId: string, tenantId: string) {
         }
 
         // Define como tenant primário
-        user.tenantId = tenantId;
+        user.tenantId = new mongoose.Types.ObjectId(tenantId) as any;
         await user.save();
-        
+
         return { success: true, message: "Estabelecimento ativo alterado com sucesso" };
     } catch (error) {
         console.error("Erro ao alterar tenant ativo:", error);

@@ -43,6 +43,7 @@ export default async function CalculadoraPage({ params }: CalculadoraPageProps) 
                         grAcompanhamentoPessoa: tenant.grAcompanhamentoPessoa,
                         mlBebidaPessoa: tenant.mlBebidaPessoa,
                         grSobremesaPessoa: tenant.grSobremesaPessoa,
+                        whatsApp: tenant.whatsApp,
                     }}
                 />
             </section>
