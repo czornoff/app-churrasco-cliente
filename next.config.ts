@@ -9,6 +9,7 @@ const withPWA = withPWAInit({
 
 const nextConfig: NextConfig = {
     /* config options here */
+    // output: "standalone", // Removido para rodar com pm2 e next start
     basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
     reactCompiler: true,
     images: {
