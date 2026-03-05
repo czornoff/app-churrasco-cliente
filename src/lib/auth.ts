@@ -104,5 +104,35 @@ export const authOptions: NextAuthOptions = {
             }
             return session;
         }
-    }
+    },
+    // Configurações críticas para funcionar atrás de Proxy reverso com basePath
+    // trustHost é inferido pelo NEXTAUTH_URL no NextAuth v4
+    cookies: {
+        sessionToken: {
+            name: `next-auth.session-token`,
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: process.env.NODE_ENV === "production",
+            },
+        },
+        callbackUrl: {
+            name: `next-auth.callback-url`,
+            options: {
+                sameSite: "lax",
+                path: "/",
+                secure: process.env.NODE_ENV === "production",
+            },
+        },
+        csrfToken: {
+            name: `next-auth.csrf-token`,
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: process.env.NODE_ENV === "production",
+            },
+        },
+    },
 };
