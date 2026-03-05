@@ -29,8 +29,9 @@ export async function POST(request: Request) {
             resetPasswordExpires: expires,
         });
 
-        const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
-        // NEXTAUTH_URL já contém o basePath (/churrasco), então não precisa concatenar novamente
+        const nextAuthUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+        // Se NEXTAUTH_URL terminar com /api/auth, removemos para a URL do frontend
+        const baseUrl = nextAuthUrl.replace(/\/api\/auth\/?$/, '');
         const resetUrl = `${baseUrl}/reset-password?token=${token}`;
 
         await sendEmail({

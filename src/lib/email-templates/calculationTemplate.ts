@@ -71,7 +71,7 @@ export function getCalculationEmailTemplate(
             </table>
 
             <div style="margin-top: 30px; text-align: center;">
-                <a href="${process.env.NEXTAUTH_URL || 'https://mandebem.com'}" style="background-color: #1f2937; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; display: inline-block;">
+                <a href="${(process.env.NEXTAUTH_URL || 'https://mandebem.com').replace(/\/api\/auth\/?$/, '')}" style="background-color: #1f2937; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; display: inline-block;">
                     Voltar para o App
                 </a>
             </div>
