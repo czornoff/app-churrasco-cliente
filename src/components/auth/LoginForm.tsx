@@ -16,7 +16,8 @@ export function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const error = searchParams.get("error");
-    const callbackUrl = searchParams.get("callbackUrl") || "/admin";
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+    const callbackUrl = searchParams.get("callbackUrl") || `${basePath}/admin`;
 
     const [view, setView] = useState<ViewType>('login');
     const [loading, setLoading] = useState(false);
@@ -177,7 +178,7 @@ export function LoginForm() {
                     <div className="space-y-6">
                         <button
                             type="button"
-                            onClick={() => signIn("google", { callbackUrl: callbackUrl })}
+                            onClick={() => signIn("google", { callbackUrl })}
                             disabled={loading}
                             className="w-full flex items-center justify-center gap-3 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 font-bold py-4 px-4 transition-all shadow-sm active:scale-[0.98] border-b-4 active:border-b-0 active:translate-y-0.5 p-3 rounded-lg"
                         >

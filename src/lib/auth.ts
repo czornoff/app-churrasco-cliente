@@ -44,7 +44,7 @@ export const authOptions: NextAuthOptions = {
         })
     ],
     pages: {
-        signIn: '/login',
+        signIn: `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/login`,
     },
     callbacks: {
         async signIn({ user, account }) {
