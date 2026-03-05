@@ -16,8 +16,7 @@ export function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const error = searchParams.get("error");
-    const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-    const callbackUrl = searchParams.get("callbackUrl") || `${basePath}/admin`;
+    const callbackUrl = searchParams.get("callbackUrl") || `/admin`;
 
     const [view, setView] = useState<ViewType>('login');
     const [loading, setLoading] = useState(false);

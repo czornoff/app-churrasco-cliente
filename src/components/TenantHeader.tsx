@@ -173,8 +173,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                                         </Link>
                                         <DropdownMenuSeparator className="my-1 bg-zinc-100 dark:bg-zinc-900" />
                                         <DropdownMenuItem
-                                            className="rounded-lg font-bold text-red-600 focus:bg-red-50 dark:focus:bg-red-950/30 cursor-pointer"
-                                            onClick={() => signOut({ callbackUrl: `${basePath}/${tenant.slug}` })}
+                                            onClick={() => signOut({ callbackUrl: `/${tenant.slug}` })}
                                         >
                                             <LogOut size={16} className="mr-3" />
                                             Sair da Conta
@@ -242,7 +241,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                                         </div>
                                     </Link>
                                     <button
-                                        onClick={() => signOut({ callbackUrl: `${basePath}/${tenant.slug}` })}
+                                        onClick={() => signOut({ callbackUrl: `/${tenant.slug}` })}
                                         className="p-4 rounded-lg bg-red-50 dark:bg-red-950/20 font-black text-xs uppercase tracking-widest flex items-center justify-between text-red-600"
                                     >
                                         Sair da Conta
@@ -253,7 +252,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                         </nav>
                     </div>
                 )}
-            </header>
+            </header >
 
             <EndUserAuthModal
                 isOpen={isAuthModalOpen}

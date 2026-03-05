@@ -90,8 +90,7 @@ export function EndUserAuthModal({ isOpen, onClose, tenantId, tenantName, primar
         if (session?.user?.email) {
             await addTenantToUserAction(session.user.email, tenantId);
         }
-        const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-        signIn('google', { callbackUrl: `${basePath}/` });
+        signIn('google', { callbackUrl: `/` });
     };
 
     return (
