@@ -21,12 +21,10 @@ export default async function Home() {
                 {/* Logo / Icon Area */}
                 <div className="flex justify-center">
                     <div className="relative bg-white dark:bg-zinc-900 p-0 rounded-lg shadow-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
-                        <Image
-                            src="/icon-512.png"
+                        <img
+                            src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/icon-512.png`}
                             alt="Logo"
-                            width={96}
-                            height={96}
-                            className="object-cover"
+                            className="w-24 h-24 object-cover"
                         />
                     </div>
                 </div>
