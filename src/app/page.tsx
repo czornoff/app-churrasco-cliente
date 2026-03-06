@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Calculator, Flame, MapPin, Users, Clock10, History, BookAudio, Mail, Instagram } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import Image from "next/image";
 
 export default async function Home() {
     const session = await getServerSession(authOptions);
@@ -20,10 +21,12 @@ export default async function Home() {
                 {/* Logo / Icon Area */}
                 <div className="flex justify-center">
                     <div className="relative bg-white dark:bg-zinc-900 p-0 rounded-lg shadow-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
-                        <img
+                        <Image
                             src="/icon-512.png"
                             alt="Logo"
-                            className="w-24 h-24 object-cover"
+                            width={96}
+                            height={96}
+                            className="object-cover"
                         />
                     </div>
                 </div>
