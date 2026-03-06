@@ -161,7 +161,7 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
         return homens + (mulheres * 0.75) + (crianças * 0.5);
     };
 
-    const handleCalcular = () => {
+    const handleCalcular = async () => {
         if (formData.produtosSelecionados.length === 0) {
             toast.error('Selecione pelo menos um produto');
             return;
