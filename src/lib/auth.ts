@@ -109,28 +109,28 @@ export const authOptions: NextAuthOptions = {
     // trustHost é inferido pelo NEXTAUTH_URL no NextAuth v4
     cookies: {
         sessionToken: {
-            name: `next-auth.session-token`,
+            name: `${process.env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.session-token`,
             options: {
                 httpOnly: true,
                 sameSite: "lax",
-                path: "/",
+                path: process.env.NEXT_PUBLIC_BASE_PATH || "/",
                 secure: process.env.NODE_ENV === "production",
             },
         },
         callbackUrl: {
-            name: `next-auth.callback-url`,
+            name: `${process.env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.callback-url`,
             options: {
                 sameSite: "lax",
-                path: "/",
+                path: process.env.NEXT_PUBLIC_BASE_PATH || "/",
                 secure: process.env.NODE_ENV === "production",
             },
         },
         csrfToken: {
-            name: `next-auth.csrf-token`,
+            name: `${process.env.NODE_ENV === "production" ? "__Host-" : ""}next-auth.csrf-token`,
             options: {
                 httpOnly: true,
                 sameSite: "lax",
-                path: "/",
+                path: "/", // csrf precisa ficar na raiz pra verificação do provedor
                 secure: process.env.NODE_ENV === "production",
             },
         },
