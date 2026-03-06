@@ -281,9 +281,10 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                     }
                 } else if (categoria === 'suprimentos') {
                     if (produto.tipoSuprimento === 'CARVAO') {
-                        const totalCarnes = pessoasEquivalentes * config.carne * multiplicadorCarnes;
-                        const kgProdutoFinal = totalCarnes / 1000;
-                        quantidadeNecessaria = kgProdutoFinal * (produto.qtdePorAdulto ?? 2.5);
+                        const totalCarnesG = pessoasEquivalentes * config.carne * multiplicadorCarnes;
+                        // Regra: 1kg de carvão por 1kg de carne a cada 4 horas
+                        // Carvão (g) = Carne (g) * (Horas / 4)
+                        quantidadeNecessaria = totalCarnesG * (formData.horasEvento / 4);
                     } else if (produto.tipoSuprimento === 'ACENDEDOR') {
                         quantidadeNecessaria = formData.horasEvento * (produto.qtdePorAdulto ?? 1);
                     } else {
@@ -298,7 +299,7 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                 quantidadeEmbalagens = Math.ceil(quantidadeNecessaria / divisorEmbalagem);
 
                 const totalPreco = quantidadeEmbalagens * produto.preco;
-                const unidade = categoria === 'bebidas' ? 'ml' : categoria === 'suprimentos' ? '' : 'g';
+                const unidade = categoria === 'bebidas' ? 'ml' : (categoria === 'suprimentos' && produto.tipoSuprimento !== 'CARVAO') ? '' : 'g';
 
                 return {
                     produtoId: produto._id,
