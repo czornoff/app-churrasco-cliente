@@ -282,9 +282,9 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                 } else if (categoria === 'suprimentos') {
                     if (produto.tipoSuprimento === 'CARVAO') {
                         const totalCarnesG = pessoasEquivalentes * config.carne * multiplicadorCarnes;
-                        // Regra: 1kg de carvão por 1kg de carne a cada 4 horas
-                        // Carvão (g) = Carne (g) * (Horas / 4)
-                        quantidadeNecessaria = totalCarnesG * (formData.horasEvento / 4);
+                        // Regra base: 1kg de carvão por 1kg de carne a cada 4 horas
+                        // Carvão (g) = Carne (g) * (Horas / 4) * Multiplicador
+                        quantidadeNecessaria = totalCarnesG * (formData.horasEvento / 4) * (produto.qtdePorAdulto || 1);
                     } else if (produto.tipoSuprimento === 'ACENDEDOR') {
                         quantidadeNecessaria = formData.horasEvento * (produto.qtdePorAdulto ?? 1);
                     } else {
@@ -532,6 +532,11 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                                                     </div>
                                                     <div className="text-xs text-zinc-500 dark:text-zinc-400">
                                                         R$ {produto.preco.toFixed(2)}
+                                                        {(produto.gramasEmbalagem || produto.mlEmbalagem) ? (
+                                                            <span className="ml-1 opacity-70">
+                                                                • {produto.gramasEmbalagem || produto.mlEmbalagem}{produto.categoria?.toLowerCase() === 'bebidas' ? 'ml' : 'g'}
+                                                            </span>
+                                                        ) : null}
                                                     </div>
                                                 </div>
                                             </label>

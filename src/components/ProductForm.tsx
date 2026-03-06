@@ -116,8 +116,20 @@ export function ProductForm({ tenantId, initialData, onBack, onSuccess }: Produc
                             type="number"
                             step="0.01"
                             defaultValue={initialData?.qtdePorAdulto}
-                            placeholder={tipoSuprimento === 'CARVAO' ? "Ex: 2.5 (kg por kg)" : tipoSuprimento === 'ACENDEDOR' ? "Ex: 1 (por hora)" : "Ex: 10"}
+                            placeholder={tipoSuprimento === 'CARVAO' ? "Ex: 1 (kg por kg de carne)" : tipoSuprimento === 'ACENDEDOR' ? "Ex: 1 (por hora)" : "Ex: 10"}
                             required
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="gramasEmbalagem">Gramas por Embalagem</Label>
+                        <Input
+                            id="gramasEmbalagem"
+                            name="gramasEmbalagem"
+                            type="number"
+                            step="0.01"
+                            defaultValue={initialData?.gramasEmbalagem}
+                            placeholder="Ex: 3000 (para saco de 3kg)"
+                            required={tipoSuprimento === 'CARVAO'}
                         />
                     </div>
                 </>

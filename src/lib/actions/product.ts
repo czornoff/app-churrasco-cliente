@@ -96,6 +96,7 @@ export async function saveProductAction(prevState: any, formData: FormData) {
         }
     } else if (category === 'suprimentos') {
         productData.qtdePorAdulto = Number(formData.get("qtdePorAdulto")) || 0;
+        productData.gramasEmbalagem = Number(formData.get("gramasEmbalagem")) || 0;
         const tipoSuprimento = formData.get("tipoSuprimento") as string;
         if (tipoSuprimento) {
             productData.tipoSuprimento = tipoSuprimento;
@@ -209,6 +210,7 @@ export async function getCardapioByTenant(tenantId: string) {
                             }
                         } else if (categoria === 'suprimentos') {
                             produtoFormatado.qtdePorAdulto = produto.qtdePorAdulto || 0;
+                            produtoFormatado.gramasEmbalagem = produto.gramasEmbalagem || 0;
                             if (produto.tipoSuprimento) {
                                 produtoFormatado.tipoSuprimento = produto.tipoSuprimento;
                             }
