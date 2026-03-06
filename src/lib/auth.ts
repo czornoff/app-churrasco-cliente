@@ -59,7 +59,7 @@ export const authOptions: NextAuthOptions = {
             // Se for Google e não existir, cria como END_USER (Ativo)
             if (account?.provider === "google") {
                 if (!dbUser) {
-                    await User.create({
+                    const newUser = await User.create({
                         nome: user.name || "Novo Usuário",
                         email: user.email,
                         googleId: user.id,
@@ -69,9 +69,11 @@ export const authOptions: NextAuthOptions = {
                         tenantIds: [],
                         tenantId: null
                     });
+                    user.id = newUser._id.toString();
                     return true;
                 } else {
                     // Propaga os dados do banco para o objeto user
+                    user.id = dbUser._id.toString();
                     user.role = dbUser.role;
                     user.status = dbUser.status;
                     user.tenantId = dbUser.tenantId ? dbUser.tenantId.toString() : null;

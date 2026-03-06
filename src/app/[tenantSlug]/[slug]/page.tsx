@@ -54,7 +54,7 @@ export default async function DynamicPage({ params }: PageProps) {
     function formatWhatsAppLink(url: string) {
         const numbers = url.replace("https://wa.me/", "").replace(/\D/g, "");
         const formatted = numbers.startsWith("55") ? numbers : `55${numbers}`;
-        return `https://wa.me/+${formatted}`;
+        return `https://api.whatsapp.com/send/?phone=${formatted}`;
     }
 
     const clientePagina = await ClientePagina.findOne({

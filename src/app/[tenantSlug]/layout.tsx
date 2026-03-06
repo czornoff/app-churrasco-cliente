@@ -35,7 +35,8 @@ export async function generateMetadata({ params }: { params: Promise<{ tenantSlu
 function formatWhatsAppLink(url: string) {
     const numbers = url.replace("https://wa.me/", "").replace(/\D/g, "");
     const formatted = numbers.startsWith("55") ? numbers : `55${numbers}`;
-    return `https://wa.me/+${formatted}`;
+    const text = encodeURIComponent("Olá! Gostaria de tirar uma dúvida sobre o churrasco.");
+    return `https://api.whatsapp.com/send/?phone=${formatted}&text=${text}`;
 }
 
 export default async function TenantLayout({ children, params }: TenantLayoutProps) {

@@ -340,7 +340,7 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
 
         // Salvar se estiver logado
         if (session?.user) {
-            saveCalculationAction({
+            await saveCalculationAction({
                 tenantId,
                 userId: (session.user as any).id || undefined,
                 totalPeople: {
@@ -393,12 +393,10 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
 
         if (toTenant && params?.whatsApp) {
             const numbersOnly = params.whatsApp.replace(/\D/g, '');
-            // Verifica se tem DDI, se não adiciona o do Brasil (55)
             const finalNumber = numbersOnly.length <= 11 ? `55${numbersOnly}` : numbersOnly;
-            window.open(`https://wa.me/${finalNumber}?text=${encodedText}`, '_blank');
+            window.open(`https://api.whatsapp.com/send/?phone=${finalNumber}&text=${encodedText}`, '_blank');
         } else {
-            // Abre para escolher o contato no próprio WhatsApp
-            window.open(`https://wa.me/?text=${encodedText}`, '_blank');
+            window.open(`https://api.whatsapp.com/send/?text=${encodedText}`, '_blank');
         }
     };
 
