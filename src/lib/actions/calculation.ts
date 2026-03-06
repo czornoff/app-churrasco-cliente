@@ -2,6 +2,7 @@
 
 import connectDB from "@/lib/mongodb";
 import { Calculation } from "@/models/Schemas";
+import { User } from "@/models/User";
 import { revalidatePath } from "next/cache";
 
 export async function saveCalculationAction(data: {
@@ -19,9 +20,22 @@ export async function saveCalculationAction(data: {
     try {
         await connectDB();
 
+        let finalUserId = data.userId;
+        // Segurança: Se o ID não for um ObjectId válido (ex: vindo do Google como string numérica)
+        if (finalUserId && !/^[0-9a-fA-F]{24}$/.test(finalUserId)) {
+            const userRef = await User.findOne({
+                $or: [{ googleId: finalUserId }, { _id: (finalUserId.length === 24 ? (finalUserId as any) : undefined) }]
+            });
+            if (userRef) {
+                finalUserId = userRef._id.toString();
+            } else {
+                finalUserId = undefined;
+            }
+        }
+
         const newCalculation = await Calculation.create({
             tenantId: data.tenantId,
-            userId: data.userId,
+            userId: finalUserId,
             eventName: data.eventName || 'Churrasco sem nome',
             totalPeople: data.totalPeople,
             items: data.items,

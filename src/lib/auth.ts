@@ -87,11 +87,25 @@ export const authOptions: NextAuthOptions = {
 
         async jwt({ token, user }) {
             if (user) {
-                token.id = user.id || '';
-                token.role = user.role || '';
-                token.status = user.status || '';
-                token.tenantId = user.tenantId || null;
-                token.tenantIds = user.tenantIds || [];
+                // Na primeira chamada (login), guardamos os dados iniciais
+                token.id = user.id as string;
+                token.email = user.email;
+            }
+
+            // Se o ID não for um ObjectId válido (ex: vindo do Google como string numérica)
+            const isGoogleId = typeof token.id === 'string' && !/^[0-9a-fA-F]{24}$/.test(token.id);
+
+            if ((user || isGoogleId) && token.email) {
+                await connectDB();
+                const dbUser = await User.findOne({ email: token.email }) as unknown as IUser;
+                if (dbUser) {
+                    // Sobrescreve com o ID real do MongoDB e outros dados atualizados
+                    token.id = dbUser._id.toString();
+                    token.role = dbUser.role || '';
+                    token.status = dbUser.status || '';
+                    token.tenantId = dbUser.tenantId ? dbUser.tenantId.toString() : null;
+                    token.tenantIds = dbUser.tenantIds?.map(id => id.toString()) || [];
+                }
             }
             return token;
         },
