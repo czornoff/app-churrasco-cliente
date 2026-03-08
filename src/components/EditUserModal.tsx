@@ -105,7 +105,7 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
 
                 <div className="px-8 space-y-2">
                     <form action={handleUpdate} className="space-y-4 py-4">
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* Nome e Email */}
                             <div className="space-y-2">
                                 <Label>Nome</Label>

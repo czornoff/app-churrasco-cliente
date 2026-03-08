@@ -21,12 +21,12 @@ export function AdminBreadcrumbs() {
     useEffect(() => {
         const generateBreadcrumbs = async () => {
             let paths = pathname.split('/').filter(Boolean);
-            
+
             // Remover 'admin' do início
             if (paths[0] === 'admin') {
                 paths = paths.slice(1);
             }
-            
+
             const breadcrumbs: BreadcrumbItem[] = [];
 
             // Regex para detectar ObjectIds do MongoDB
@@ -51,7 +51,7 @@ export function AdminBreadcrumbs() {
                     // Incluir até "produtos" mas não o ID do produto
                     if (path !== 'produtos' || !isObjectId(nextPath)) {
                         const href = `/admin/${paths.slice(0, index + 1).join('/')}`;
-                        
+
                         let label = path;
                         if (path === 'tenants') label = 'Estabelecimentos';
                         else if (path === 'users') label = 'Usuários';
@@ -59,6 +59,7 @@ export function AdminBreadcrumbs() {
                         else if (path === 'produtos') label = 'Produtos';
                         else if (path === 'register') label = 'Registrar';
                         else if (path === 'novo') label = 'Novo';
+                        else if (path === 'calculations') label = 'Cálculos';
                         else if (isObjectId(path)) label = '...'; // Será atualizado depois
 
                         breadcrumbs.push({
@@ -68,7 +69,7 @@ export function AdminBreadcrumbs() {
                             isId: isObjectId(path)
                         });
                     }
-                    
+
                     // Se é "produtos", incluir e parar
                     if (path === 'produtos') {
                         break;
@@ -76,7 +77,7 @@ export function AdminBreadcrumbs() {
                 } else if (nextPath !== 'produtos') {
                     // Segmentos normais (não relacionados a produtos)
                     const href = `/admin/${paths.slice(0, index + 1).join('/')}`;
-                    
+
                     let label = path;
                     if (path === 'tenants') label = 'Estabelecimentos';
                     else if (path === 'users') label = 'Usuários';
@@ -84,6 +85,7 @@ export function AdminBreadcrumbs() {
                     else if (path === 'produtos') label = 'Produtos';
                     else if (path === 'register') label = 'Registrar';
                     else if (path === 'novo') label = 'Novo';
+                    else if (path === 'calculations') label = 'Cálculos';
                     else if (isObjectId(path)) label = '...'; // Será atualizado depois
 
                     breadcrumbs.push({
@@ -98,7 +100,7 @@ export function AdminBreadcrumbs() {
             // Buscar nomes reais para IDs
             if (tenantId) {
                 const data = await getBreadcrumbData(tenantId);
-                
+
                 // Atualizar labels dos IDs
                 breadcrumbs.forEach(item => {
                     if (item.isId && item.label === '...' && tenantId && item.href.includes(tenantId)) {
@@ -118,18 +120,18 @@ export function AdminBreadcrumbs() {
         <nav className="flex items-center space-x-2 text-sm text-zinc-400 dark:text-zinc-500">
             <Link href="/admin" className="hover:text-orange-600 dark:hover:text-orange-500 transition-colors flex items-center gap-1.5 group">
                 <Home size={14} className="group-hover:scale-110 transition-transform" />
-                <span className="font-medium">Home</span>
+                <span className="font-medium hidden md:block">Home</span>
             </Link>
 
             {items.map((item, index) => (
                 <div key={`${item.href}-${index}`} className="flex items-center space-x-2">
-                    <ChevronRight size={14} className="text-zinc-300 dark:text-zinc-800" />
+                    <ChevronRight size={14} className="text-zinc-300 dark:text-zinc-800 hidden md:block" />
                     {item.isLast ? (
                         <span className="font-bold text-zinc-900 dark:text-white">{item.label}</span>
                     ) : (
-                        <Link 
-                            href={item.href} 
-                            className="hover:text-orange-600 dark:hover:text-orange-500 transition-colors font-medium truncate max-w-xs"
+                        <Link
+                            href={item.href}
+                            className="hover:text-orange-600 dark:hover:text-orange-500 transition-colors font-medium truncate max-w-xs hidden md:block"
                             title={item.label}
                         >
                             {item.label}

@@ -149,26 +149,26 @@ export function ClientAdminGeneralCalculations({ initialCalculations }: { initia
                 <Table>
                     <TableHeader className="bg-zinc-100 dark:bg-zinc-800/50 border-y">
                         <TableRow className="border-none hover:bg-transparent">
-                            <TableHead className="px-6 py-4 text-xs font-black uppercase text-zinc-500">Data</TableHead>
-                            <TableHead className="px-6 py-4 text-xs font-black uppercase text-zinc-500">Estabelecimento</TableHead>
-                            <TableHead className="px-6 py-4 text-xs font-black uppercase text-zinc-500">Usuário</TableHead>
-                            <TableHead className="px-6 py-4 text-xs font-black uppercase text-zinc-500 text-center">Pessoas</TableHead>
-                            <TableHead className="px-6 py-4 text-xs font-black uppercase text-zinc-500 text-center">Itens</TableHead>
-                            <TableHead className="px-6 py-4 text-xs font-black uppercase text-zinc-500 text-center">Total</TableHead>
-                            <TableHead className="px-6 py-4 text-xs font-black uppercase text-zinc-500 text-center">Ação</TableHead>
+                            <TableHead className="px-2 md:px-3 py-4 text-xs font-black uppercase text-zinc-500">Data</TableHead>
+                            <TableHead className="px-2 md:px-3 py-4 text-xs font-black uppercase text-zinc-500 hidden md:table-cell">Estabelecimento</TableHead>
+                            <TableHead className="px-2 md:px-3 py-4 text-xs font-black uppercase text-zinc-500 hidden md:table-cell">Usuário</TableHead>
+                            <TableHead className="px-2 md:px-3 py-4 text-xs font-black uppercase text-zinc-500 text-center hidden md:table-cell">Pessoas</TableHead>
+                            <TableHead className="px-2 md:px-3 py-4 text-xs font-black uppercase text-zinc-500 text-center hidden md:table-cell">Itens</TableHead>
+                            <TableHead className="px-2 md:px-3 py-4 text-xs font-black uppercase text-zinc-500 text-center">Total</TableHead>
+                            <TableHead className="px-2 md:px-3 py-4 text-xs font-black uppercase text-zinc-500 text-center">Ação</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {paginatedCalculations.length > 0 ? (
                             paginatedCalculations.map((calc) => (
                                 <TableRow key={calc._id} className="hover:bg-zinc-50/50 dark:hover:bg-zinc-800/30 transition-colors border-zinc-100 dark:border-zinc-800">
-                                    <TableCell className="font-medium text-zinc-500 whitespace-nowrap px-6 py-4">
+                                    <TableCell className="font-medium text-zinc-500 whitespace-nowrap px-2 md:px-3 py-4">
                                         <div className="flex items-center gap-2">
                                             <Calendar size={14} className="text-zinc-400" />
                                             {new Date(calc.createdAt).toLocaleDateString('pt-BR')}
                                         </div>
                                     </TableCell>
-                                    <TableCell className="px-6 py-4">
+                                    <TableCell className="px-2 md:px-3 py-4 hidden md:table-cell">
                                         <div className="flex items-center gap-2">
                                             <Store size={14} className="text-orange-500" />
                                             <span className="font-bold text-zinc-700 dark:text-zinc-300">
@@ -176,7 +176,7 @@ export function ClientAdminGeneralCalculations({ initialCalculations }: { initia
                                             </span>
                                         </div>
                                     </TableCell>
-                                    <TableCell className="px-6 py-4">
+                                    <TableCell className="px-2 md:px-3 py-4 hidden md:table-cell">
                                         <div className="flex items-center gap-2">
                                             <UserIcon size={14} className="text-zinc-400" />
                                             <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
@@ -184,22 +184,22 @@ export function ClientAdminGeneralCalculations({ initialCalculations }: { initia
                                             </span>
                                         </div>
                                     </TableCell>
-                                    <TableCell className="px-6 py-4 text-center">
+                                    <TableCell className="px-2 md:px-3 py-4 text-center hidden md:table-cell">
                                         <div className="inline-flex items-center gap-1.5 px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-xs font-bold text-zinc-600">
                                             <UsersIcon size={12} />
                                             {(calc.totalPeople?.men || 0) + (calc.totalPeople?.women || 0) + (calc.totalPeople?.children || 0)}
                                         </div>
                                     </TableCell>
-                                    <TableCell className="px-6 py-4 text-center">
+                                    <TableCell className="px-2 md:px-3 py-4 text-center hidden md:table-cell">
                                         <div className="inline-flex items-center gap-1 px-2 py-1 bg-orange-50 dark:bg-orange-950/30 rounded-lg text-xs font-bold text-orange-600">
                                             <Calculator size={12} />
                                             {calc.items?.length || 0}
                                         </div>
                                     </TableCell>
-                                    <TableCell className="px-6 py-4 text-center font-black text-orange-600">
+                                    <TableCell className="px-2 md:px-3 py-4 text-center font-black text-orange-600">
                                         {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(calc.totalPrice || 0)}
                                     </TableCell>
-                                    <TableCell className="px-6 py-4 text-center whitespace-nowrap">
+                                    <TableCell className="px-2 md:px-3 py-4 text-center whitespace-nowrap">
                                         <Button
                                             variant="ghost"
                                             size="sm"

@@ -1,69 +1,23 @@
 'use client'
 
-import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { SidebarContent } from "./SidebarContent";
-import { cn } from "@/lib/utils";
+import { useAdminLayout } from "./AdminLayoutProvider";
+import { Button } from "./ui/button";
+import { Menu } from "lucide-react";
 
 export function MobileNav() {
-    const [isOpen, setIsOpen] = useState(false);
-
-    // Prevent scrolling when menu is open
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
-    }, [isOpen]);
+    const { setSidebarOpen } = useAdminLayout();
 
     return (
-        <div className="mobile-only">
+        <div className="md:hidden">
             <Button
                 variant="ghost"
                 size="icon"
                 className="text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 active:scale-95"
-                onClick={() => setIsOpen(true)}
+                onClick={() => setSidebarOpen(true)}
             >
                 <Menu size={26} />
                 <span className="sr-only">Menu</span>
             </Button>
-
-            {/* Backdrop / Overlay */}
-            {isOpen && (
-                <div
-                    className="fixed inset-0 bg-zinc-900/60 backdrop-blur-sm z-100 animate-in fade-in duration-300 md:hidden"
-                    onClick={() => setIsOpen(false)}
-                />
-            )}
-
-            {/* Slide-out Sheet */}
-            {isOpen && (
-                <div className={cn(
-                    "fixed top-0 left-0 bottom-0 w-75 bg-white dark:bg-zinc-900 z-101 transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) shadow-2xl flex flex-col border-r border-zinc-200 dark:border-zinc-800 md:hidden",
-                    "translate-x-0"
-                )}>
-                    <div className="h-16 flex items-center justify-between px-6 border-b border-zinc-100 dark:border-zinc-800/50">
-                        <span className="text-xs font-black text-zinc-400 dark:text-zinc-600 uppercase tracking-[0.2em]">Navegação</span>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="text-zinc-400 dark:text-zinc-600 hover:text-red-500"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            <X size={20} />
-                        </Button>
-                    </div>
-
-                    <div className="flex-1 overflow-y-auto">
-                        <SidebarContent onItemClick={() => setIsOpen(false)} />
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

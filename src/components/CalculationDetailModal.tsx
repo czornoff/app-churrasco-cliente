@@ -181,19 +181,19 @@ export function CalculationDetailModal({ isOpen, onClose, calculation }: Calcula
                                 Compartilhar via WhatsApp
                             </Button>
 
-                            <div className="flex gap-3">
+                            <div className="gap-3 grid md:grid-cols-2 grid-cols-1">
                                 <Input
                                     type="email"
-                                    placeholder="Ou envie para um e-mail"
+                                    placeholder="Ou envie para um e-mail para:"
                                     value={emailDestino}
                                     onChange={(e) => setEmailDestino(e.target.value)}
-                                    className="flex-1 bg-white dark:bg-zinc-800"
+                                    className="bg-white dark:bg-zinc-800"
                                     disabled={isSendingEmail}
                                 />
                                 <Button
                                     onClick={handleSendEmail}
                                     disabled={isSendingEmail || !emailDestino}
-                                    className="bg-orange-600 hover:bg-orange-700 text-white"
+                                    className="bg-orange-600 hover:bg-orange-700 text-white w-full"
                                 >
                                     {isSendingEmail ? 'Enviando...' : 'Reenviar E-mail'}
                                 </Button>

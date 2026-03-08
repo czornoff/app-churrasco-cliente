@@ -140,7 +140,7 @@ export function ClienteProfileForm({ initialData, tenantSlug, primaryColor }: Cl
             </div>
 
             {/* WhatsApp + Gênero */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
                 <div className="space-y-2">
                     <Label className={labelClass}>WhatsApp</Label>
                     <Input
@@ -181,8 +181,8 @@ export function ClienteProfileForm({ initialData, tenantSlug, primaryColor }: Cl
             </div>
 
             {/* UF + Cidade */}
-            <div className="grid grid-cols-4 gap-4">
-                <div className="col-span-1 space-y-2">
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+                <div className="space-y-2">
                     <Label className={labelClass}>UF</Label>
                     <select
                         name="UF"
@@ -199,7 +199,7 @@ export function ClienteProfileForm({ initialData, tenantSlug, primaryColor }: Cl
                         ))}
                     </select>
                 </div>
-                <div className="col-span-3 space-y-2">
+                <div className="space-y-2">
                     <Label className={labelClass}>Cidade</Label>
                     <select
                         name="cidade"

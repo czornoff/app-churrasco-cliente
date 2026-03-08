@@ -237,7 +237,7 @@ export function ProductForm({ tenantId, initialData, onBack, onSuccess }: Produc
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <Label htmlFor="preco">Preço (R$)</Label>
                         <Input
@@ -253,8 +253,8 @@ export function ProductForm({ tenantId, initialData, onBack, onSuccess }: Produc
                     {renderCamposDinamicos()}
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                    <div className="flex items-center space-x-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+                    <div className="space-y-2">
                         <Switch
                             id="ativo"
                             checked={ativo}

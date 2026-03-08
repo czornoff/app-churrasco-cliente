@@ -86,15 +86,16 @@ export default function EditTenantForm(
                 onValueChange={setActiveTab}
                 className="w-full"
             >
-                <div className="overflow-x-auto pb-2">
-                    <TabsList className="inline-flex h-auto w-full justify-start md:grid md:grid-cols-6 mb-8 min-w-150">
-                        <TabsTrigger value="geral"><Globe className="w-3 h-3 mr-2" /> Geral</TabsTrigger>
-                        <TabsTrigger value="contato"><Palette className="w-3 h-3 mr-2" /> Contato</TabsTrigger>
-                        <TabsTrigger value="cardapio"><ScanBarcode className="w-3 h-3 mr-2" /> Produtos</TabsTrigger>
-                        <TabsTrigger value="menus"><List className="w-3 h-3 mr-2" /> Menu App</TabsTrigger>
-                        <TabsTrigger value="paginas"><FileText className="w-3 h-3 mr-2" /> Páginas</TabsTrigger>
+                <div className="pt-1 bg-zinc-50 dark:bg-zinc-800 rounded-md">
+                    <TabsList className="flex flex-wrap w-full justify-start md:grid md:grid-cols-6 
+                        mb-8 md:mb-0">
+                        <TabsTrigger value="geral"><Globe className="w-3 h-3 mr-1 pb-1" /> Geral</TabsTrigger>
+                        <TabsTrigger value="contato"><Palette className="w-3 h-3 mr-1 pb-1" /> Contato</TabsTrigger>
+                        <TabsTrigger value="cardapio"><ScanBarcode className="w-3 h-3 mr-1 pb-1" /> Produtos</TabsTrigger>
+                        <TabsTrigger value="menus"><List className="w-3 h-3 mr-1 pb-1" /> Menu App</TabsTrigger>
+                        <TabsTrigger value="paginas"><FileText className="w-3 h-3 mr-1 pb-1" /> Páginas</TabsTrigger>
                         {session?.user?.role === 'SUPERADMIN' && (
-                            <TabsTrigger value="config"><ShieldCheck className="w-3 h-3 mr-2" /> Sistema</TabsTrigger>
+                            <TabsTrigger value="config"><ShieldCheck className="w-3 h-3 mr-1 pb-1" /> Sistema</TabsTrigger>
                         )}
                     </TabsList>
                 </div>
@@ -265,16 +266,16 @@ export default function EditTenantForm(
                                             Configurações Administrativas
                                         </h3>
                                         <p className="text-zinc-500 dark:text-zinc-400 text-sm">
-                                            Configure os limites e versão do sistema.
+                                            Configure o sistema.
                                         </p>
                                     </div>
                                 </div>
                                 <CardContent className="grid gap-4 md:grid-cols-2">
-                                    <div className="space-y-2">
+                                    <div className="space-y-2 hidden">
                                         <Label>Limite de Consultas Gratuitas</Label>
                                         <Input type="number" name="limiteConsulta" defaultValue={(state?.formData?.limiteConsulta as number) || tenant.limiteConsulta} />
                                     </div>
-                                    <div className="space-y-2">
+                                    <div className="space-y-2 hidden">
                                         <Label>Versão do Sistema</Label>
                                         <Input name="versao" defaultValue={(state?.formData?.versao as string) || tenant.versao} />
                                     </div>

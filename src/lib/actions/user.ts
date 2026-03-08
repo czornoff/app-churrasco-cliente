@@ -110,13 +110,12 @@ export async function updateFullUserAction(userId: string, formData: FormData) {
     };
 
     // SEGURANÇA BACKEND: Proteger Role e Status
-    if (!isSelf) {
-        // Se não for o próprio usuário, permitimos mudar Role e Status respeitando a hierarquia
-        if (currentRole === 'TENANT_OWNER') {
-            // Tenant Owner não pode tornar ninguém SUPERADMIN nem mudar o status para algo que ele não deve?
-            // Na verdade a regra é: Tenant Owner pode alterar entre tenant_owner e end_user
+    if (!isSelf || currentRole === 'SUPERADMIN') {
+        // Se não for o próprio usuário, OUU se for um SUPERADMIN se editando (para testes), permitimos mudar Role e Status
+        if (currentRole === 'TENANT_OWNER' && !isSelf) {
+            // Tenant Owner não pode tornar ninguém SUPERADMIN
             if (requestedRole === 'SUPERADMIN') {
-                updateData.role = targetUser.role; // Mantém o cargo atual se tentar burlar
+                updateData.role = targetUser.role;
             } else {
                 updateData.role = requestedRole;
             }
@@ -125,7 +124,7 @@ export async function updateFullUserAction(userId: string, formData: FormData) {
         }
         updateData.status = requestedStatus;
     } else {
-        // Se for o próprio usuário, IGNORA role e status informados no form
+        // Se for o próprio usuário e NÃO for SuperAdmin, IGNORA role e status informados no form
         updateData.role = targetUser.role;
         updateData.status = targetUser.status;
     }

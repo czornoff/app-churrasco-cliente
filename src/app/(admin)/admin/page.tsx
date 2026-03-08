@@ -27,15 +27,18 @@ export default async function DashboardPage() {
         redirect('/');
     }
 
-    // Se for TENANT_OWNER, redirecionar para edição do seu primeiro tenant
+    // Redirecionar TENANT_OWNER para seu estabelecimento (eles não veem o dashboard global)
     if (session.user.role === 'TENANT_OWNER') {
-        if (!session.user.tenantIds || session.user.tenantIds.length === 0) {
-            redirect('/');
+        const firstTenantId = session.user.tenantIds?.[0];
+        if (firstTenantId) {
+            redirect(`/admin/tenants/${firstTenantId}`);
+        } else {
+            // Se não tiver estabelecimento, vai para a lista (que estará vazia ou filtrada)
+            redirect('/admin/tenants');
         }
-        redirect(`/admin/tenants/${session.user.tenantIds[0]}`);
     }
 
-    // Somente SUPERADMIN chega até aqui
+    // Somente SUPERADMIN pode ver o Dashboard de métricas globais
     if (session.user.role !== 'SUPERADMIN') {
         redirect('/');
     }
@@ -93,7 +96,7 @@ export default async function DashboardPage() {
                 </div>
             </div>
             <div className="max-w-6xl mx-auto space-y-6">
-                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {stats.map((stat, index) => (
                         <Card key={index} className="border border-zinc-200/50 dark:border-zinc-600/50 shadow-sm hover:shadow-lg hover:shadow-zinc/60 dark:hover:shadow-zinc/20 transition-all duration-300 rounded-lg overflow-hidden group">
                             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">

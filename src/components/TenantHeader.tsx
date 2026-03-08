@@ -137,49 +137,6 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                                     currentTenantSlug={tenant.slug}
                                     colorPrimary={tenant.colorPrimary}
                                 />
-
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <button className="flex items-center gap-2 group outline-none">
-                                            <div className="relative w-9 h-9 rounded-full overflow-hidden border-2 border-white dark:border-zinc-800 shadow-md group-hover:scale-105 transition-all">
-                                                <Image
-                                                    unoptimized
-                                                    src={session.user?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(session.user?.name || 'U')}&background=random`}
-                                                    alt={session.user?.name || 'User'}
-                                                    fill
-                                                    className="object-cover"
-                                                />
-                                            </div>
-                                            <ChevronDown size={14} className="transition-transform group-data-[state=open]:rotate-180 text-zinc-500" />
-                                        </button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end" className="w-56 rounded-lg p-2 border-none shadow-2xl bg-white dark:bg-zinc-950 animate-in zoom-in-95 duration-200">
-                                        <DropdownMenuLabel className="px-3 py-2">
-                                            <p className="text-xs uppercase font-black text-zinc-900 dark:text-zinc-100 tracking-widest">Acesso Cliente</p>
-                                            <p className="text-sm font-bold text-zinc-900 dark:text-white line-clamp-1">{session.user?.name}</p>
-                                        </DropdownMenuLabel>
-                                        <DropdownMenuSeparator className="my-1 bg-zinc-100 dark:bg-zinc-900" />
-                                        <Link href={`/${tenant.slug}/perfil`}>
-                                            <DropdownMenuItem className="rounded-lg font-bold text-zinc-600 dark:text-zinc-100 focus:bg-zinc-50 dark:focus:bg-zinc-900 cursor-pointer">
-                                                <UserCircle size={16} className="mr-3" />
-                                                Meu Perfil
-                                            </DropdownMenuItem>
-                                        </Link>
-                                        <Link href={`/${tenant.slug}/meus-churrascos`}>
-                                            <DropdownMenuItem className="rounded-lg font-bold text-zinc-600 dark:text-zinc-100 focus:bg-zinc-50 dark:focus:bg-zinc-900 cursor-pointer">
-                                                <Calculator size={16} className="mr-3" />
-                                                Meus Churrascos
-                                            </DropdownMenuItem>
-                                        </Link>
-                                        <DropdownMenuSeparator className="my-1 bg-zinc-100 dark:bg-zinc-900" />
-                                        <DropdownMenuItem
-                                            onClick={() => signOut({ callbackUrl: `/${tenant.slug}` })}
-                                        >
-                                            <LogOut size={16} className="mr-3" />
-                                            Sair da Conta
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
                             </>
                         ) : (
                             <Button
@@ -227,7 +184,21 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
 
                             {session && (
                                 <>
-                                    <div className="h-px bg-zinc-100 dark:bg-zinc-800 my-2" />
+                                    <div className="flex items-center gap-2">
+                                        <div className="relative w-9 h-9 rounded-full overflow-hidden border-2 border-white dark:border-zinc-800 shadow-md group-hover:scale-105 transition-all">
+                                            <Image
+                                                unoptimized
+                                                src={session.user?.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(session.user?.name || 'U')}&background=random`}
+                                                alt={session.user?.name || 'User'}
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        </div>
+                                        <div className="px-3 py-2">
+                                            <p className="text-xs uppercase font-black text-zinc-900 dark:text-zinc-100 tracking-widest">Acesso Cliente</p>
+                                            <p className="text-sm font-bold text-zinc-900 dark:text-white line-clamp-1">{session.user?.name}</p>
+                                        </div>
+                                    </div>
                                     <Link href={`/${tenant.slug}/perfil`} onClick={() => setIsMobileMenuOpen(false)}>
                                         <div className="p-4 rounded-lg bg-zinc-50 dark:bg-zinc-900 font-black text-xs uppercase tracking-widest flex items-center justify-between">
                                             Meu Perfil

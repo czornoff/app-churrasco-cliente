@@ -110,7 +110,7 @@ export function ProfileForm({ initialData }: { initialData: IUser }) {
                 <Input name="nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                     <Label>WhatsApp</Label>
                     <Input
@@ -131,8 +131,8 @@ export function ProfileForm({ initialData }: { initialData: IUser }) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-4 gap-4">
-                <div className="col-span-1 space-y-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
                     <Label>UF</Label>
                     <select
                         name="UF"
@@ -149,7 +149,7 @@ export function ProfileForm({ initialData }: { initialData: IUser }) {
                         ))}
                     </select>
                 </div>
-                <div className="col-span-3 space-y-2">
+                <div className="space-y-2">
                     <Label>Cidade</Label>
                     <select
                         name="cidade"

@@ -21,8 +21,8 @@ export function TenantTable({ tenants, onEdit }: TenantTableProps) {
                 <TableHeader className="bg-zinc-200 dark:bg-zinc-700">
                     <TableRow>
                         <TableHead className="w-70 px-6 py-3">Estabelecimento</TableHead>
-                        <TableHead className="px-6 py-3">Slug / URL</TableHead>
-                        <TableHead className="px-6 py-3">Status</TableHead>
+                        <TableHead className="px-6 py-3 hidden md:table-cell">Slug / URL</TableHead>
+                        <TableHead className="px-6 py-3 hidden md:table-cell">Status</TableHead>
                         <TableHead className="text-right px-6 py-3 text-center">Ações</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -30,23 +30,42 @@ export function TenantTable({ tenants, onEdit }: TenantTableProps) {
                     {tenants.length > 0 ? (
                         tenants.map((tenant) => (
                             <TableRow key={tenant._id.toString()} className="hover:bg-zinc-50/50 dark:hover:bg-zinc-700/50 transition-colors">
-                                <TableCell className="flex items-center gap-3 px-6 py-3">
-                                    <Image
-                                        unoptimized
-                                        src={((tenant.logoUrl && !tenant.logoUrl.includes('mandebem.com') && !tenant.logoUrl.includes('placeholder')) ? tenant.logoUrl.trim() : null) || `https://ui-avatars.com/api/?name=${encodeURIComponent(tenant.name || "Estabelecimento")}&background=random`}
-                                        alt={tenant.name || "Estabelecimento"}
-                                        width={100}
-                                        height={100}
-                                        className="w-9 h-9 rounded-full border-2 border-zinc-600 shadow-sm object-cover"
-                                    />
-                                    <div className="flex flex-col">
-                                        <span className="font-semibold text-zinc-700 dark:text-zinc-400 leading-none mb-1">
-                                            {tenant.name}
-                                        </span>
+                                <TableCell className="px-1 md:px-3 py-3">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <Image
+                                            unoptimized
+                                            src={((tenant.logoUrl && !tenant.logoUrl.includes('mandebem.com') && !tenant.logoUrl.includes('placeholder')) ? tenant.logoUrl.trim() : null) || `https://ui-avatars.com/api/?name=${encodeURIComponent(tenant.name || "Estabelecimento")}&background=random`}
+                                            alt={tenant.name || "Estabelecimento"}
+                                            width={100}
+                                            height={100}
+                                            className="w-9 h-9 rounded-full border-2 border-zinc-600 shadow-sm object-cover hidden md:table-cell"
+                                        />
+                                        <div className="flex flex-col items-start">
+                                            <Badge
+                                                variant="outline"
+                                                className={`font-medium border-0 px-0 py-0 mb-1 ${tenant.active
+                                                    ? "text-green-700 dark:text-green-400"
+                                                    : "text-red-700 dark:text-red-400"
+                                                    }`}
+                                            >
+                                                {tenant.active ? "Ativo" : "Inativo"}
+                                            </Badge>
+                                            <span className="font-semibold text-zinc-700 dark:text-zinc-400 leading-tight">
+                                                {tenant.name}
+                                            </span>
+                                        </div>
                                     </div>
+                                    <Link href={`/${tenant.slug}`} target="_blank" >
+                                        <span className="flex gap-1 text-xs text-blue-600 dark:text-blue-400">
+                                            <ExternalLink size={14} />
+                                            <span className="text-xs text-blue-600 dark:text-blue-400 font-mono">
+                                                mandebem.com/{tenant.slug}
+                                            </span>
+                                        </span>
+                                    </Link>
                                 </TableCell>
 
-                                <TableCell className="px-6 py-3 text-left">
+                                <TableCell className="px-1 md:px-3 py-3 text-left hidden md:table-cell">
                                     <Button variant="ghost" size="sm" asChild className="h-8 w-auto px-2 text-blue-600 hover:text-blue-600">
                                         <Link href={`/${tenant.slug}`} target="_blank">
                                             <ExternalLink size={14} />
@@ -57,7 +76,7 @@ export function TenantTable({ tenants, onEdit }: TenantTableProps) {
                                     </Button>
                                 </TableCell>
 
-                                <TableCell className="px-6 py-3">
+                                <TableCell className="px-1 md:px-3 py-3 hidden md:table-cell">
                                     <Badge
                                         variant="outline"
                                         className={`font-medium rounded-lg ${tenant.active
@@ -69,7 +88,7 @@ export function TenantTable({ tenants, onEdit }: TenantTableProps) {
                                     </Badge>
                                 </TableCell>
 
-                                <TableCell className="text-center px-6 py-3">
+                                <TableCell className="text-center px-1 md:px-3 py-3">
                                     <div className="flex items-center justify-center gap-2">
                                         <Button
                                             variant="ghost"
