@@ -46,7 +46,7 @@ export async function registerEndUserAction(formData: FormData) {
 
 /**
  * Vincula um tenant ao usuário logado, se ainda não estiver vinculado.
- * Chamado após login bem-sucedido pela página do estabelecimento.
+ * Chamado após login bem-sucedido pela página da loja.
  */
 export async function addTenantToUserAction(userEmail: string, tenantId: string) {
     if (!userEmail || !tenantId) return;

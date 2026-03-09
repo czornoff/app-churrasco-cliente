@@ -62,8 +62,8 @@ export function TenantsMultiSelect({
             <div
                 onClick={() => !disabled && setOpen(!open)}
                 className={`w-full min-h-10 border rounded-lg px-3 py-2 flex items-center justify-between gap-2 cursor-pointer transition-colors ${disabled
-                        ? 'bg-zinc-100 dark:bg-zinc-700 cursor-not-allowed'
-                        : 'bg-white dark:bg-zinc-800 hover:border-orange-400'
+                    ? 'bg-zinc-100 dark:bg-zinc-700 cursor-not-allowed'
+                    : 'bg-white dark:bg-zinc-800 hover:border-orange-400'
                     } ${open ? 'border-orange-500' : 'border-zinc-200 dark:border-zinc-600'}`}
             >
                 <div className="flex flex-wrap gap-2 flex-1">
@@ -89,7 +89,7 @@ export function TenantsMultiSelect({
                         ))
                     ) : (
                         <span className="text-zinc-400 dark:text-zinc-500 text-sm">
-                            Selecione estabelecimentos...
+                            Selecione lojas...
                         </span>
                     )}
                 </div>
@@ -103,7 +103,7 @@ export function TenantsMultiSelect({
                 <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-600 rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto">
                     {tenants.length === 0 ? (
                         <div className="p-3 text-center text-sm text-zinc-500 dark:text-zinc-400">
-                            Nenhum estabelecimento disponível
+                            Nenhum loja disponível
                         </div>
                     ) : (
                         <div className="p-2">
@@ -113,8 +113,8 @@ export function TenantsMultiSelect({
                                     type="button"
                                     onClick={() => handleSelect(tenant._id.toString())}
                                     className={`w-full text-left px-3 py-2 rounded-lg transition-colors text-sm ${selected.includes(tenant._id.toString())
-                                            ? 'bg-orange-100 dark:bg-orange-900 text-orange-900 dark:text-orange-100 font-medium'
-                                            : 'hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300'
+                                        ? 'bg-orange-100 dark:bg-orange-900 text-orange-900 dark:text-orange-100 font-medium'
+                                        : 'hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300'
                                         }`}
                                 >
                                     {tenant.name}

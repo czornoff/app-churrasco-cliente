@@ -70,7 +70,7 @@ export default async function UsersPage() {
                                 <TableHead className="px-2 md:px-3 py-3 hidden md:table-cell">Nível / Cargo</TableHead>
                                 <TableHead className="px-2 md:px-3 py-3 hidden md:table-cell">Método</TableHead>
                                 <TableHead className="px-2 md:px-3 py-3 hidden md:table-cell">Localização</TableHead>
-                                <TableHead className="px-2 md:px-3 py-3 hidden md:table-cell">Estabelecimentos</TableHead>
+                                <TableHead className="px-2 md:px-3 py-3 hidden md:table-cell">Lojas</TableHead>
                                 <TableHead className="px-2 md:px-3 py-3">
                                     <span className="hidden md:table-cell">
                                         Status
@@ -115,7 +115,7 @@ export default async function UsersPage() {
 
                                     <TableCell className="px-2 md:px-3 py-3 hidden md:table-cell">
                                         <Badge variant="outline" className="font-medium bg-zinc-50 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-400 border-zinc-200 rounded-lg dark:border-zinc-600">
-                                            {user.role === 'SUPERADMIN' ? ' SuperAdmin' : (user.role === 'TENANT_OWNER' ? ' Dono do Estabelecimento' : 'Usuário Final')}
+                                            {user.role === 'SUPERADMIN' ? ' SuperAdmin' : (user.role === 'TENANT_OWNER' ? ' Admin da Loja' : 'Usuário Final')}
                                         </Badge>
                                     </TableCell>
 
@@ -179,10 +179,11 @@ export default async function UsersPage() {
                                             tenants={JSON.parse(JSON.stringify(tenants))}
                                         />
 
-                                        <DeleteUserButton
-                                            userId={user._id.toString()}
-                                            userName={user.nome}
-                                        />
+                                        {!((session?.user?.id && user._id && session.user.id === user._id.toString()) ||
+                                            (session?.user?.email && user.email && session.user.email === user.email)) && <DeleteUserButton
+                                                userId={user._id.toString()}
+                                                userName={user.nome}
+                                            />}
                                     </TableCell>
                                 </TableRow>
                             ))}

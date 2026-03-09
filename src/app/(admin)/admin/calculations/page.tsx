@@ -40,7 +40,7 @@ export default async function GeneralCalculationsPage() {
                             Histórico Geral de Cálculos
                         </h1>
                         <p className="text-zinc-500 dark:text-zinc-200 text-sm">
-                            Visualize todos os cálculos realizados em todos os estabelecimentos.
+                            Visualize todos os cálculos realizados em todos os lojas.
                         </p>
                     </div>
                 </div>

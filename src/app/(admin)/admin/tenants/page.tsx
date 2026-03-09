@@ -17,7 +17,7 @@ export default async function AdminTenantsPage() {
         redirect("/login");
     }
 
-    // TENANT_OWNER vê apenas seus estabelecimentos
+    // TENANT_OWNER vê apenas seus lojas
     const isTenantOwner = session?.user?.role === 'TENANT_OWNER';
     const filter = isTenantOwner && session.user.tenantIds
         ? { _id: { $in: session.user.tenantIds } }
@@ -35,9 +35,9 @@ export default async function AdminTenantsPage() {
                 <div className="flex items-left gap-2">
                     <Users className="h-8 w-8 text-orange-600" />
                     <div>
-                        <h1 className="text-2xl font-bold text-zinc-800 dark:text-zinc-200">Estabelecimentos</h1>
+                        <h1 className="text-2xl font-bold text-zinc-800 dark:text-zinc-200">Lojas</h1>
                         <p className="text-zinc-500 dark:text-zinc-200 text-sm">
-                            Cadastre e gerencie estabelecimentos que utilizam sua calculadora.
+                            Cadastre e gerencie lojas que utilizam sua calculadora.
                         </p>
                     </div>
                 </div>

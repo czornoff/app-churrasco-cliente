@@ -27,15 +27,9 @@ export default async function DashboardPage() {
         redirect('/');
     }
 
-    // Redirecionar TENANT_OWNER para seu estabelecimento (eles não veem o dashboard global)
+    // Redirecionar TENANT_OWNER para seu loja (eles não veem o dashboard global)
     if (session.user.role === 'TENANT_OWNER') {
-        const firstTenantId = session.user.tenantIds?.[0];
-        if (firstTenantId) {
-            redirect(`/admin/tenants/${firstTenantId}`);
-        } else {
-            // Se não tiver estabelecimento, vai para a lista (que estará vazia ou filtrada)
-            redirect('/admin/tenants');
-        }
+        redirect('/admin/tenants');
     }
 
     // Somente SUPERADMIN pode ver o Dashboard de métricas globais
@@ -63,7 +57,7 @@ export default async function DashboardPage() {
             link: "/admin/users"
         },
         {
-            title: "Estabelecimentos",
+            title: "Lojas",
             value: tenantCount,
             icon: Store,
             description: "Total de lojas e restaurantes",
@@ -75,7 +69,7 @@ export default async function DashboardPage() {
             title: "Unidades Ativas",
             value: activeTenants,
             icon: Activity,
-            description: "Estabelecimentos operando agora",
+            description: "Lojas operando agora",
             color: "text-orange-600 dark:text-orange-400",
             bg: "bg-orange-50 dark:bg-orange-500/10",
             link: "/admin/tenants"
@@ -136,14 +130,14 @@ export default async function DashboardPage() {
                             </div>
                             <h2 className="text-3xl md:text-4xl font-black tracking-tight max-w-xl">Gerencie suas unidades com facilidade</h2>
                             <p className="text-zinc-400 text-sm md:text-base max-w-md font-medium leading-relaxed">
-                                Utilize o menu lateral para gerenciar usuários, visualizar estabelecimentos ou editar as configurações do seu perfil administrativo.
+                                Utilize o menu lateral para gerenciar usuários, visualizar lojas ou editar as configurações do seu perfil administrativo.
                             </p>
                         </div>
                         <div className="flex shrink-0">
                             <Link href="/admin/tenants">
                                 <Button className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4">
                                     <Plus size={18} />
-                                    Novo Estabelecimento
+                                    Nova Loja
                                 </Button>
                             </Link>
                         </div>

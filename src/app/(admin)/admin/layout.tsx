@@ -25,7 +25,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
                 <main className="flex-1 min-h-screen flex flex-col relative overflow-x-hidden">
                     {/* Fixed Header with Glassmorphism */}
                     <header className="fixed top-0 right-0 z-40 left-0 md:left-52 h-16 md:h-20 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-zinc-200/50 dark:border-zinc-800/50 flex items-center justify-between px-4 md:px-10 transition-colors duration-300">
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2">
                             {/* Mobile Navigator (Strictly small screens) */}
                             <MobileNav />
 
@@ -33,22 +33,10 @@ export default async function AdminLayout({ children }: { children: ReactNode })
                             <AdminBreadcrumbs />
                         </div>
 
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
                             <ThemeToggle />
 
-                            {/* Tenant Selector - para usuários com múltiplos acessos */}
-                            {session?.user?.tenantIds && session.user.tenantIds.length > 1 && (
-                                <>
-                                    <div className="h-6 w-px bg-zinc-200 dark:bg-zinc-800 mx-2"></div>
-                                    <TenantSelector
-                                        tenantIds={session.user.tenantIds}
-                                        currentTenantId={session.user.tenantId}
-                                        role={session.user.role}
-                                    />
-                                </>
-                            )}
-
-                            <div className="h-6 w-px bg-zinc-200 dark:bg-zinc-800 mx-2"></div>
+                            <div className="h-6 w-px bg-zinc-200 dark:bg-zinc-800 mr-2"></div>
 
                             {/* User Profile Summary */}
                             {session?.user && (
@@ -58,7 +46,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
                                             {session.user.name}
                                         </p>
                                         <p className="text-[9px] text-zinc-400 dark:text-zinc-500 uppercase font-black tracking-widest">
-                                            {session.user.role === 'SUPERADMIN' ? 'Administrador' : (session.user.role === 'TENANT_OWNER' ? 'Admin de Estabelecimento' : 'Usuário')}
+                                            {session.user.role === 'SUPERADMIN' ? 'Administrador' : (session.user.role === 'TENANT_OWNER' ? 'Admin da Loja' : 'Usuário')}
                                         </p>
                                     </div>
                                     {session.user.image ? (
@@ -68,7 +56,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
                                                 src={session.user.image}
                                                 alt="Avatar"
                                                 fill
-                                                sizes="(max-width: 768px) 32px, 40px"
+                                                sizes="(max-width: 768px) 40px, 40px"
                                                 priority
                                             />
                                         </div>
@@ -80,7 +68,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
                                 </div>
                             )}
 
-                            <div className="ml-2">
+                            <div>
                                 <LogoutButton />
                             </div>
                         </div>

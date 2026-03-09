@@ -84,7 +84,7 @@ export function PublicTenantSelector({ currentTenantSlug, colorPrimary }: Public
                         borderColor: colorPrimary,
                     }}
                 >
-                    <SelectValue placeholder="Selecione um estabelecimento" />
+                    <SelectValue placeholder="Selecione um loja" />
                 </SelectTrigger>
                 <SelectContent>
                     {tenants.map(tenant => (

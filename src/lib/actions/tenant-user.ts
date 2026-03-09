@@ -13,7 +13,7 @@ export async function addUserToTenantAction(userId: string, tenantId: string) {
 
         // Verifica se o usuário já está associado a este tenant
         if (user.tenantIds?.some((id: any) => id.toString() === tenantId)) {
-            return { success: false, message: "Usuário já está associado a este estabelecimento" };
+            return { success: false, message: "Usuário já está associado a este loja" };
         }
 
         // Adiciona o tenant aos tenantIds do usuário
@@ -29,10 +29,10 @@ export async function addUserToTenantAction(userId: string, tenantId: string) {
 
         await user.save();
 
-        return { success: true, message: "Usuário adicionado ao estabelecimento com sucesso" };
+        return { success: true, message: "Usuário adicionado aa loja com sucesso" };
     } catch (error) {
         console.error("Erro ao adicionar usuário ao tenant:", error);
-        return { success: false, message: "Erro ao adicionar usuário ao estabelecimento" };
+        return { success: false, message: "Erro ao adicionar usuário aa loja" };
     }
 }
 
@@ -55,10 +55,10 @@ export async function removeUserFromTenantAction(userId: string, tenantId: strin
 
         await user.save();
 
-        return { success: true, message: "Usuário removido do estabelecimento com sucesso" };
+        return { success: true, message: "Usuário removido da loja com sucesso" };
     } catch (error) {
         console.error("Erro ao remover usuário do tenant:", error);
-        return { success: false, message: "Erro ao remover usuário do estabelecimento" };
+        return { success: false, message: "Erro ao remover usuário da loja" };
     }
 }
 
@@ -73,16 +73,16 @@ export async function setActiveTenantAction(userId: string, tenantId: string) {
 
         // Verifica se o usuário tem acesso a este tenant
         if (!user.tenantIds?.some(id => id.toString() === tenantId)) {
-            return { success: false, message: "Usuário não tem acesso a este estabelecimento" };
+            return { success: false, message: "Usuário não tem acesso a este loja" };
         }
 
         // Define como tenant primário
         user.tenantId = new mongoose.Types.ObjectId(tenantId) as any;
         await user.save();
 
-        return { success: true, message: "Estabelecimento ativo alterado com sucesso" };
+        return { success: true, message: "Loja ativo alterado com sucesso" };
     } catch (error) {
         console.error("Erro ao alterar tenant ativo:", error);
-        return { success: false, message: "Erro ao alterar estabelecimento ativo" };
+        return { success: false, message: "Erro ao alterar loja ativo" };
     }
 }

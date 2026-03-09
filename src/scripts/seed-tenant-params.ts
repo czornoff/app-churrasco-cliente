@@ -17,7 +17,7 @@ async function seed() {
         }
     );
 
-    console.log(`${result.modifiedCount} estabelecimentos atualizados.`);
+    console.log(`${result.modifiedCount} lojas atualizados.`);
     process.exit(0);
 }
 

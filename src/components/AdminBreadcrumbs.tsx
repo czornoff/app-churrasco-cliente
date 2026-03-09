@@ -53,7 +53,7 @@ export function AdminBreadcrumbs() {
                         const href = `/admin/${paths.slice(0, index + 1).join('/')}`;
 
                         let label = path;
-                        if (path === 'tenants') label = 'Estabelecimentos';
+                        if (path === 'tenants') label = 'Lojas';
                         else if (path === 'users') label = 'Usuários';
                         else if (path === 'perfil') label = 'Perfil';
                         else if (path === 'produtos') label = 'Produtos';
@@ -79,7 +79,7 @@ export function AdminBreadcrumbs() {
                     const href = `/admin/${paths.slice(0, index + 1).join('/')}`;
 
                     let label = path;
-                    if (path === 'tenants') label = 'Estabelecimentos';
+                    if (path === 'tenants') label = 'Lojas';
                     else if (path === 'users') label = 'Usuários';
                     else if (path === 'perfil') label = 'Perfil';
                     else if (path === 'produtos') label = 'Produtos';
@@ -104,7 +104,7 @@ export function AdminBreadcrumbs() {
                 // Atualizar labels dos IDs
                 breadcrumbs.forEach(item => {
                     if (item.isId && item.label === '...' && tenantId && item.href.includes(tenantId)) {
-                        item.label = data.tenantName || 'Estabelecimento';
+                        item.label = data.tenantName || 'Loja';
                     }
                 });
             }

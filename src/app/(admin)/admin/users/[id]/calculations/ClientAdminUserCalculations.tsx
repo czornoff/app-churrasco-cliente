@@ -68,13 +68,13 @@ export function ClientAdminUserCalculations({ calculations }: { calculations: an
             {/* Filter Bar */}
             <div className="p-4 bg-zinc-50 dark:bg-zinc-900/50 border-b border-zinc-200 dark:border-zinc-800 flex flex-wrap gap-4 items-end">
                 <div className="space-y-1.5 w-full md:w-[300px]">
-                    <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">Filtrar por Estabelecimento</label>
+                    <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">Filtrar por Loja</label>
                     <Select value={tenantFilter} onValueChange={handleFilterChange}>
                         <SelectTrigger className="h-10">
-                            <SelectValue placeholder="Todos os estabelecimentos" />
+                            <SelectValue placeholder="Todos os lojas" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">Todos os estabelecimentos</SelectItem>
+                            <SelectItem value="all">Todos os lojas</SelectItem>
                             {uniqueTenants.map(tenant => (
                                 <SelectItem key={tenant.id} value={tenant.id}>{tenant.name}</SelectItem>
                             ))}
@@ -96,7 +96,7 @@ export function ClientAdminUserCalculations({ calculations }: { calculations: an
                         <TableRow className="border-none hover:bg-transparent">
                             <TableHead className="px-2 md:px-3 py-3">Data</TableHead>
                             {tenantFilter === "all" && (
-                                <TableHead className="px-2 md:px-3 py-3 hidden md:table-cell">Estabelecimento</TableHead>
+                                <TableHead className="px-2 md:px-3 py-3 hidden md:table-cell">Loja</TableHead>
                             )}
                             <TableHead className="px-2 md:px-3 py-3 text-center hidden md:table-cell">Pessoas</TableHead>
                             <TableHead className="px-2 md:px-3 py-4 text-center hidden md:table-cell">Itens</TableHead>

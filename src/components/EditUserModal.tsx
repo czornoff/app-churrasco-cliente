@@ -184,14 +184,14 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
                                             <SelectItem value="SUPERADMIN">Super Admin</SelectItem>
                                         )}
                                         {(session?.user?.role === 'SUPERADMIN' || session?.user?.role === 'TENANT_OWNER') && (
-                                            <SelectItem value="TENANT_OWNER">Dono do Estabelecimento</SelectItem>
+                                            <SelectItem value="TENANT_OWNER">Admin da Loja</SelectItem>
                                         )}
                                         <SelectItem value="END_USER">Usuário Final</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
 
-                            {/* Status e Estabelecimentos */}
+                            {/* Status e Lojas */}
                             <div className="space-y-2">
                                 <Label>Status</Label>
                                 <Select
@@ -209,9 +209,9 @@ export function EditUserModal({ user, tenants }: { user: IUser; tenants: ITenant
                             </div>
                         </div>
 
-                        {/* Estabelecimentos (Multi-select) - Full Width */}
+                        {/* Lojas (Multi-select) - Full Width */}
                         <div className="space-y-2 pt-2">
-                            <Label>Estabelecimentos (Tenants)</Label>
+                            <Label>Lojas (Tenants)</Label>
                             <TenantsMultiSelect
                                 tenants={tenants}
                                 selectedIds={selectedTenantIds}

@@ -107,7 +107,7 @@ export function TenantSelector({ tenantIds = [], currentTenantId, role }: Tenant
         <div className="w-full max-w-xs">
             <Select value={selectedValue} onValueChange={handleTenantChange} disabled={loading}>
                 <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Selecione um estabelecimento" />
+                    <SelectValue placeholder="Selecione um loja" />
                 </SelectTrigger>
                 <SelectContent>
                     {tenants.map(tenant => (

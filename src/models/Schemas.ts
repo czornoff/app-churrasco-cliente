@@ -32,7 +32,7 @@ const TenantSchema = new Schema<ITenantDocument>({
     logoUrl: {
         type: String,
         default: function (this: ITenantDocument) {
-            return `https://ui-avatars.com/api/?name=${encodeURIComponent(this.name || 'Estabelecimento')}&background=random`;
+            return `https://ui-avatars.com/api/?name=${encodeURIComponent(this.name || 'Loja')}&background=random`;
         }
     },
     colorPrimary: { type: String, default: '#e53935' },

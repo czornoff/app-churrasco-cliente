@@ -20,11 +20,11 @@ export default async function Home() {
             <div className="flex-1 flex flex-col items-center justify-center max-w-3xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 py-8">
                 {/* Logo / Icon Area */}
                 <div className="flex justify-center">
-                    <div className="relative bg-white dark:bg-zinc-900 p-0 rounded-lg shadow-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
+                    <div className="">
                         <img
                             src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/icon-512.png`}
                             alt="Logo"
-                            className="w-24 h-24 object-cover"
+                            className="w-48 h-48 object-cover"
                         />
                     </div>
                 </div>

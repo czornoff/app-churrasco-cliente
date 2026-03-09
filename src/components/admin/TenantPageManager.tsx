@@ -160,15 +160,21 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
 
         const newCards = [...(currentPage.cards || [])];
 
+        // Ensure text is not undefined
+        if (editingCard.texto === undefined) {
+            editingCard.texto = '';
+        }
+
         // Check if we are editing an existing card (by temporary ID check)
         const isEditingIndex = editingCard._id && !isNaN(parseInt(editingCard._id));
 
         if (isEditingIndex) {
             const index = parseInt(editingCard._id!);
-            newCards[index] = editingCard as ICard;
-            delete newCards[index]._id; // Clean up temp ID
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { _id, ...cardData } = editingCard;
+            newCards[index] = cardData as ICard;
         } else {
-            // Clean up temp ID just in case
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { _id, ...cardData } = editingCard;
             newCards.push(cardData as ICard);
         }
@@ -188,6 +194,13 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
     if (view === 'editor') {
         return (
             <div className="space-y-6 animate-in slide-in-from-right duration-300">
+                <style jsx global>{`
+                    .EmojiPickerReact .epr-category-name,
+                    .EmojiPickerReact .epr-header-overlay,
+                    .EmojiPickerReact .epr-emoji-category-label {
+                        display: none !important;
+                    }
+                `}</style>
                 <div className="flex items-center gap-4 justify-between">
                     <h3 className="text-xl font-bold text-zinc-800 dark:text-zinc-200">
                         {currentPage._id ? 'Editar Item' : 'Novo Item'}
@@ -275,6 +288,7 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                     width={'100%'}
                                     height={200}
                                     searchDisabled
+                                    categories={[]}
                                     previewConfig={{ showPreview: false }}
                                     theme={resolvedTheme === 'dark' ? Theme.DARK : Theme.LIGHT}
                                 />
@@ -297,7 +311,7 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                 <CardTitle>Conteúdo de Texto</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="border rounded-lg overflow-hidden min-h-125">
+                                <div className="border overflow-hidden">
                                     <DynamicRichTextEditor
                                         value={currentPage.texto || ''}
                                         onChange={(data) => setCurrentPage({ ...currentPage, texto: data })}
@@ -324,11 +338,11 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {currentPage.cards?.map((card, index) => (
                                     <Card key={index} className="relative group hover:border-orange-200 transition-colors">
-                                        <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                                        <CardHeader className="flex flex-row items-center justify-between pb-0 space-y-0">
                                             <CardTitle className="text-sm font-medium">
                                                 {card.emoji} {card.titulo}
                                             </CardTitle>
-                                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div className="flex gap-1">
                                                 <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleEditCard(card, index)}>
                                                     <Edit className="h-3 w-3" />
                                                 </Button>
@@ -338,9 +352,9 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
                                             </div>
                                         </CardHeader>
                                         <CardContent>
-                                            <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
-                                                <div dangerouslySetInnerHTML={{ __html: card.texto.replace(/\n/g, '<br />') }} />
-                                            </p>
+                                            <div className="text-xs text-muted-foreground line-clamp-2 mb-2">
+                                                <div dangerouslySetInnerHTML={{ __html: (card.texto || '').replace(/\n/g, '<br />') }} />
+                                            </div>
                                             {card.extra && (
                                                 <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-secondary text-secondary-foreground">
                                                     {card.extra}
@@ -363,38 +377,42 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
 
                             {/* Card Editor Modal (Inline for simplicity, or could be a Dialog) */}
                             {isCardModalOpen && editingCard && (
-                                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in">
-                                    <Card className="w-full max-w-md animate-in zoom-in-95">
+                                <div className="fixed inset-0 z-50 flex items-start justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in overflow-y-auto">
+                                    <Card className="w-full max-w-md animate-in zoom-in-95 my-auto">
                                         <CardHeader>
                                             <CardTitle>{editingCard._id ? 'Editar Card' : 'Novo Card'}</CardTitle>
                                         </CardHeader>
                                         <CardContent className="space-y-4">
-                                            <div className="space-y-2">
-                                                <Label>Título</Label>
-                                                <Input
-                                                    value={editingCard.titulo || ''}
-                                                    onChange={e => setEditingCard({ ...editingCard, titulo: e.target.value })}
-                                                    placeholder="Título do card"
-                                                />
-                                            </div>
-
-                                            <div className="flex gap-4">
-                                                <div className="w-1/4 space-y-2">
+                                            <div className="mr-6 grid grid-cols-6 gap-2">
+                                                <div className="space-y-2 col-span-5">
+                                                    <Label>Título</Label>
+                                                    <Input
+                                                        value={editingCard.titulo || ''}
+                                                        onChange={e => setEditingCard({ ...editingCard, titulo: e.target.value })}
+                                                        placeholder="Título do card"
+                                                    />
+                                                </div>
+                                                <div className="space-y-2 col-span-1">
                                                     <Label>Ícone</Label>
                                                     <Input
                                                         value={editingCard.emoji || ''}
                                                         onChange={e => setEditingCard({ ...editingCard, emoji: e.target.value })}
-                                                        className="text-center text-2xl"
+                                                        className="text-center text-2xl w-20"
                                                     />
                                                 </div>
-                                                <div className="w-3/4">
+                                            </div>
+
+                                            <div className="flex flex-col gap-4">
+
+                                                <div className="w-full">
                                                     <EmojiPicker
                                                         onEmojiClick={(emojiData) =>
                                                             setEditingCard({ ...editingCard, emoji: emojiData.emoji })
                                                         }
                                                         width={'100%'}
-                                                        height={200}
+                                                        height={150}
                                                         searchDisabled
+                                                        categories={[]}
                                                         previewConfig={{ showPreview: false }}
                                                         theme={resolvedTheme === 'dark' ? Theme.DARK : Theme.LIGHT}
                                                     />
@@ -403,7 +421,7 @@ export function TenantPageManager({ tenantId }: TenantPageManagerProps) {
 
                                             <div className="space-y-2">
                                                 <Label>Texto Descritivo</Label>
-                                                <div className="border rounded-lg overflow-hidden min-h-75">
+                                                <div className="border overflow-hidden">
                                                     <DynamicRichTextEditor
                                                         value={editingCard.texto || ''}
                                                         onChange={(data) => setEditingCard({ ...editingCard, texto: data })}

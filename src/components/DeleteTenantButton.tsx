@@ -46,7 +46,7 @@ export function DeleteTenantButton({ tenantId, tenantName }: DeleteTenantButtonP
                 <AlertDialogHeader>
                     <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Esta ação não pode ser desfeita. Isso excluirá permanentemente o estabelecimento
+                        Esta ação não pode ser desfeita. Isso excluirá permanentemente a loja
                         <span className="font-bold text-zinc-900"> {tenantName}</span> e removerá os dados de nossos servidores.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
@@ -57,7 +57,7 @@ export function DeleteTenantButton({ tenantId, tenantName }: DeleteTenantButtonP
                         disabled={isPending}
                         onClick={handleDelete}
                     >
-                        {isPending ? "Excluindo..." : "Sim, excluir estabelecimento"}
+                        {isPending ? "Excluindo..." : "Sim, excluir loja"}
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

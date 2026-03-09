@@ -664,7 +664,7 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                         {/* Dica */}
                         <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg border border-blue-200 dark:border-blue-900">
                             <p className="text-xs text-blue-900 dark:text-blue-100">
-                                <strong>💡 Cálculo Personalizado:</strong> As quantidades são baseadas nos parâmetros definidos pelo estabelecimento.
+                                <strong>💡 Cálculo Personalizado:</strong> As quantidades são baseadas nos parâmetros definidos pela loja.
                                 Se selecionar **apenas carnes**, o consumo base é aumentado em 20%.
                                 Acompanhamentos e outros itens dividem a base de consumo. Bebidas são calculadas por ml.
                                 Mulheres consomem 75% e crianças 50% dos valores base de homens adultas.

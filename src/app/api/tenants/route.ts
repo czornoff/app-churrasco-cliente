@@ -18,6 +18,6 @@ export async function GET(request: Request) {
         return NextResponse.json({ tenants });
     } catch (error) {
         console.error('Erro ao buscar tenants:', error);
-        return NextResponse.json({ error: 'Erro ao buscar estabelecimentos' }, { status: 500 });
+        return NextResponse.json({ error: 'Erro ao buscar lojas' }, { status: 500 });
     }
 }

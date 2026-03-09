@@ -38,7 +38,7 @@ export default async function NewProductPage({
                     Novo Item para {tenant.name}
                 </h1>
                 <p className="text-zinc-500 dark:text-zinc-200 text-sm">
-                    Cadastre as opções de carnes, bebidas ou acompanhamentos do estabelecimento.
+                    Cadastre as opções de carnes, bebidas ou acompanhamentos da loja.
                 </p>
             </div>
 

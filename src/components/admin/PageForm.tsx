@@ -150,7 +150,7 @@ export function PageForm({ initialData, isEditing = false }: PageFormProps) {
                                     placeholder="Ex: promocoes"
                                     required
                                 />
-                                <p className="text-xs text-zinc-500">Será acessado via /nome-do-estabelecimento/<strong>slug</strong></p>
+                                <p className="text-xs text-zinc-500">Será acessado via /nome-do-loja/<strong>slug</strong></p>
                             </div>
                         </div>
 

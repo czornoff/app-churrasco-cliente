@@ -12,15 +12,16 @@ import { ITenantDocument } from "@/models/Schemas"
 interface TenantTableProps {
     tenants: any[]; // Using any because of ITenantDocument type issues in client components if not serialized
     onEdit: (tenant: any) => void;
+    isTenantOwner: boolean;
 }
 
-export function TenantTable({ tenants, onEdit }: TenantTableProps) {
+export function TenantTable({ tenants, onEdit, isTenantOwner }: TenantTableProps) {
     return (
         <div className="border border-zinc-200/50 dark:border-zinc-600/50 shadow-sm hover:shadow-lg transition-all duration-300 rounded-lg bg-white dark:bg-zinc-800 overflow-hidden">
             <Table>
                 <TableHeader className="bg-zinc-200 dark:bg-zinc-700">
                     <TableRow>
-                        <TableHead className="w-70 px-6 py-3">Estabelecimento</TableHead>
+                        <TableHead className="w-70 px-6 py-3">Loja</TableHead>
                         <TableHead className="px-6 py-3 hidden md:table-cell">Slug / URL</TableHead>
                         <TableHead className="px-6 py-3 hidden md:table-cell">Status</TableHead>
                         <TableHead className="text-right px-6 py-3 text-center">Ações</TableHead>
@@ -34,8 +35,8 @@ export function TenantTable({ tenants, onEdit }: TenantTableProps) {
                                     <div className="flex items-center gap-3 mb-2">
                                         <Image
                                             unoptimized
-                                            src={((tenant.logoUrl && !tenant.logoUrl.includes('mandebem.com') && !tenant.logoUrl.includes('placeholder')) ? tenant.logoUrl.trim() : null) || `https://ui-avatars.com/api/?name=${encodeURIComponent(tenant.name || "Estabelecimento")}&background=random`}
-                                            alt={tenant.name || "Estabelecimento"}
+                                            src={((tenant.logoUrl && !tenant.logoUrl.includes('mandebem.com') && !tenant.logoUrl.includes('placeholder')) ? tenant.logoUrl.trim() : null) || `https://ui-avatars.com/api/?name=${encodeURIComponent(tenant.name || "Loja")}&background=random`}
+                                            alt={tenant.name || "Loja"}
                                             width={100}
                                             height={100}
                                             className="w-9 h-9 rounded-full border-2 border-zinc-600 shadow-sm object-cover hidden md:table-cell"
@@ -55,7 +56,7 @@ export function TenantTable({ tenants, onEdit }: TenantTableProps) {
                                             </span>
                                         </div>
                                     </div>
-                                    <Link href={`/${tenant.slug}`} target="_blank" >
+                                    <Link href={`/${tenant.slug}`} target="_blank" className="block md:hidden">
                                         <span className="flex gap-1 text-xs text-blue-600 dark:text-blue-400">
                                             <ExternalLink size={14} />
                                             <span className="text-xs text-blue-600 dark:text-blue-400 font-mono">
@@ -98,11 +99,11 @@ export function TenantTable({ tenants, onEdit }: TenantTableProps) {
                                         >
                                             <Edit size={14} />
                                         </Button>
-
-                                        <DeleteTenantButton
+                                        {!isTenantOwner && <DeleteTenantButton
                                             tenantId={tenant._id.toString()}
                                             tenantName={tenant.name}
-                                        />
+                                        />}
+
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -110,7 +111,7 @@ export function TenantTable({ tenants, onEdit }: TenantTableProps) {
                     ) : (
                         <TableRow>
                             <TableCell colSpan={4} className="text-center py-20">
-                                <p className="text-muted-foreground italic">Nenhum estabelecimento cadastrado no sistema.</p>
+                                <p className="text-muted-foreground italic">Nenhum loja cadastrado no sistema.</p>
                             </TableCell>
                         </TableRow>
                     )}

@@ -15,16 +15,7 @@ import {
     LogIn
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
 import { EndUserAuthModal } from './auth/EndUserAuthModal';
-import { PublicTenantSelector } from './PublicTenantSelector';
 import { cn } from '@/lib/utils';
 
 interface TenantHeaderProps {
@@ -130,15 +121,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
 
                     {/* Auth & User Menu */}
                     <div className="flex items-center gap-4">
-                        {session ? (
-                            <>
-                                {/* Public Tenant Selector - aparece apenas se múltiplos tenants */}
-                                <PublicTenantSelector
-                                    currentTenantSlug={tenant.slug}
-                                    colorPrimary={tenant.colorPrimary}
-                                />
-                            </>
-                        ) : (
+                        {!session && (
                             <Button
                                 onClick={() => setIsAuthModalOpen(true)}
                                 className="rounded-lg px-6 h-10 font-black text-xs uppercase tracking-widest text-white shadow-xl hover:opacity-90 transition-all active:scale-95"

@@ -45,13 +45,13 @@ export async function createTenantAction(prevState: ActionState, formData: FormD
         if (error instanceof Error && 'code' in error && error.code === 11000) {
             return {
                 success: false,
-                message: `O endereço "/${formattedSlug}" já está sendo usado por outro estabelecimento.`,
+                message: `O endereço "/${formattedSlug}" já está sendo usado por outra loja.`,
                 formData: rawData
             };
         }
         return {
             success: false,
-            message: "Ocorreu um erro ao salvar o estabelecimento. Tente novamente.",
+            message: "Ocorreu um erro ao salvar a loja. Tente novamente.",
             formData: rawData
         };
     }
@@ -82,7 +82,7 @@ export async function updateTenantAction(prevState: ActionState, formData: FormD
             const currentLogo = formData.get('logoUrl')?.toString().trim() || "";
             const isPlaceholder = !currentLogo || currentLogo.includes('ui-avatars.com') || currentLogo.includes('mandebem.com') || currentLogo.includes('placeholder');
             return isPlaceholder
-                ? `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.get('name')?.toString() || "Estabelecimento")}&background=random`
+                ? `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.get('name')?.toString() || "Loja")}&background=random`
                 : currentLogo;
         })(),
         colorPrimary: formData.get('colorPrimary')?.toString(),
@@ -126,6 +126,6 @@ export async function deleteTenantAction(id: string) {
         }
     } catch (error) {
         console.error("Erro ao deletar:", error);
-        throw new Error("Falha ao remover estabelecimento.");
+        throw new Error("Falha ao remover loja.");
     }
 }

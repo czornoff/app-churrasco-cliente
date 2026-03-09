@@ -134,13 +134,13 @@ export default function EditTenantForm(
                                         Identidade Visual
                                     </h3>
                                     <p className="text-zinc-500 dark:text-zinc-400 text-sm">
-                                        Defina as informações básicas e a aparência do seu estabelecimento no MandeBem.
+                                        Defina as informações básicas e a aparência do seu loja no MandeBem.
                                     </p>
                                 </div>
                             </div>
                             <CardContent className="grid gap-4 grid-cols-1 md:grid-cols-2">
                                 <div className="space-y-2">
-                                    <Label>Nome do Estabelecimento</Label>
+                                    <Label>Nome da Loja</Label>
                                     <Input
                                         name="name"
                                         value={nameValue}
@@ -166,7 +166,7 @@ export default function EditTenantForm(
                                         name="logoUrl"
                                         defaultValue={(state?.formData?.logoUrl as string) || tenant.logoUrl}
                                         isAvatar={true}
-                                        fallbackUrl={`https://ui-avatars.com/api/?name=${encodeURIComponent(nameValue || "Estabelecimento")}&background=random`}
+                                        fallbackUrl={`https://ui-avatars.com/api/?name=${encodeURIComponent(nameValue || "Loja")}&background=random`}
                                     />
                                     <p className="text-[10px] text-zinc-400 italic">
                                         * Esta imagem será exibida no topo do seu cardápio.

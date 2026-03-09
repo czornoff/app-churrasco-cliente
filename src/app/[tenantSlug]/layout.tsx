@@ -49,7 +49,7 @@ export default async function TenantLayout({ children, params }: TenantLayoutPro
             <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 px-4 transition-colors duration-300">
                 <div className="text-center space-y-4">
                     <h1 className="text-2xl font-black text-zinc-900 dark:text-white">Ops! Cliente não encontrado</h1>
-                    <p className="text-zinc-500 dark:text-zinc-500 font-medium">Este estabelecimento pode estar inativo ou o link está incorreto.</p>
+                    <p className="text-zinc-500 dark:text-zinc-500 font-medium">Este loja pode estar inativo ou o link está incorreto.</p>
                 </div>
             </div>
         );

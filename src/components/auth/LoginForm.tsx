@@ -132,12 +132,12 @@ export function LoginForm() {
                             <Mail className="absolute left-4 top-4 h-5 w-5 text-zinc-400" />
                             <Input
                                 type="email"
-                                placeholder="Seu e-mail cadastrado"
+                                placeholder="      Seu e-mail cadastrado"
                                 value={forgotEmail}
                                 onChange={(e) => setForgotEmail(e.target.value)}
                                 required
                                 disabled={loading}
-                                className="w-full h-14 pl-12 border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/50 dark:text-white outline-none focus-visible:ring-4 focus-visible:ring-orange-500/10 focus-visible:border-orange-500 transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-600 px-5 text-base font-medium rounded-lg"
+                                className="w-full h-14 border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/50 dark:text-white outline-none focus-visible:ring-4 focus-visible:ring-orange-500/10 focus-visible:border-orange-500 transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-600 px-5 text-base font-medium rounded-lg"
                             />
                         </div>
                         <button

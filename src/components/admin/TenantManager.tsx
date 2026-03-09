@@ -48,8 +48,8 @@ export function TenantManager({ initialTenants, isTenantOwner }: TenantManagerPr
             {/* Formulário de Cadastro - Apenas SuperAdmin */}
             {!isTenantOwner && <CreateTenantForm />}
 
-            {/* Listagem de Estabelecimentos */}
-            <TenantTable tenants={tenants} onEdit={handleEdit} />
+            {/* Listagem de Lojas */}
+            <TenantTable tenants={tenants} onEdit={handleEdit} isTenantOwner={isTenantOwner} />
         </div>
     );
 }

@@ -99,7 +99,7 @@ export function ClientAdminGeneralCalculations({ initialCalculations }: { initia
                     <div className="relative">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
                         <Input
-                            placeholder="Buscar por estabelecimento ou usuário..."
+                            placeholder="Buscar por loja ou usuário..."
                             value={searchTerm}
                             onChange={handleSearchChange}
                             className="pl-9 h-10"
@@ -108,13 +108,13 @@ export function ClientAdminGeneralCalculations({ initialCalculations }: { initia
                 </div>
 
                 <div className="space-y-1.5 w-full md:w-[240px]">
-                    <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">Estabelecimento</label>
+                    <label className="text-xs font-bold uppercase tracking-wider text-zinc-500 ml-1">Loja</label>
                     <Select value={tenantFilter} onValueChange={handleTenantFilterChange}>
                         <SelectTrigger className="h-10">
-                            <SelectValue placeholder="Todos os estabelecimentos" />
+                            <SelectValue placeholder="Todos os lojas" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">Todos os estabelecimentos</SelectItem>
+                            <SelectItem value="all">Todos os lojas</SelectItem>
                             {filterOptions.tenants.map(tenant => (
                                 <SelectItem key={tenant.id} value={tenant.id}>{tenant.name}</SelectItem>
                             ))}
@@ -150,7 +150,7 @@ export function ClientAdminGeneralCalculations({ initialCalculations }: { initia
                     <TableHeader className="bg-zinc-100 dark:bg-zinc-800/50 border-y">
                         <TableRow className="border-none hover:bg-transparent">
                             <TableHead className="px-2 md:px-3 py-4 text-xs font-black uppercase text-zinc-500">Data</TableHead>
-                            <TableHead className="px-2 md:px-3 py-4 text-xs font-black uppercase text-zinc-500 hidden md:table-cell">Estabelecimento</TableHead>
+                            <TableHead className="px-2 md:px-3 py-4 text-xs font-black uppercase text-zinc-500 hidden md:table-cell">Loja</TableHead>
                             <TableHead className="px-2 md:px-3 py-4 text-xs font-black uppercase text-zinc-500 hidden md:table-cell">Usuário</TableHead>
                             <TableHead className="px-2 md:px-3 py-4 text-xs font-black uppercase text-zinc-500 text-center hidden md:table-cell">Pessoas</TableHead>
                             <TableHead className="px-2 md:px-3 py-4 text-xs font-black uppercase text-zinc-500 text-center hidden md:table-cell">Itens</TableHead>

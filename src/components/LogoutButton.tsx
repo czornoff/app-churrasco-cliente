@@ -9,10 +9,9 @@ export function LogoutButton() {
         <Button
             variant="ghost"
             onClick={() => signOut({ callbackUrl: `/admin` })}
-            className="text-zinc-500 hover:text-red-600"
+            className="text-red-500 hover:text-red-600"
         >
-            <LogOut className="w-4 h-4 mr-2" />
-            Sair
+            <LogOut className="w-4 h-4" />
         </Button>
     );
 }
