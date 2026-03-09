@@ -8,7 +8,7 @@ import {
     UtensilsCrossed,
     Calculator,
     LogOut,
-    ChevronDown,
+    UserCog,
     Menu,
     X,
     UserCircle,
@@ -134,10 +134,17 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
 
                         {/* Mobile Menu Toggle */}
                         <button
-                            className="md:hidden p-2 text-white"
+                            className="p-2 text-white"
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         >
-                            {isMobileMenuOpen ? <X size={24} className="text-zinc-500" /> : <Menu size={24} className="text-zinc-500" />}
+                            {
+                                isMobileMenuOpen ?
+                                    <X size={24} className="text-zinc-500" /> :
+                                    <div>
+                                        <Menu size={24} className="text-zinc-500 md:hidden" />
+                                        <UserCog size={24} className="text-zinc-500 hidden md:block" />
+                                    </div>
+                            }
                         </button>
                     </div>
                 </div>
@@ -146,24 +153,26 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                 {isMobileMenuOpen && (
                     <div className="absolute top-full left-0 w-full bg-white dark:bg-zinc-950 border-t border-zinc-100 dark:border-zinc-900 p-6 animate-in slide-in-from-top duration-300">
                         <nav className="flex flex-col gap-4">
-                            {allMenuItems.map((item) => {
-                                const href = isInternalLink(item.url)
-                                    ? `/${tenant.slug}${item.url.startsWith('/') ? item.url : '/' + item.url}`
-                                    : item.url;
+                            <div className="md:hidden">
+                                {allMenuItems.map((item) => {
+                                    const href = isInternalLink(item.url)
+                                        ? `/${tenant.slug}${item.url.startsWith('/') ? item.url : '/' + item.url}`
+                                        : item.url;
 
-                                const Icon = item.nome.toLowerCase().includes('cardápio') ? UtensilsCrossed
-                                    : item.nome.toLowerCase().includes('calculadora') ? Calculator
-                                        : Menu;
+                                    const Icon = item.nome.toLowerCase().includes('cardápio') ? UtensilsCrossed
+                                        : item.nome.toLowerCase().includes('calculadora') ? Calculator
+                                            : Menu;
 
-                                return (
-                                    <Link key={item._id} href={href} onClick={() => setIsMobileMenuOpen(false)} target={!isInternalLink(item.url) ? "_blank" : undefined}>
-                                        <div className="p-4 rounded-lg bg-zinc-50 dark:bg-zinc-900 font-black text-xs uppercase tracking-widest flex items-center justify-between">
-                                            {item.nome}
-                                            <Icon size={16} style={{ color: tenant.colorPrimary }} />
-                                        </div>
-                                    </Link>
-                                );
-                            })}
+                                    return (
+                                        <Link key={item._id} href={href} onClick={() => setIsMobileMenuOpen(false)} target={!isInternalLink(item.url) ? "_blank" : undefined}>
+                                            <div className="p-4 rounded-lg bg-zinc-50 dark:bg-zinc-900 font-black text-xs uppercase tracking-widest flex items-center justify-between">
+                                                {item.nome}
+                                                <Icon size={16} style={{ color: tenant.colorPrimary }} />
+                                            </div>
+                                        </Link>
+                                    );
+                                })}
+                            </div>
 
                             {session && (
                                 <>

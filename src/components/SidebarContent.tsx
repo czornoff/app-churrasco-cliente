@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Users, UserCircle, UserCog, LayoutDashboard, History, UtensilsCrossed } from "lucide-react";
+import { Users, UserCog, LayoutDashboard, History } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 
@@ -10,8 +10,7 @@ const navItems = [
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/tenants", label: "Lojas", icon: Users },
     { href: "/admin/users", label: "Usuários", icon: UserCog },
-    { href: "/admin/calculations", label: "Histórico", icon: History },
-    { href: "/admin/perfil", label: "Meu Perfil", icon: UserCircle },
+    { href: "/admin/calculations", label: "Histórico", icon: History }
 ];
 
 export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
