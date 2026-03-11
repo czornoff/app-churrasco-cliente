@@ -49,7 +49,7 @@ export default async function Home() {
                             size="lg"
                             className="bg-orange-600 hover:bg-orange-700 text-white font-bold text-xl px-12 py-8 rounded-full shadow-[0_0_20px_rgba(234,88,12,0.3)] hover:shadow-[0_0_30px_rgba(234,88,12,0.5)] transition-all transform hover:scale-105 active:scale-95"
                         >
-                            <Link href="./loja-modelo">
+                            <Link href={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/loja-modelo`}>
                                 <Calculator className="mr-2 h-6 w-6" />
                                 VEJA UMA LOJA MODELO
                             </Link>
