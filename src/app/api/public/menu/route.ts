@@ -21,6 +21,6 @@ export async function GET(req: Request) {
         return NextResponse.json({ error: "Tenant not found" }, { status: 404 });
     }
 
-    const menus = await ClienteMenu.find({ clienteId: id, ativo: true }).sort({ createdAt: 1 });
+    const menus = await ClienteMenu.find({ tenantId: id, ativo: true }).sort({ createdAt: 1 });
     return NextResponse.json(menus);
 }

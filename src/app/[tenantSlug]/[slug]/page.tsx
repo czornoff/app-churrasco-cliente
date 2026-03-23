@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     if (!tenant) return { title: "Página não encontrada" };
 
     const clientePagina = await ClientePagina.findOne({
-        clienteId: tenant._id,
+        tenantId: tenant._id,
         "paginas.slug": slug,
         "paginas.ativo": true
     }).select("paginas.$");
@@ -58,7 +58,7 @@ export default async function DynamicPage({ params }: PageProps) {
     }
 
     const clientePagina = await ClientePagina.findOne({
-        clienteId: tenantRaw._id,
+        tenantId: tenantRaw._id,
         "paginas.slug": slug,
         "paginas.ativo": true
     });
@@ -102,9 +102,9 @@ export default async function DynamicPage({ params }: PageProps) {
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-4">
-                                    <p className="text-zinc-600 dark:text-zinc-300 mb-4 text-sm leading-relaxed">
+                                    <div className="text-zinc-600 dark:text-zinc-300 mb-4 text-sm leading-relaxed">
                                         <div dangerouslySetInnerHTML={{ __html: card.texto.replace(/\n/g, '<br />') }} />
-                                    </p>
+                                    </div>
                                     {card.extra && (
                                         <div className="pt-4 mt-auto border-t border-dashed border-zinc-200 dark:border-zinc-800">
                                             <p className="text-xs font-bold uppercase tracking-wider" style={{ color: primaryColor }}>

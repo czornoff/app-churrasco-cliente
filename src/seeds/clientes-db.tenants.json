@@ -1,0 +1,29 @@
+[{
+  "_id": {
+    "$oid": "69aa231d05b42a8c0ac4576d"
+  },
+  "name": "Loja Modelo",
+  "slug": "loja-modelo",
+  "nomeApp": "Loja Modelo",
+  "slogan": "A solução inteligente para organizar seu churrasco sem desperdícios.",
+  "logoUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772758044/oqwvojiaa4o8ialrba1s.png",
+  "colorPrimary": "#346fe5",
+  "email": "czornoff@gmail.com",
+  "whatsApp": "(11) 99378-8486",
+  "instagram": "https://instagram.com/",
+  "address": "Praça da Sé, 1, São Paulo, SP.",
+  "versao": "1.0.1",
+  "limiteConsulta": 5,
+  "grCarnePessoa": 300,
+  "grAcompanhamentoPessoa": 200,
+  "mlBebidaPessoa": 1000,
+  "grSobremesaPessoa": 150,
+  "active": true,
+  "createdAt": {
+    "$date": "2026-03-06T00:43:09.357Z"
+  },
+  "updatedAt": {
+    "$date": "2026-03-06T22:45:32.911Z"
+  },
+  "__v": 0
+}]

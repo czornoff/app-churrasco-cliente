@@ -4,7 +4,7 @@ export interface IClienteMenu {
     url: string;
     idPai: number;
     ativo: boolean;
-    clienteId: string;
+    tenantId: string;
     createdAt?: Date;
     updatedAt?: Date;
 }

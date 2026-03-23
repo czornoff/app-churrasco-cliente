@@ -30,7 +30,7 @@ export async function GET(req: Request) {
     }
 
     await connectDB();
-    const menus = await ClienteMenu.find({ clienteId: targetTenantId }).sort({ createdAt: 1 });
+    const menus = await ClienteMenu.find({ tenantId: targetTenantId }).sort({ createdAt: 1 });
     return NextResponse.json(menus);
 }
 
@@ -51,7 +51,7 @@ export async function POST(req: Request) {
 
     const menu = await ClienteMenu.create({
         ...body,
-        clienteId: targetTenantId
+        tenantId: targetTenantId
     });
 
     return NextResponse.json(menu);
@@ -73,7 +73,7 @@ export async function PUT(req: Request) {
     await connectDB();
 
     const menu = await ClienteMenu.findOneAndUpdate(
-        { _id, clienteId: targetTenantId },
+        { _id, tenantId: targetTenantId },
         body,
         { new: true }
     );
@@ -102,7 +102,7 @@ export async function DELETE(req: Request) {
     }
 
     await connectDB();
-    const menu = await ClienteMenu.findOneAndDelete({ _id: id, clienteId: targetTenantId });
+    const menu = await ClienteMenu.findOneAndDelete({ _id: id, tenantId: targetTenantId });
 
     if (!menu) {
         return NextResponse.json({ error: "Menu not found" }, { status: 404 });

@@ -1,0 +1,19 @@
+[{
+  "_id": {
+    "$oid": "69aadbafe4b6faac21c1c508"
+  },
+  "nome": "O Churrasco",
+  "url": "o-churrasco",
+  "idPai": 0,
+  "ativo": true,
+  "tenantId": {
+    "$oid": "69aa231d05b42a8c0ac4576d"
+  },
+  "createdAt": {
+    "$date": "2026-03-06T13:50:39.150Z"
+  },
+  "updatedAt": {
+    "$date": "2026-03-06T17:36:00.091Z"
+  },
+  "__v": 0
+}]

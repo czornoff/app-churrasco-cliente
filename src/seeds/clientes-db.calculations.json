@@ -1,0 +1,898 @@
+[{
+  "_id": {
+    "$oid": "69ab1022d19ad4982eb36fff"
+  },
+  "tenantId": {
+    "$oid": "69aa231d05b42a8c0ac4576d"
+  },
+  "userId": {
+    "$oid": "69aa1dd114302fbfedde10c5"
+  },
+  "eventName": "Churrasco sem nome",
+  "totalPeople": {
+    "men": 1,
+    "women": 1,
+    "children": 0
+  },
+  "items": [
+    {
+      "produtoId": "69aa238605b42a8c0ac45779",
+      "nome": "Espetinho de Carne",
+      "preco": 39.9,
+      "quantidade": 840,
+      "quantidadeEmbalagem": 1,
+      "tamanhoEmbalagem": 900,
+      "totalPreco": 39.9,
+      "categoria": "carnes",
+      "unidade": "g"
+    }
+  ],
+  "totalPrice": 39.9,
+  "createdAt": {
+    "$date": "2026-03-06T17:34:26.238Z"
+  },
+  "updatedAt": {
+    "$date": "2026-03-06T17:34:26.238Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69ab159fd19ad4982eb371c0"
+  },
+  "tenantId": {
+    "$oid": "69aa231d05b42a8c0ac4576d"
+  },
+  "userId": {
+    "$oid": "69aa1dd114302fbfedde10c5"
+  },
+  "eventName": "Churrasco sem nome",
+  "totalPeople": {
+    "men": 10,
+    "women": 10,
+    "children": 5
+  },
+  "items": [
+    {
+      "produtoId": "69aa238605b42a8c0ac45779",
+      "nome": "Espetinho de Carne",
+      "preco": 39.9,
+      "quantidade": 3428.57,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 900,
+      "totalPreco": 159.6,
+      "categoria": "carnes",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab11a5d19ad4982eb3705d",
+      "nome": "Espetinho de Frango",
+      "preco": 29.9,
+      "quantidade": 2285.71,
+      "quantidadeEmbalagem": 3,
+      "tamanhoEmbalagem": 800,
+      "totalPreco": 89.7,
+      "categoria": "carnes",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab11d4d19ad4982eb3706a",
+      "nome": "Espetinho de Kafta",
+      "preco": 32.9,
+      "quantidade": 2285.71,
+      "quantidadeEmbalagem": 3,
+      "tamanhoEmbalagem": 800,
+      "totalPreco": 98.7,
+      "categoria": "carnes",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab12f8d19ad4982eb370c4",
+      "nome": "Cerveja 269ml",
+      "preco": 2.69,
+      "quantidade": 12000,
+      "quantidadeEmbalagem": 45,
+      "tamanhoEmbalagem": 269,
+      "totalPreco": 121.05,
+      "categoria": "bebidas",
+      "subCategoriaBebida": "alcoolica",
+      "unidade": "ml"
+    },
+    {
+      "produtoId": "69ab139fd19ad4982eb3713b",
+      "nome": "Refrigerante Garrafa",
+      "preco": 9.9,
+      "quantidade": 19200,
+      "quantidadeEmbalagem": 10,
+      "tamanhoEmbalagem": 2000,
+      "totalPreco": 99,
+      "categoria": "bebidas",
+      "subCategoriaBebida": "nao-alcoolica",
+      "unidade": "ml"
+    },
+    {
+      "produtoId": "69ab11f8d19ad4982eb37070",
+      "nome": "Espetinho de Pão de Alho",
+      "preco": 19.9,
+      "quantidade": 1661.13,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 79.6,
+      "categoria": "acompanhamentos",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab1235d19ad4982eb3707f",
+      "nome": "Espetinho de Queijo Coalho",
+      "preco": 19.9,
+      "quantidade": 1661.13,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 79.6,
+      "categoria": "acompanhamentos",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab13bfd19ad4982eb3714f",
+      "nome": "Salada Maionese",
+      "preco": 12.5,
+      "quantidade": 1661.13,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 50,
+      "categoria": "acompanhamentos",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab142ed19ad4982eb37164",
+      "nome": "Sal Parrilha",
+      "preco": 12.5,
+      "quantidade": 16.61,
+      "quantidadeEmbalagem": 1,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 12.5,
+      "categoria": "outros",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab154ad19ad4982eb3717b",
+      "nome": "Abacaxi com Canela",
+      "preco": 10,
+      "quantidade": 1000,
+      "quantidadeEmbalagem": 1,
+      "tamanhoEmbalagem": 1000,
+      "totalPreco": 10,
+      "categoria": "sobremesas",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab1566d19ad4982eb37192",
+      "nome": "Bolo Aniversário",
+      "preco": 70,
+      "quantidade": 1000,
+      "quantidadeEmbalagem": 1,
+      "tamanhoEmbalagem": 1000,
+      "totalPreco": 70,
+      "categoria": "sobremesas",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab1293d19ad4982eb3709d",
+      "nome": "Acendedor",
+      "preco": 16.5,
+      "quantidade": 4,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 0,
+      "totalPreco": 66,
+      "categoria": "suprimentos",
+      "unidade": ""
+    },
+    {
+      "produtoId": "69ab12b9d19ad4982eb370a9",
+      "nome": "Carvão 5kg",
+      "preco": 56.5,
+      "quantidade": 9.6,
+      "quantidadeEmbalagem": 10,
+      "tamanhoEmbalagem": 0,
+      "totalPreco": 565,
+      "categoria": "suprimentos",
+      "unidade": ""
+    }
+  ],
+  "totalPrice": 1500.75,
+  "createdAt": {
+    "$date": "2026-03-06T17:57:51.438Z"
+  },
+  "updatedAt": {
+    "$date": "2026-03-06T17:57:51.438Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69ab1637d19ad4982eb371f0"
+  },
+  "tenantId": {
+    "$oid": "69aa231d05b42a8c0ac4576d"
+  },
+  "userId": {
+    "$oid": "69aa1dd114302fbfedde10c5"
+  },
+  "eventName": "Churrasco sem nome",
+  "totalPeople": {
+    "men": 10,
+    "women": 10,
+    "children": 5
+  },
+  "items": [
+    {
+      "produtoId": "69aa238605b42a8c0ac45779",
+      "nome": "Espetinho de Carne",
+      "preco": 39.9,
+      "quantidade": 3428.57,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 900,
+      "totalPreco": 159.6,
+      "categoria": "carnes",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab11a5d19ad4982eb3705d",
+      "nome": "Espetinho de Frango",
+      "preco": 29.9,
+      "quantidade": 2285.71,
+      "quantidadeEmbalagem": 3,
+      "tamanhoEmbalagem": 800,
+      "totalPreco": 89.7,
+      "categoria": "carnes",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab11d4d19ad4982eb3706a",
+      "nome": "Espetinho de Kafta",
+      "preco": 32.9,
+      "quantidade": 2285.71,
+      "quantidadeEmbalagem": 3,
+      "tamanhoEmbalagem": 800,
+      "totalPreco": 98.7,
+      "categoria": "carnes",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab12f8d19ad4982eb370c4",
+      "nome": "Cerveja 269ml",
+      "preco": 2.69,
+      "quantidade": 12000,
+      "quantidadeEmbalagem": 45,
+      "tamanhoEmbalagem": 269,
+      "totalPreco": 121.05,
+      "categoria": "bebidas",
+      "subCategoriaBebida": "alcoolica",
+      "unidade": "ml"
+    },
+    {
+      "produtoId": "69ab139fd19ad4982eb3713b",
+      "nome": "Refrigerante Garrafa",
+      "preco": 9.9,
+      "quantidade": 19200,
+      "quantidadeEmbalagem": 10,
+      "tamanhoEmbalagem": 2000,
+      "totalPreco": 99,
+      "categoria": "bebidas",
+      "subCategoriaBebida": "nao-alcoolica",
+      "unidade": "ml"
+    },
+    {
+      "produtoId": "69ab11f8d19ad4982eb37070",
+      "nome": "Espetinho de Pão de Alho",
+      "preco": 19.9,
+      "quantidade": 1661.13,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 79.6,
+      "categoria": "acompanhamentos",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab1235d19ad4982eb3707f",
+      "nome": "Espetinho de Queijo Coalho",
+      "preco": 19.9,
+      "quantidade": 1661.13,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 79.6,
+      "categoria": "acompanhamentos",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab13bfd19ad4982eb3714f",
+      "nome": "Salada Maionese",
+      "preco": 12.5,
+      "quantidade": 1661.13,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 50,
+      "categoria": "acompanhamentos",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab142ed19ad4982eb37164",
+      "nome": "Sal Parrilha",
+      "preco": 12.5,
+      "quantidade": 16.61,
+      "quantidadeEmbalagem": 1,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 12.5,
+      "categoria": "outros",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab154ad19ad4982eb3717b",
+      "nome": "Abacaxi com Canela",
+      "preco": 10,
+      "quantidade": 1000,
+      "quantidadeEmbalagem": 1,
+      "tamanhoEmbalagem": 1000,
+      "totalPreco": 10,
+      "categoria": "sobremesas",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab1566d19ad4982eb37192",
+      "nome": "Bolo Aniversário",
+      "preco": 70,
+      "quantidade": 1000,
+      "quantidadeEmbalagem": 1,
+      "tamanhoEmbalagem": 1000,
+      "totalPreco": 70,
+      "categoria": "sobremesas",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab1293d19ad4982eb3709d",
+      "nome": "Acendedor",
+      "preco": 16.5,
+      "quantidade": 4,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 0,
+      "totalPreco": 66,
+      "categoria": "suprimentos",
+      "unidade": ""
+    },
+    {
+      "produtoId": "69ab12b9d19ad4982eb370a9",
+      "nome": "Carvão 5kg",
+      "preco": 56.5,
+      "quantidade": 9.6,
+      "quantidadeEmbalagem": 10,
+      "tamanhoEmbalagem": 0,
+      "totalPreco": 565,
+      "categoria": "suprimentos",
+      "unidade": ""
+    }
+  ],
+  "totalPrice": 1500.75,
+  "createdAt": {
+    "$date": "2026-03-06T18:00:23.903Z"
+  },
+  "updatedAt": {
+    "$date": "2026-03-06T18:00:23.903Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69ab1639d19ad4982eb371f2"
+  },
+  "tenantId": {
+    "$oid": "69aa231d05b42a8c0ac4576d"
+  },
+  "userId": {
+    "$oid": "69aa1dd114302fbfedde10c5"
+  },
+  "eventName": "Churrasco sem nome",
+  "totalPeople": {
+    "men": 10,
+    "women": 10,
+    "children": 5
+  },
+  "items": [
+    {
+      "produtoId": "69aa238605b42a8c0ac45779",
+      "nome": "Espetinho de Carne",
+      "preco": 39.9,
+      "quantidade": 3428.57,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 900,
+      "totalPreco": 159.6,
+      "categoria": "carnes",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab11a5d19ad4982eb3705d",
+      "nome": "Espetinho de Frango",
+      "preco": 29.9,
+      "quantidade": 2285.71,
+      "quantidadeEmbalagem": 3,
+      "tamanhoEmbalagem": 800,
+      "totalPreco": 89.7,
+      "categoria": "carnes",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab11d4d19ad4982eb3706a",
+      "nome": "Espetinho de Kafta",
+      "preco": 32.9,
+      "quantidade": 2285.71,
+      "quantidadeEmbalagem": 3,
+      "tamanhoEmbalagem": 800,
+      "totalPreco": 98.7,
+      "categoria": "carnes",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab12f8d19ad4982eb370c4",
+      "nome": "Cerveja 269ml",
+      "preco": 2.69,
+      "quantidade": 12000,
+      "quantidadeEmbalagem": 45,
+      "tamanhoEmbalagem": 269,
+      "totalPreco": 121.05,
+      "categoria": "bebidas",
+      "subCategoriaBebida": "alcoolica",
+      "unidade": "ml"
+    },
+    {
+      "produtoId": "69ab139fd19ad4982eb3713b",
+      "nome": "Refrigerante Garrafa",
+      "preco": 9.9,
+      "quantidade": 19200,
+      "quantidadeEmbalagem": 10,
+      "tamanhoEmbalagem": 2000,
+      "totalPreco": 99,
+      "categoria": "bebidas",
+      "subCategoriaBebida": "nao-alcoolica",
+      "unidade": "ml"
+    },
+    {
+      "produtoId": "69ab11f8d19ad4982eb37070",
+      "nome": "Espetinho de Pão de Alho",
+      "preco": 19.9,
+      "quantidade": 1661.13,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 79.6,
+      "categoria": "acompanhamentos",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab1235d19ad4982eb3707f",
+      "nome": "Espetinho de Queijo Coalho",
+      "preco": 19.9,
+      "quantidade": 1661.13,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 79.6,
+      "categoria": "acompanhamentos",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab13bfd19ad4982eb3714f",
+      "nome": "Salada Maionese",
+      "preco": 12.5,
+      "quantidade": 1661.13,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 50,
+      "categoria": "acompanhamentos",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab142ed19ad4982eb37164",
+      "nome": "Sal Parrilha",
+      "preco": 12.5,
+      "quantidade": 16.61,
+      "quantidadeEmbalagem": 1,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 12.5,
+      "categoria": "outros",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab154ad19ad4982eb3717b",
+      "nome": "Abacaxi com Canela",
+      "preco": 10,
+      "quantidade": 1000,
+      "quantidadeEmbalagem": 1,
+      "tamanhoEmbalagem": 1000,
+      "totalPreco": 10,
+      "categoria": "sobremesas",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab1566d19ad4982eb37192",
+      "nome": "Bolo Aniversário",
+      "preco": 70,
+      "quantidade": 1000,
+      "quantidadeEmbalagem": 1,
+      "tamanhoEmbalagem": 1000,
+      "totalPreco": 70,
+      "categoria": "sobremesas",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab1293d19ad4982eb3709d",
+      "nome": "Acendedor",
+      "preco": 16.5,
+      "quantidade": 4,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 0,
+      "totalPreco": 66,
+      "categoria": "suprimentos",
+      "unidade": ""
+    },
+    {
+      "produtoId": "69ab12b9d19ad4982eb370a9",
+      "nome": "Carvão 5kg",
+      "preco": 56.5,
+      "quantidade": 9.6,
+      "quantidadeEmbalagem": 10,
+      "tamanhoEmbalagem": 0,
+      "totalPreco": 565,
+      "categoria": "suprimentos",
+      "unidade": ""
+    }
+  ],
+  "totalPrice": 1500.75,
+  "createdAt": {
+    "$date": "2026-03-06T18:00:25.804Z"
+  },
+  "updatedAt": {
+    "$date": "2026-03-06T18:00:25.804Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69ab1657d19ad4982eb371f5"
+  },
+  "tenantId": {
+    "$oid": "69aa231d05b42a8c0ac4576d"
+  },
+  "userId": {
+    "$oid": "69aa1dd114302fbfedde10c5"
+  },
+  "eventName": "Churrasco sem nome",
+  "totalPeople": {
+    "men": 10,
+    "women": 10,
+    "children": 5
+  },
+  "items": [
+    {
+      "produtoId": "69aa238605b42a8c0ac45779",
+      "nome": "Espetinho de Carne",
+      "preco": 39.9,
+      "quantidade": 3428.57,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 900,
+      "totalPreco": 159.6,
+      "categoria": "carnes",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab11a5d19ad4982eb3705d",
+      "nome": "Espetinho de Frango",
+      "preco": 29.9,
+      "quantidade": 2285.71,
+      "quantidadeEmbalagem": 3,
+      "tamanhoEmbalagem": 800,
+      "totalPreco": 89.7,
+      "categoria": "carnes",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab11d4d19ad4982eb3706a",
+      "nome": "Espetinho de Kafta",
+      "preco": 32.9,
+      "quantidade": 2285.71,
+      "quantidadeEmbalagem": 3,
+      "tamanhoEmbalagem": 800,
+      "totalPreco": 98.7,
+      "categoria": "carnes",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab12dbd19ad4982eb370b6",
+      "nome": "Cerveja 350ml",
+      "preco": 3.6,
+      "quantidade": 12000,
+      "quantidadeEmbalagem": 35,
+      "tamanhoEmbalagem": 350,
+      "totalPreco": 126,
+      "categoria": "bebidas",
+      "subCategoriaBebida": "alcoolica",
+      "unidade": "ml"
+    },
+    {
+      "produtoId": "69ab139fd19ad4982eb3713b",
+      "nome": "Refrigerante Garrafa",
+      "preco": 9.9,
+      "quantidade": 19200,
+      "quantidadeEmbalagem": 10,
+      "tamanhoEmbalagem": 2000,
+      "totalPreco": 99,
+      "categoria": "bebidas",
+      "subCategoriaBebida": "nao-alcoolica",
+      "unidade": "ml"
+    },
+    {
+      "produtoId": "69ab11f8d19ad4982eb37070",
+      "nome": "Espetinho de Pão de Alho",
+      "preco": 19.9,
+      "quantidade": 1661.13,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 79.6,
+      "categoria": "acompanhamentos",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab1235d19ad4982eb3707f",
+      "nome": "Espetinho de Queijo Coalho",
+      "preco": 19.9,
+      "quantidade": 1661.13,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 79.6,
+      "categoria": "acompanhamentos",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab13bfd19ad4982eb3714f",
+      "nome": "Salada Maionese",
+      "preco": 12.5,
+      "quantidade": 1661.13,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 50,
+      "categoria": "acompanhamentos",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab142ed19ad4982eb37164",
+      "nome": "Sal Parrilha",
+      "preco": 12.5,
+      "quantidade": 16.61,
+      "quantidadeEmbalagem": 1,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 12.5,
+      "categoria": "outros",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab154ad19ad4982eb3717b",
+      "nome": "Abacaxi com Canela",
+      "preco": 10,
+      "quantidade": 1000,
+      "quantidadeEmbalagem": 1,
+      "tamanhoEmbalagem": 1000,
+      "totalPreco": 10,
+      "categoria": "sobremesas",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab1566d19ad4982eb37192",
+      "nome": "Bolo Aniversário",
+      "preco": 70,
+      "quantidade": 1000,
+      "quantidadeEmbalagem": 1,
+      "tamanhoEmbalagem": 1000,
+      "totalPreco": 70,
+      "categoria": "sobremesas",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab12b9d19ad4982eb370a9",
+      "nome": "Carvão 5kg",
+      "preco": 56.5,
+      "quantidade": 9.6,
+      "quantidadeEmbalagem": 10,
+      "tamanhoEmbalagem": 0,
+      "totalPreco": 565,
+      "categoria": "suprimentos",
+      "unidade": ""
+    },
+    {
+      "produtoId": "69ab1293d19ad4982eb3709d",
+      "nome": "Acendedor",
+      "preco": 16.5,
+      "quantidade": 4,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 0,
+      "totalPreco": 66,
+      "categoria": "suprimentos",
+      "unidade": ""
+    }
+  ],
+  "totalPrice": 1505.7,
+  "createdAt": {
+    "$date": "2026-03-06T18:00:55.899Z"
+  },
+  "updatedAt": {
+    "$date": "2026-03-06T18:00:55.899Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69ab59ac0af8dc28c012d7f0"
+  },
+  "tenantId": {
+    "$oid": "69aa231d05b42a8c0ac4576d"
+  },
+  "userId": {
+    "$oid": "69aa1dd114302fbfedde10c5"
+  },
+  "eventName": "Churrasco sem nome",
+  "totalPeople": {
+    "men": 10,
+    "women": 10,
+    "children": 5
+  },
+  "items": [
+    {
+      "produtoId": "69aa238605b42a8c0ac45779",
+      "nome": "Espetinho de Carne",
+      "preco": 39.9,
+      "quantidade": 3600,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 900,
+      "totalPreco": 159.6,
+      "categoria": "carnes",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab11a5d19ad4982eb3705d",
+      "nome": "Espetinho de Frango",
+      "preco": 29.9,
+      "quantidade": 2400,
+      "quantidadeEmbalagem": 3,
+      "tamanhoEmbalagem": 800,
+      "totalPreco": 89.7,
+      "categoria": "carnes",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab12f8d19ad4982eb370c4",
+      "nome": "Cerveja 269ml",
+      "preco": 2.69,
+      "quantidade": 10000,
+      "quantidadeEmbalagem": 38,
+      "tamanhoEmbalagem": 269,
+      "totalPreco": 102.22,
+      "categoria": "bebidas",
+      "subCategoriaBebida": "alcoolica",
+      "unidade": "ml"
+    },
+    {
+      "produtoId": "69ab139fd19ad4982eb3713b",
+      "nome": "Refrigerante Garrafa",
+      "preco": 9.9,
+      "quantidade": 16000,
+      "quantidadeEmbalagem": 8,
+      "tamanhoEmbalagem": 2000,
+      "totalPreco": 79.2,
+      "categoria": "bebidas",
+      "subCategoriaBebida": "nao-alcoolica",
+      "unidade": "ml"
+    },
+    {
+      "produtoId": "69ab1315d19ad4982eb370d3",
+      "nome": "Farofa",
+      "preco": 6.3,
+      "quantidade": 569.8,
+      "quantidadeEmbalagem": 2,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 12.6,
+      "categoria": "acompanhamentos",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab13bfd19ad4982eb3714f",
+      "nome": "Salada Maionese",
+      "preco": 12.5,
+      "quantidade": 1139.6,
+      "quantidadeEmbalagem": 3,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 37.5,
+      "categoria": "acompanhamentos",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab142ed19ad4982eb37164",
+      "nome": "Sal Parrilha",
+      "preco": 12.5,
+      "quantidade": 11.4,
+      "quantidadeEmbalagem": 1,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 12.5,
+      "categoria": "outros",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab11f8d19ad4982eb37070",
+      "nome": "Espetinho de Pão de Alho",
+      "preco": 19.9,
+      "quantidade": 1139.6,
+      "quantidadeEmbalagem": 3,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 59.7,
+      "categoria": "outros",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab1235d19ad4982eb3707f",
+      "nome": "Espetinho de Queijo Coalho",
+      "preco": 19.9,
+      "quantidade": 1139.6,
+      "quantidadeEmbalagem": 3,
+      "tamanhoEmbalagem": 500,
+      "totalPreco": 59.7,
+      "categoria": "outros",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab1566d19ad4982eb37192",
+      "nome": "Bolo Aniversário",
+      "preco": 70,
+      "quantidade": 1500,
+      "quantidadeEmbalagem": 2,
+      "tamanhoEmbalagem": 1000,
+      "totalPreco": 140,
+      "categoria": "sobremesas",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab154ad19ad4982eb3717b",
+      "nome": "Abacaxi com Canela",
+      "preco": 10,
+      "quantidade": 1500,
+      "quantidadeEmbalagem": 2,
+      "tamanhoEmbalagem": 1000,
+      "totalPreco": 20,
+      "categoria": "sobremesas",
+      "unidade": "g"
+    },
+    {
+      "produtoId": "69ab1293d19ad4982eb3709d",
+      "nome": "Acendedor",
+      "preco": 16.5,
+      "quantidade": 4,
+      "quantidadeEmbalagem": 4,
+      "tamanhoEmbalagem": 0,
+      "totalPreco": 66,
+      "categoria": "suprimentos",
+      "unidade": ""
+    },
+    {
+      "produtoId": "69ab12b9d19ad4982eb370a9",
+      "nome": "Carvão 5kg",
+      "preco": 56.5,
+      "quantidade": 6000,
+      "quantidadeEmbalagem": 2,
+      "tamanhoEmbalagem": 5000,
+      "totalPreco": 113,
+      "categoria": "suprimentos",
+      "unidade": "g"
+    }
+  ],
+  "totalPrice": 951.72,
+  "createdAt": {
+    "$date": "2026-03-06T22:48:12.841Z"
+  },
+  "updatedAt": {
+    "$date": "2026-03-06T22:48:12.841Z"
+  },
+  "__v": 0
+}]

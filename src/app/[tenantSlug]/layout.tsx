@@ -59,7 +59,7 @@ export default async function TenantLayout({ children, params }: TenantLayoutPro
     const whatsappLimpo = tenant.whatsApp ? formatWhatsAppLink(tenant.whatsApp) : "#";
 
     // Fetch Menu Items
-    const menuItemsRaw = await ClienteMenu.find({ clienteId: tenantRaw._id, ativo: true }).sort({ createdAt: 1 }).lean();
+    const menuItemsRaw = await ClienteMenu.find({ tenantId: tenantRaw._id, ativo: true }).sort({ createdAt: 1 }).lean();
     const menuItems = JSON.parse(JSON.stringify(menuItemsRaw));
 
     return (

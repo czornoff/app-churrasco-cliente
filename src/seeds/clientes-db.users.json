@@ -1,0 +1,45 @@
+[{
+  "nome": "Christian Zornoff",
+  "email": "czornoff@gmail.com",
+  "googleId": "115808998415559032251",
+  "role": "SUPERADMIN",
+  "status": "active",
+  "avatar": "https://lh3.googleusercontent.com/a/ACg8ocJNvFJHrj0n6_5p0lNZjmsU29h1rd_qUHKP_iWg4wL1VKKILJZJ5w=s96-c",
+  "tenantIds": [],
+  "tenantId": null,
+  "genero": "undefined",
+  "createdAt": {
+    "$date": "2026-03-06T00:20:33.655Z"
+  },
+  "updatedAt": {
+    "$date": "2026-03-06T00:20:33.655Z"
+  },
+  "__v": 0
+},
+{
+  "nome": "Dono de loja",
+  "email": "loja@mandebem.com",
+  "password": "$2b$10$HzD/5kb.6uEoY8vmRpIsJ.0dBo40CgmnsbpM8HurIiGK1EowdGavy",
+  "role": "TENANT_OWNER",
+  "status": "active",
+  "avatar": "https://ui-avatars.com/api/?name=Dono%20de%20loja&background=random",
+  "tenantIds": [
+    {
+      "$oid": "69aa231d05b42a8c0ac4576d"
+    }
+  ],
+  "genero": "undefined",
+  "createdAt": {
+    "$date": "2026-03-09T14:11:02.574Z"
+  },
+  "updatedAt": {
+    "$date": "2026-03-23T13:49:11.050Z"
+  },
+  "__v": 0,
+  "UF": "",
+  "cidade": "",
+  "tenantId": {
+    "$oid": "69aa231d05b42a8c0ac4576d"
+  },
+  "whatsApp": ""
+}]

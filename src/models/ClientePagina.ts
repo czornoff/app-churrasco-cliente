@@ -20,7 +20,7 @@ export interface IPagina {
 }
 
 export interface IClientePagina extends Document {
-    clienteId: Types.ObjectId;
+    tenantId: Types.ObjectId;
     paginas: IPagina[];
     createdAt: Date;
     updatedAt: Date;
@@ -45,7 +45,7 @@ const PaginaSchema = new Schema<IPagina>({
 });
 
 const ClientePaginaSchema = new Schema<IClientePagina>({
-    clienteId: {
+    tenantId: {
         type: Schema.Types.ObjectId,
         ref: 'Tenant',
         required: true

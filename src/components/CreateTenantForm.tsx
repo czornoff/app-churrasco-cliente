@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast } from "sonner" // Recomendado para feedback
 import { Plus } from "lucide-react"
+import { ResetModelButton } from "./admin/ResetModelButton"
 
 export function CreateTenantForm() {
     // O hook gerencia o estado da action (erro/sucesso)
@@ -25,38 +26,49 @@ export function CreateTenantForm() {
     }, [state]);
 
     return (
-        <Card className="border border-zinc-200/50 dark:border-zinc-600/50 shadow-sm hover:shadow-lg hover:shadow-zinc/60 dark:hover:shadow-zinc/20 transition-all duration-300 rounded-lg">
-            <CardHeader>
-                <CardTitle>Cadastrar nova Loja</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <form action={formAction} className="items-end">
-                    <div className="grid gap-6 md:grid-cols-2 mb-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="name">Nome da Loja</Label>
-                            <Input id="name" name="name" placeholder="Ex: Churrascaria Pantanal" required />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="slug">Slug da URL (ex: churrascaria-pantanal)</Label>
-                            <div className="flex items-center gap-2">
-                                <span className="text-sm text-zinc-400 font-mono">/</span>
-                                <Input id="slug" name="slug" placeholder="slug-unico" minLength={5} required />
+        <div className="flex gap-3">
+            <Card className="w-3/4 border border-zinc-200/50 dark:border-zinc-600/50 shadow-sm hover:shadow-lg hover:shadow-zinc/60 dark:hover:shadow-zinc/20 transition-all duration-300 rounded-lg">
+                <CardHeader>
+                    <CardTitle>Cadastrar nova Loja</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form action={formAction} className="items-end">
+                        <div className="grid gap-6 md:grid-cols-2 mb-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="name">Nome da Loja</Label>
+                                <Input id="name" name="name" placeholder="Ex: Churrascaria Pantanal" required />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="slug">Slug da URL (ex: churrascaria-pantanal)</Label>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm text-zinc-400 font-mono">/</span>
+                                    <Input id="slug" name="slug" placeholder="slug-unico" minLength={5} required />
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-
-
-                    <Button
-                        type="submit"
-                        disabled={isPending}
-                        className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4"
-                    >
-                        <Plus size={18} />
-                        {isPending ? "Criando..." : "Nova Loja"}
-                    </Button>
-                </form>
-            </CardContent>
-        </Card>
+    
+    
+    
+                        <Button
+                            type="submit"
+                            disabled={isPending}
+                            className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4"
+                        >
+                            <Plus size={18} />
+                            {isPending ? "Criando..." : "Nova Loja"}
+                        </Button>
+                    </form>
+                </CardContent>
+            </Card>
+            <Card className="w-1/4 border border-zinc-200/50 dark:border-zinc-600/50 shadow-sm hover:shadow-lg hover:shadow-zinc/60 dark:hover:shadow-zinc/20 transition-all duration-300 rounded-lg">
+                <CardHeader>
+                    <CardTitle>Resetar Loja Modelo</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-xs text-zinc-400 dark:text-zinc-500 font-medium mb-6">Reseta a loja modelo para o estado original</p>
+                    <ResetModelButton />
+                </CardContent>
+            </Card>
+        </div>
     )
 }

@@ -32,7 +32,7 @@ export async function GET(req: Request) {
     }
 
     await connectDB();
-    const clientePagina = await ClientePagina.findOne({ clienteId: targetTenantId });
+    const clientePagina = await ClientePagina.findOne({ tenantId: targetTenantId });
     return NextResponse.json(clientePagina?.paginas || []);
 }
 
@@ -51,14 +51,14 @@ export async function POST(req: Request) {
 
     await connectDB();
 
-    let clientePagina = await ClientePagina.findOne({ clienteId: targetTenantId });
+    let clientePagina = await ClientePagina.findOne({ tenantId: targetTenantId });
 
     // Remove tenantId from the page object itself to avoid cluttering subdoc
     const { tenantId, ...pageData } = body;
 
     if (!clientePagina) {
         clientePagina = await ClientePagina.create({
-            clienteId: targetTenantId,
+            tenantId: targetTenantId,
             paginas: [pageData]
         });
     } else {
@@ -87,7 +87,7 @@ export async function PUT(req: Request) {
     await connectDB();
 
     const clientePagina = await ClientePagina.findOneAndUpdate(
-        { clienteId: targetTenantId, "paginas._id": _id },
+        { tenantId: targetTenantId, "paginas._id": _id },
         {
             $set: {
                 "paginas.$": { ...body, _id }
@@ -122,7 +122,7 @@ export async function DELETE(req: Request) {
 
     await connectDB();
     const clientePagina = await ClientePagina.findOneAndUpdate(
-        { clienteId: targetTenantId },
+        { tenantId: targetTenantId },
         {
             $pull: { paginas: { _id: id } }
         },

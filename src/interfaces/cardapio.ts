@@ -8,7 +8,7 @@ export interface ICardapio {
     mlEmbalagem?: number;
     gramasEmbalagem?: number;
     ativo: boolean;
-    clienteId: string;
+    tenantId: string;
     createdAt?: Date;
     updatedAt?: Date;
 }

@@ -1,0 +1,546 @@
+[{
+  "_id": {
+    "$oid": "69aa238653f68bf1a9cc95fd"
+  },
+  "tenantId": {
+    "$oid": "69aa231d05b42a8c0ac4576d"
+  },
+  "__v": 0,
+  "acompanhamentos": [
+    {
+      "ativo": true,
+      "nome": "Farofa",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772819205/lsvduxbxgwzfoavvp9xi.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 6.3,
+      "gramasPorAdulto": 50,
+      "gramasEmbalagem": 500,
+      "mlPorAdulto": 0,
+      "mlEmbalagem": 0,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab1315d19ad4982eb370d3"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:47:01.905Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T17:47:01.905Z"
+      }
+    },
+    {
+      "ativo": true,
+      "nome": "Salada Maionese",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772819370/txncrcxxnyb8thhbdorm.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 12.5,
+      "gramasPorAdulto": 100,
+      "gramasEmbalagem": 500,
+      "mlPorAdulto": 0,
+      "mlEmbalagem": 0,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab13bfd19ad4982eb3714f"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:49:51.395Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T17:49:51.395Z"
+      }
+    }
+  ],
+  "bebidas": [
+    {
+      "ativo": true,
+      "nome": "Cerveja 350ml",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772819145/t7bb1agwiil0ofbqp2zc.png",
+      "subCategoriaBebida": "alcoolica",
+      "preco": 3.6,
+      "gramasPorAdulto": 0,
+      "gramasEmbalagem": 0,
+      "mlPorAdulto": 1200,
+      "mlEmbalagem": 350,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab12dbd19ad4982eb370b6"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:46:03.699Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T17:46:03.699Z"
+      }
+    },
+    {
+      "ativo": true,
+      "nome": "Cerveja 269ml",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772819172/yarg7clnpfs3gndnq0k0.png",
+      "subCategoriaBebida": "alcoolica",
+      "preco": 2.69,
+      "gramasPorAdulto": 0,
+      "gramasEmbalagem": 0,
+      "mlPorAdulto": 1200,
+      "mlEmbalagem": 269,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab12f8d19ad4982eb370c4"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:46:32.106Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T17:46:32.106Z"
+      }
+    },
+    {
+      "ativo": true,
+      "nome": "Cerveja Long Neck 330ml",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772819231/cxzb4xohkswhnglbmzij.png",
+      "subCategoriaBebida": "alcoolica",
+      "preco": 3.69,
+      "gramasPorAdulto": 0,
+      "gramasEmbalagem": 0,
+      "mlPorAdulto": 1200,
+      "mlEmbalagem": 330,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab1337d19ad4982eb370e3"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:47:35.911Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T17:47:35.911Z"
+      }
+    },
+    {
+      "ativo": true,
+      "nome": "Refrigerante Lata",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772819312/mypq34f1o3qgono5t4gs.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 2.65,
+      "gramasPorAdulto": 0,
+      "gramasEmbalagem": 0,
+      "mlPorAdulto": 1000,
+      "mlEmbalagem": 350,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab1384d19ad4982eb37128"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:48:52.461Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T17:48:52.461Z"
+      }
+    },
+    {
+      "ativo": true,
+      "nome": "Refrigerante Garrafa",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772819344/xdbzfhlz2ihurkerkhxi.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 9.9,
+      "gramasPorAdulto": 0,
+      "gramasEmbalagem": 0,
+      "mlPorAdulto": 1000,
+      "mlEmbalagem": 2000,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab139fd19ad4982eb3713b"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:49:19.264Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T17:49:19.264Z"
+      }
+    }
+  ],
+  "carnes": [
+    {
+      "ativo": true,
+      "nome": "Espetinho de Carne",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772757889/ggwexqdcc8hqctb2sac8.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 39.9,
+      "gramasPorAdulto": 300,
+      "gramasEmbalagem": 900,
+      "mlPorAdulto": 0,
+      "mlEmbalagem": 0,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69aa238605b42a8c0ac45779"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T00:44:54.734Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T00:44:54.734Z"
+      }
+    },
+    {
+      "ativo": true,
+      "nome": "Espetinho de Frango",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772818870/q6eonopsjzab0m40mkal.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 29.9,
+      "gramasPorAdulto": 200,
+      "gramasEmbalagem": 800,
+      "mlPorAdulto": 0,
+      "mlEmbalagem": 0,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab11a5d19ad4982eb3705d"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:40:53.828Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T17:41:12.741Z"
+      }
+    },
+    {
+      "ativo": true,
+      "nome": "Espetinho de Kafta",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772818897/ln4cftas4ythe1r4nof3.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 32.9,
+      "gramasPorAdulto": 200,
+      "gramasEmbalagem": 800,
+      "mlPorAdulto": 0,
+      "mlEmbalagem": 0,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab11d4d19ad4982eb3706a"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:41:40.401Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T17:41:40.401Z"
+      }
+    },
+    {
+      "ativo": true,
+      "nome": "Espetinho de Copa Lombo",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772818951/o3gi5kfqy4wx3an9vyzk.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 34.9,
+      "gramasPorAdulto": 200,
+      "gramasEmbalagem": 700,
+      "mlPorAdulto": 0,
+      "mlEmbalagem": 0,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab1216d19ad4982eb37077"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:42:46.311Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T17:42:46.311Z"
+      }
+    },
+    {
+      "ativo": true,
+      "nome": "Espetinho de Salsichão",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772819008/ujphegqqcxhwovoxb5pz.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 38.9,
+      "gramasPorAdulto": 150,
+      "gramasEmbalagem": 500,
+      "mlPorAdulto": 0,
+      "mlEmbalagem": 0,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab1251d19ad4982eb37088"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:43:45.978Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T17:43:45.978Z"
+      }
+    },
+    {
+      "ativo": true,
+      "nome": "Espetinho Camarão",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772819039/uus4jkzyhxgrxqsoepql.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 42.9,
+      "gramasPorAdulto": 100,
+      "gramasEmbalagem": 500,
+      "mlPorAdulto": 0,
+      "mlEmbalagem": 0,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab126ed19ad4982eb37092"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:44:14.323Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T17:44:14.323Z"
+      }
+    }
+  ],
+  "categoriasAtivas": {
+    "acompanhamentos": true,
+    "bebidas": true,
+    "carnes": true,
+    "outros": true,
+    "sobremesas": true,
+    "suprimentos": true
+  },
+  "configuracoes": {
+    "gramasCarneAdulto": 400,
+    "gramasOutrosAdulto": 200,
+    "mlBebidaAdulto": 1200
+  },
+  "createdAt": {
+    "$date": "2026-03-06T00:44:54.734Z"
+  },
+  "outros": [
+    {
+      "ativo": true,
+      "nome": "Molho Churrasco",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772819268/hlss5xizmnedkaemslvk.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 12.3,
+      "gramasPorAdulto": 10,
+      "gramasEmbalagem": 150,
+      "mlPorAdulto": 0,
+      "mlEmbalagem": 0,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab1357d19ad4982eb370f4"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:48:07.360Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T17:48:22.002Z"
+      }
+    },
+    {
+      "ativo": true,
+      "nome": "Sal Parrilha",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772819401/ogdr64a94gpu3hey0gkw.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 12.5,
+      "gramasPorAdulto": 1,
+      "gramasEmbalagem": 500,
+      "mlPorAdulto": 0,
+      "mlEmbalagem": 0,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab142ed19ad4982eb37164"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:51:42.333Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T17:51:42.333Z"
+      }
+    },
+    {
+      "ativo": true,
+      "nome": "Espetinho de Pão de Alho",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772818933/d2dnsrhwvuyiapxlceui.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 19.9,
+      "gramasPorAdulto": 100,
+      "gramasEmbalagem": 500,
+      "mlPorAdulto": 0,
+      "mlEmbalagem": 0,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab11f8d19ad4982eb37070"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T18:01:53.857Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T18:01:53.857Z"
+      }
+    },
+    {
+      "ativo": true,
+      "nome": "Espetinho de Queijo Coalho",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772818977/xeflvt9vvxe0ysfsvjuf.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 19.9,
+      "gramasPorAdulto": 100,
+      "gramasEmbalagem": 500,
+      "mlPorAdulto": 0,
+      "mlEmbalagem": 0,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab1235d19ad4982eb3707f"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T18:02:01.145Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T18:02:01.145Z"
+      }
+    }
+  ],
+  "sobremesas": [
+    {
+      "ativo": true,
+      "nome": "Abacaxi com Canela",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772819756/jruk9cyi9kiezk6rpkdl.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 10,
+      "gramasPorAdulto": 100,
+      "gramasEmbalagem": 1000,
+      "mlPorAdulto": 0,
+      "mlEmbalagem": 0,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab154ad19ad4982eb3717b"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:56:26.978Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T17:56:26.978Z"
+      }
+    },
+    {
+      "ativo": true,
+      "nome": "Bolo Aniversário",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772819795/bs1zwprlnqmm3domxczd.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 70,
+      "gramasPorAdulto": 100,
+      "gramasEmbalagem": 1000,
+      "mlPorAdulto": 0,
+      "mlEmbalagem": 0,
+      "qtdePorAdulto": 0,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "_id": {
+        "$oid": "69ab1566d19ad4982eb37192"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:56:54.947Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T17:56:54.947Z"
+      }
+    }
+  ],
+  "suprimentos": [
+    {
+      "ativo": true,
+      "nome": "Acendedor",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772819065/lcrxj3iamfjjthtxzfnr.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 16.5,
+      "gramasPorAdulto": 0,
+      "gramasEmbalagem": 0,
+      "mlPorAdulto": 0,
+      "mlEmbalagem": 0,
+      "qtdePorAdulto": 1,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "tipoSuprimento": "ACENDEDOR",
+      "_id": {
+        "$oid": "69ab1293d19ad4982eb3709d"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:44:51.820Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T17:44:51.820Z"
+      }
+    },
+    {
+      "ativo": true,
+      "nome": "Carvão 5kg",
+      "imageUrl": "https://res.cloudinary.com/dt6juutam/image/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/v1772819101/uiwo86mll5nfyecyjvih.png",
+      "subCategoriaBebida": "nao-alcoolica",
+      "preco": 56.5,
+      "gramasPorAdulto": 0,
+      "gramasEmbalagem": 5000,
+      "mlPorAdulto": 0,
+      "mlEmbalagem": 0,
+      "qtdePorAdulto": 1,
+      "pesoRelativo": 0,
+      "base": 1,
+      "fator": 1,
+      "tipoSuprimento": "CARVAO",
+      "_id": {
+        "$oid": "69ab12b9d19ad4982eb370a9"
+      },
+      "createdAt": {
+        "$date": "2026-03-06T17:45:29.390Z"
+      },
+      "updatedAt": {
+        "$date": "2026-03-06T22:47:33.816Z"
+      }
+    }
+  ],
+  "updatedAt": {
+    "$date": "2026-03-06T22:47:33.816Z"
+  }
+}]

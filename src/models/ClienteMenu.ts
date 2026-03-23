@@ -5,7 +5,7 @@ export interface IClienteMenu extends Document {
     url: string;
     idPai: number;
     ativo: boolean;
-    clienteId: Types.ObjectId;
+    tenantId: Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -15,7 +15,7 @@ const ClienteMenuSchema = new Schema<IClienteMenu>({
     url: { type: String, default: 'https://mandebem.com/' },
     idPai: { type: Number, default: 0 },
     ativo: { type: Boolean, default: true },
-    clienteId: {
+    tenantId: {
         type: Schema.Types.ObjectId,
         ref: 'Tenant',
         required: true

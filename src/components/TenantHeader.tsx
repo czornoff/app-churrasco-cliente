@@ -12,7 +12,8 @@ import {
     Menu,
     X,
     UserCircle,
-    LogIn
+    LogIn,
+    HelpCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { EndUserAuthModal } from './auth/EndUserAuthModal';
@@ -111,7 +112,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                             return (
                                 <Link key={item._id} href={href} target={!isInternalLink(item.url) ? "_blank" : undefined}>
                                     <Button variant="ghost" className="rounded-lg px-4 font-bold text-xs uppercase tracking-widest transition-all text-zinc-600 dark:text-zinc-100 hover:text-zinc-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5">
-                                        <Icon size={14} className="mr" />
+                                        <Icon size={14} className="mr-2" />
                                         {item.nome}
                                     </Button>
                                 </Link>
@@ -151,7 +152,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
 
                 {/* Mobile Menu Overlay */}
                 {isMobileMenuOpen && (
-                    <div className="absolute top-full left-0 w-full bg-white dark:bg-zinc-950 border-t border-zinc-100 dark:border-zinc-900 p-6 animate-in slide-in-from-top duration-300">
+                    <div className="absolute top-full left-0 md:left-[65%] w-full md:w-[35%] md:float-right bg-white dark:bg-zinc-950 border-t border-zinc-100 dark:border-zinc-900 p-6 animate-in slide-in-from-top duration-300">
                         <nav className="flex flex-col gap-4">
                             <div className="md:hidden">
                                 {allMenuItems.map((item) => {
@@ -191,6 +192,14 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                                             <p className="text-sm font-bold text-zinc-900 dark:text-white line-clamp-1">{session.user?.name}</p>
                                         </div>
                                     </div>
+                                    {(session.user.role === 'SUPERADMIN' || session.user.role === 'TENANT_OWNER') && (
+                                        <Link href={`${basePath}/admin`} onClick={() => setIsMobileMenuOpen(false)} target="_blank">
+                                            <div className="p-4 rounded-lg bg-orange-50 dark:bg-orange-950/20 font-black text-xs uppercase tracking-widest flex items-center justify-between text-orange-600 border border-orange-200/50 dark:border-orange-500/20">
+                                                Painel Administrativo
+                                                <UserCog size={16} />
+                                            </div>
+                                        </Link>
+                                    )}
                                     <Link href={`/${tenant.slug}/perfil`} onClick={() => setIsMobileMenuOpen(false)}>
                                         <div className="p-4 rounded-lg bg-zinc-50 dark:bg-zinc-900 font-black text-xs uppercase tracking-widest flex items-center justify-between">
                                             Meu Perfil
@@ -201,6 +210,12 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                                         <div className="p-4 rounded-lg bg-zinc-50 dark:bg-zinc-900 font-black text-xs uppercase tracking-widest flex items-center justify-between">
                                             Meus Churrascos
                                             <Calculator size={16} className="text-zinc-100" />
+                                        </div>
+                                    </Link>
+                                    <Link href={`${basePath}/manual`} onClick={() => setIsMobileMenuOpen(false)} target="_blank">
+                                        <div className="p-4 rounded-lg bg-zinc-50 dark:bg-zinc-900 font-black text-xs uppercase tracking-widest flex items-center justify-between">
+                                            Manual de Uso
+                                            <HelpCircle size={16} className="text-zinc-100" />
                                         </div>
                                     </Link>
                                     <button

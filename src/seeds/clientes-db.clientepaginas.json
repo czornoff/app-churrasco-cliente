@@ -1,0 +1,60 @@
+[{
+  "_id": {
+    "$oid": "69aadba2e4b6faac21c1c503"
+  },
+  "tenantId": {
+    "$oid": "69aa231d05b42a8c0ac4576d"
+  },
+  "paginas": [
+    {
+      "titulo": "O Churrasco",
+      "texto": "<p><i>O churrasco não é apenas uma técnica de cocção; é um ritual de celebração, um estado de espírito que transforma qualquer quintal em um santuário. No Brasil, ele é o evento oficial da \"felicidade sem pressa\".</i></p><p>&nbsp;</p><h4><strong>A Alquimia do Fogo e do Sal</strong></h4><p>Tudo começa com o estalar da madeira ou o brilho rubi do carvão. É o único momento em que ficar encarando o fogo por horas não é estranho, mas sim contemplativo. O churrasqueiro, esse mestre de cerimônias munido de uma faca afiada e um avental de guerra, entende que a carne não se apressa; ela se seduz.</p><p>O som é a primeira música da festa: o \"chiado\" sagrado quando a gordura beija a brasa, liberando aquele aroma que deveria ser engarrafado e vendido como perfume de domingo.</p><p>&nbsp;</p><h4><strong>Os Personagens da Brasa</strong></h4><p>Nenhum churrasco é feito só de proteína; ele é composto por uma fauna humana fascinante:</p><ul><li><strong>O Sommelier de Ponto</strong>: Aquele que jura que \"se passar disso, vira sola de sapato\".</li><li><strong>O Guardião da Tábua</strong>: O amigo que não sai de perto do churrasqueiro, garantindo que nenhuma fatia de picanha se sinta solitária.</li><li><strong>O Mestre do Acompanhamento</strong>: Quem entende que o arroz soltinho, a farofa crocante e o vinagrete cítrico são os heróis injustiçados da tarde.</li><li><strong>O Pão de Alho</strong>: A única entidade capaz de unir todas as tribos em torno da grelha.</li></ul><h4>&nbsp;</h4><h4><strong>O Gosto da Convivência</strong></h4><p>No final das contas, o churrasco é sobre o tempo que sobra. É a conversa que flui enquanto a costela assa lentamente, é a risada que explode entre um gole e outro, e é aquela sensação de que o mundo lá fora pode esperar.</p><p>&nbsp;</p><p><i>O segredo não está no corte da carne ou na temperatura exata, mas no sal grosso que tempera as histórias contadas ao redor da churrasqueira.</i></p>",
+      "tipo": "ambos",
+      "emoji": "🥩",
+      "ativo": true,
+      "cards": [
+        {
+          "titulo": "Picanha",
+          "texto": "<p>A rainha do churrasco brasileiro destaca-se pela sua capa de gordura uniforme, que confere sabor e suculência incomparáveis. A melhor prática é assá-la inteira ou em postas grossas, iniciando com a gordura para cima para selar a carne e finalizando com a gordura para baixo para dourar, usando apenas sal grosso ou flor de sal.</p>",
+          "extra": "",
+          "emoji": "🥩",
+          "ativo": true,
+          "_id": {
+            "$oid": "69af11a40548ddfa8ff30e25"
+          }
+        },
+        {
+          "titulo": "Espetinhos (Bovino, Frango, Suíno, Misto)",
+          "texto": "<p>Oferecem praticidade e variedade, unindo diferentes texturas em uma única mordida. O segredo é garantir que os cubos de carne tenham tamanhos uniformes e intercalar com pedaços de gordura ou vegetais (no caso do misto) para manter a umidade durante o fogo alto e rápido.</p>",
+          "extra": "",
+          "emoji": "🥩",
+          "ativo": true,
+          "_id": {
+            "$oid": "69af11a40548ddfa8ff30e26"
+          }
+        },
+        {
+          "titulo": "Costela e Costelinha Suína",
+          "texto": "<p>Ambas possuem sabor marcante e muita suculência, sendo a costelinha menor e mais prática para petiscar. A melhor prática é o cozimento lento em fogo médio para derreter a gordura e soltar o osso, podendo ser finalizada com molho barbecue ou apenas sal e limão para uma crosta crocante.</p>",
+          "extra": "",
+          "emoji": "🥓",
+          "ativo": true,
+          "_id": {
+            "$oid": "69af11a40548ddfa8ff30e27"
+          }
+        }
+      ],
+      "slug": "o-churrasco",
+      "_id": {
+        "$oid": "69aadba2e4b6faac21c1c504"
+      }
+    }
+  ],
+  "createdAt": {
+    "$date": "2026-03-06T13:50:26.863Z"
+  },
+  "updatedAt": {
+    "$date": "2026-03-09T18:29:56.880Z"
+  },
+  "__v": 0
+}]

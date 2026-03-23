@@ -21,7 +21,7 @@ export async function GET(req: Request) {
     }
 
     const clientePagina = await ClientePagina.findOne({
-        clienteId: tenant._id,
+        tenantId: tenant._id,
         "paginas.slug": pageSlug,
         "paginas.ativo": true
     });

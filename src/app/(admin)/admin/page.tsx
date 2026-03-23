@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { ResetModelButton } from "@/components/admin/ResetModelButton";
 
 export default async function DashboardPage() {
     const session = await getServerSession(authOptions);
@@ -133,7 +134,7 @@ export default async function DashboardPage() {
                                 Utilize o menu lateral para gerenciar usuários, visualizar lojas ou editar as configurações do seu perfil administrativo.
                             </p>
                         </div>
-                        <div className="flex shrink-0">
+                        <div className="flex shrink-0 gap-3">
                             <Link href="/admin/tenants">
                                 <Button className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4">
                                     <Plus size={18} />
