@@ -193,7 +193,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                                         </div>
                                     </div>
                                     {(session.user.role === 'SUPERADMIN' || session.user.role === 'TENANT_OWNER') && (
-                                        <Link href={`${basePath}/admin`} onClick={() => setIsMobileMenuOpen(false)} target="_blank">
+                                        <Link href={`/admin`} onClick={() => setIsMobileMenuOpen(false)} target="_blank">
                                             <div className="p-4 rounded-lg bg-orange-50 dark:bg-orange-950/20 font-black text-xs uppercase tracking-widest flex items-center justify-between text-orange-600 border border-orange-200/50 dark:border-orange-500/20">
                                                 Painel Administrativo
                                                 <UserCog size={16} />
@@ -212,7 +212,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                                             <Calculator size={16} className="text-zinc-100" />
                                         </div>
                                     </Link>
-                                    <Link href={`${basePath}/manual`} onClick={() => setIsMobileMenuOpen(false)} target="_blank">
+                                    <Link href={`/manual`} onClick={() => setIsMobileMenuOpen(false)} target="_blank">
                                         <div className="p-4 rounded-lg bg-zinc-50 dark:bg-zinc-900 font-black text-xs uppercase tracking-widest flex items-center justify-between">
                                             Manual de Uso
                                             <HelpCircle size={16} className="text-zinc-100" />

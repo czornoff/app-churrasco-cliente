@@ -108,7 +108,7 @@ export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
             <div className="p-6 border-t border-zinc-100 dark:border-zinc-800/50 shrink-0">
                 <div className="bg-zinc-50 dark:bg-zinc-800/50 rounded-lg p-3 text-center border border-zinc-100 dark:border-zinc-800">
                     <p className="text-[10px] text-zinc-400 dark:text-zinc-600 font-bold uppercase tracking-widest">
-                        versão 2.1.1
+                        versão 2.2.1
                     </p>
                 </div>
             </div>

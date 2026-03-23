@@ -27,7 +27,7 @@ export default function ManualIndexPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <Link 
-                            href={`${basePath}/manual/usuario`}
+                            href={`/manual/usuario`}
                             className="group bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-200 dark:border-zinc-800 overflow-hidden shadow-sm hover:shadow-xl hover:border-orange-600/30 transition-all duration-300"
                         >
                             <div className="aspect-video bg-gradient-to-br from-blue-500/10 to-blue-600/20 flex items-center justify-center">
@@ -57,7 +57,7 @@ export default function ManualIndexPage() {
                         </Link>
 
                         <Link 
-                            href={`${basePath}/manual/administrador`}
+                            href={`/manual/administrador`}
                             className="group bg-white dark:bg-zinc-900 rounded-3xl border border-zinc-200 dark:border-zinc-800 overflow-hidden shadow-sm hover:shadow-xl hover:border-orange-600/30 transition-all duration-300"
                         >
                             <div className="aspect-video bg-gradient-to-br from-purple-500/10 to-purple-600/20 flex items-center justify-center">
@@ -112,7 +112,7 @@ export default function ManualIndexPage() {
                                 Ver Loja Modelo
                             </Link>
                             <Link 
-                                href={`${basePath}/admin`}
+                                href={`/admin`}
                                 className="flex items-center justify-center gap-2 bg-white/20 text-white font-bold px-6 py-3 rounded-lg hover:bg-white/30 transition-colors"
                             >
                                 Acessar Admin

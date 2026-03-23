@@ -20,7 +20,7 @@ export default function ManualUsuarioPage() {
                         </h1>
                     </div>
                     <Link 
-                        href={`${basePath}/manual`}
+                        href={`/manual`}
                         className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400 hover:text-orange-600 transition-colors"
                     >
                         <Home className="w-4 h-4" />
@@ -180,7 +180,7 @@ export default function ManualUsuarioPage() {
                         </div>
                     </div>
                     <Link 
-                        href={`${basePath}/admin`}
+                        href={`/admin`}
                         className="inline-flex items-center gap-2 bg-white text-orange-600 font-bold px-6 py-3 rounded-lg hover:bg-orange-50 transition-colors"
                     >
                         Acessar Painel Admin Demo
@@ -230,7 +230,7 @@ export default function ManualUsuarioPage() {
                 <section className="text-center space-y-6 pb-8">
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                         <Link 
-                            href={`${basePath}/manual/administrador`}
+                            href={`/manual/administrador`}
                             className="flex items-center gap-2 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white font-bold px-8 py-4 rounded-lg transition-colors border-2 border-zinc-200 dark:border-zinc-700"
                         >
                             <BookOpen className="w-5 h-5" />
