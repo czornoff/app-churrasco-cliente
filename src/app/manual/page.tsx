@@ -106,7 +106,7 @@ export default function ManualIndexPage() {
                         </div>
                         <div className="flex flex-col sm:flex-row gap-4">
                             <Link 
-                                href={`${basePath}/loja-modelo`}
+                                href={`/loja-modelo`}
                                 className="flex items-center justify-center gap-2 bg-white text-orange-600 font-bold px-6 py-3 rounded-lg hover:bg-orange-50 transition-colors"
                             >
                                 Ver Loja Modelo
