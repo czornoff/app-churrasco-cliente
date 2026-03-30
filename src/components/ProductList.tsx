@@ -3,7 +3,7 @@ import connectDB from "@/lib/mongodb";
 import Link from "next/link";
 import { DeleteProductButton } from "./DeleteProductButton"; // Importe o novo botão
 import { Cardapio } from "@/models/Cardapio";
-import { Edit } from "lucide-react";
+import { Edit, Star } from "lucide-react";
 import Image from "next/image";
 
 interface IProductItem {
@@ -16,6 +16,8 @@ interface IProductItem {
     mlEmbalagem?: number;
     gramasEmbalagem?: number;
     ativo: boolean;
+    indicado?: boolean;
+    favorito?: boolean;
 }
 
 export async function ProductList({ tenantId }: { tenantId: string }) {
@@ -49,6 +51,10 @@ export async function ProductList({ tenantId }: { tenantId: string }) {
                                     <p className="text-xs text-zinc-400">
                                         R$ {item.preco.toFixed(2)} | {item.gramasEmbalagem || item.mlEmbalagem || 0}{item.mlEmbalagem ? 'ml' : 'g'}/embalagem
                                     </p>
+                                    <div className="flex gap-2 mt-1">
+                                        {item.indicado && <Star size={12} className="fill-blue-500 text-blue-500" />}
+                                        {item.favorito && <Star size={12} className="fill-yellow-400 text-yellow-400" />}
+                                    </div>
                                 </div>
                             </div>
 

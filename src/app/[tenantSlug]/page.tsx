@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LocationMap } from '@/components/LocationMap';
+import { getCardapioByTenant } from '@/lib/actions/product';
 
 export default async function TenantHome({ params }: { params: Promise<{ tenantSlug: string }> }) {
     const { tenantSlug } = await params;
@@ -17,6 +18,10 @@ export default async function TenantHome({ params }: { params: Promise<{ tenantS
 
     const tenant = JSON.parse(JSON.stringify(tenantRaw));
     const primaryColor = tenant.colorPrimary || "#059669";
+
+    // Buscar produtos indicados
+    const { produtos } = await getCardapioByTenant(tenantRaw._id.toString());
+    const indicados = produtos.filter(p => p.indicado === true);
 
     return (
         <div className="flex flex-col min-h-[calc(100vh-80px)]">
@@ -87,6 +92,54 @@ export default async function TenantHome({ params }: { params: Promise<{ tenantS
                     </div>
                 </div>
             </section>
+
+            {/* Seção Sugestões do Churrasqueiro */}
+            {indicados.length > 0 && (
+                <section className="px-6 py-12 max-w-7xl mx-auto w-full">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                        <div className="space-y-2">
+                            <h2 className="text-2xl md:text-3xl font-black text-zinc-900 dark:text-white uppercase tracking-tighter">
+                                ⭐ Sugestões do Churrasqueiro
+                            </h2>
+                            <p className="text-zinc-500 dark:text-zinc-400 font-medium">
+                                Nossos itens mais pedidos e recomendados para o seu evento.
+                            </p>
+                        </div>
+                        <Link href={`/${tenant.slug}/cardapio`} className="text-sm font-bold uppercase tracking-widest hover:opacity-70 transition-opacity" style={{ color: primaryColor }}>
+                            Ver tudo →
+                        </Link>
+                    </div>
+
+                    <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6">
+                        {indicados.map((item) => (
+                            <div key={item._id} className="group bg-white dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-800 rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300">
+                                <div className="relative aspect-square rounded-xl overflow-hidden mb-4 bg-zinc-100 dark:bg-zinc-900 border border-zinc-50 dark:border-zinc-800">
+                                    <Image
+                                        unoptimized
+                                        src={item.imageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(item.nome)}&background=random`}
+                                        alt={item.nome}
+                                        fill
+                                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <h3 className="font-bold text-zinc-900 dark:text-white text-sm line-clamp-1 group-hover:text-orange-600 transition-colors">
+                                        {item.nome}
+                                    </h3>
+                                    <p className="text-lg font-black tracking-tight" style={{ color: primaryColor }}>
+                                        R$ {item.preco.toFixed(2)}
+                                    </p>
+                                </div>
+                                <Link href={`/${tenant.slug}/calculadora`} className="mt-4 block">
+                                    <Button className="w-full h-10 rounded-lg text-xs font-bold uppercase tracking-wider bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white hover:bg-zinc-900 hover:text-white dark:hover:bg-white dark:hover:text-zinc-900 transition-colors">
+                                        Calcular
+                                    </Button>
+                                </Link>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             {/* Location Section */}
             {tenant.address && (

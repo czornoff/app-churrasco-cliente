@@ -19,6 +19,8 @@ export interface IItem {
     fator?: number;
     unidade?: string;
     tipoSuprimento?: string; // Exemplo: 'CARVAO', 'ACENDEDOR', 'COPO', 'VELA', 'GUARDANAPO', 'TALHERES', 'PRATO', etc.
+    indicado?: boolean;
+    favorito?: boolean;
 }
 
 const ItemSchema = new Schema<IItem>(
@@ -40,6 +42,8 @@ const ItemSchema = new Schema<IItem>(
         fator: { type: Number, default: 1 },
         unidade: { type: String },
         tipoSuprimento: { type: String },
+        indicado: { type: Boolean, default: false },
+        favorito: { type: Boolean, default: false },
     },
     { timestamps: true }
 );

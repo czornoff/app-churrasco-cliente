@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronUp, Trash2, Mail, MessageCircle } from 'lucide-react';
+import { ChevronDown, ChevronUp, Trash2, Mail, MessageCircle, Star } from 'lucide-react';
 import { toast } from 'sonner';
 import { saveCalculationAction } from '@/lib/actions/calculation';
 import { sendCalculationEmailAction } from '@/lib/actions/email';
@@ -23,6 +23,7 @@ interface Produto {
     qtdePorAdulto?: number;
     tipoSuprimento?: string;
     categoria?: string;
+    imageUrl?: string;
     subCategoriaBebida?: 'alcoolica' | 'nao-alcoolica';
 }
 
@@ -154,6 +155,18 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
         }));
     };
 
+    const handleAdicionarERecalcular = (produtoId: string) => {
+        setFormData(prev => {
+            const novosSelecionados = [...prev.produtosSelecionados, produtoId];
+            // Disparar o cálculo após a atualização do estado
+            setTimeout(() => handleCalcularInternal(novosSelecionados), 0);
+            return {
+                ...prev,
+                produtosSelecionados: novosSelecionados
+            };
+        });
+    };
+
     const calcularEquivalentePessoas = (homens: number, mulheres: number, crianças: number): number => {
         // Calcular equivalente em pessoas adultas (homens)
         // Mulheres: 75% dos homens
@@ -162,7 +175,11 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
     };
 
     const handleCalcular = async () => {
-        if (formData.produtosSelecionados.length === 0) {
+        handleCalcularInternal(formData.produtosSelecionados);
+    };
+
+    const handleCalcularInternal = async (produtosSelecionadosIds: string[]) => {
+        if (produtosSelecionadosIds.length === 0) {
             toast.error('Selecione pelo menos um produto');
             return;
         }
@@ -217,7 +234,7 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
 
         const multiplicadorCarnes = (hasCarnes && !hasAcompanhamentos && !hasOutros) ? 1.2 : 1.0;
 
-        const produtosCalculo = formData.produtosSelecionados
+        const produtosCalculo = produtosSelecionadosIds
             .map(produtoId => {
                 const produto = produtos.find(p => p._id === produtoId);
                 if (!produto) return null;
@@ -341,17 +358,21 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
 
         // Salvar se estiver logado
         if (session?.user) {
-            await saveCalculationAction({
-                tenantId,
-                userId: (session.user as any).id || undefined,
-                totalPeople: {
-                    men: formData.homens,
-                    women: formData.mulheres,
-                    children: formData.criancas
-                },
-                items: produtosCalculo,
-                totalPrice: totalCusto
-            });
+            try {
+                await saveCalculationAction({
+                    tenantId,
+                    userId: (session.user as any).id || undefined,
+                    totalPeople: {
+                        men: formData.homens,
+                        women: formData.mulheres,
+                        children: formData.criancas
+                    },
+                    items: produtosCalculo,
+                    totalPrice: totalCusto
+                });
+            } catch (err) {
+                console.error("Erro ao salvar cálculo:", err);
+            }
         }
     };
 
@@ -497,52 +518,54 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                 <CardContent>
                     <div className="space-y-4">
                         {Object.entries(produtosPorCategoria).map(([categoria, produtosCategoria]) => (
-                            <div key={categoria} className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
-                                {/* Header da Categoria */}
-                                <button
-                                    onClick={() => toggleCategory(categoria)}
-                                    className="w-full flex items-center justify-between p-4 bg-zinc-50 dark:bg-zinc-900 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                            <div key={categoria} className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-700">
+                                <div 
+                                    className="w-full flex items-center justify-between p-4 border-b transition-colors"
+                                    style={{ 
+                                        backgroundColor: primaryColor,
+                                        borderColor: `${primaryColor}44` 
+                                    }}
                                 >
-                                    <h4 className="font-semibold text-zinc-900 dark:text-white">{categoria}</h4>
-                                    {expandedCategories[categoria] ? (
-                                        <ChevronUp size={20} className="text-zinc-500" />
-                                    ) : (
-                                        <ChevronDown size={20} className="text-zinc-500" />
-                                    )}
-                                </button>
+                                    <h4 className="font-bold text-white uppercase text-sm tracking-wider">{categoria}</h4>
+                                </div>
 
                                 {/* Conteúdo da Categoria */}
-                                {expandedCategories[categoria] && (
-                                    <div className="p-4 space-y-3 border-t border-zinc-200 dark:border-zinc-800">
-                                        {produtosCategoria.map((produto) => (
-                                            <label
-                                                key={produto._id}
-                                                className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
-                                            >
-                                                <input
-                                                    type="checkbox"
-                                                    checked={formData.produtosSelecionados.includes(produto._id)}
-                                                    onChange={() => toggleProduto(produto._id)}
-                                                    className="w-4 h-4 rounded cursor-pointer accent-emerald-600"
-                                                    style={{ accentColor: primaryColor }}
+                                <div className="p-4 space-y-3">
+                                    {produtosCategoria.map((produto) => (
+                                        <label
+                                            key={produto._id}
+                                            className="flex items-center gap-3 cursor-pointer p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors border border-transparent hover:border-zinc-200 dark:hover:border-zinc-800"
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={formData.produtosSelecionados.includes(produto._id)}
+                                                onChange={() => toggleProduto(produto._id)}
+                                                className="w-5 h-5 rounded cursor-pointer accent-emerald-600 shrink-0"
+                                                style={{ accentColor: primaryColor }}
+                                            />
+                                            <div className="relative w-12 h-12 rounded-full overflow-hidden bg-zinc-100 border border-zinc-200 shrink-0">
+                                                <img
+                                                    src={produto.imageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(produto.nome)}&background=random`}
+                                                    alt={produto.nome}
+                                                    className="w-full h-full object-cover"
                                                 />
-                                                <div className="flex-1">
-                                                    <div className="font-medium text-zinc-900 dark:text-white text-sm">
-                                                        {produto.nome}
-                                                    </div>
-                                                    <div className="text-xs text-zinc-500 dark:text-zinc-400">
-                                                        R$ {produto.preco.toFixed(2)}
-                                                        {(produto.gramasEmbalagem || produto.mlEmbalagem) ? (
-                                                            <span className="ml-1 opacity-70">
-                                                                • {produto.gramasEmbalagem || produto.mlEmbalagem}{produto.categoria?.toLowerCase() === 'bebidas' ? 'ml' : 'g'}
-                                                            </span>
-                                                        ) : null}
-                                                    </div>
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="font-medium text-zinc-900 dark:text-white text-sm">
+                                                    {produto.nome}
                                                 </div>
-                                            </label>
-                                        ))}
-                                    </div>
-                                )}
+                                                <div className="text-xs text-zinc-500 dark:text-zinc-400">
+                                                    R$ {produto.preco.toFixed(2)}
+                                                    {(produto.gramasEmbalagem || produto.mlEmbalagem) ? (
+                                                        <span className="ml-1 opacity-70">
+                                                            • {produto.gramasEmbalagem || produto.mlEmbalagem}{produto.categoria?.toLowerCase() === 'bebidas' ? 'ml' : 'g'}
+                                                        </span>
+                                                    ) : null}
+                                                </div>
+                                            </div>
+                                        </label>
+                                    ))}
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -650,6 +673,44 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                                 </table>
                             </div>
                         </div>
+
+
+
+                        {/* Upsell de Favoritos */}
+                        {(() => {
+                            const favoritosNaoSelecionados = produtos.filter(p => p.favorito && !formData.produtosSelecionados.includes(p._id));
+                            if (favoritosNaoSelecionados.length === 0) return null;
+
+                            return (
+                                <div className="p-5 bg-amber-50 dark:bg-amber-950/30 border-2 border-amber-200 dark:border-amber-900 rounded-xl space-y-4">
+                                    <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300">
+                                        <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
+                                        <h4 className="font-bold uppercase tracking-tight text-sm">Não deixe seu churrasco incompleto!</h4>
+                                    </div>
+                                    <p className="text-xs text-amber-700 dark:text-amber-400">
+                                        Você ainda não selecionou estes itens que fazem toda a diferença:
+                                    </p>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        {favoritosNaoSelecionados.map(item => (
+                                            <div key={item._id} className="flex items-center justify-between bg-white dark:bg-zinc-800 p-3 rounded-lg border border-amber-100 dark:border-amber-900 shadow-sm">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="text-sm font-bold text-zinc-800 dark:text-zinc-200">{item.nome}</div>
+                                                    <div className="text-xs font-medium text-zinc-500">R$ {item.preco.toFixed(2)}</div>
+                                                </div>
+                                                <Button
+                                                    size="sm"
+                                                    variant="ghost"
+                                                    onClick={() => handleAdicionarERecalcular(item._id)}
+                                                    className="h-8 px-3 text-[10px] font-black uppercase tracking-wider text-amber-600 hover:bg-amber-100 dark:text-amber-400 dark:hover:bg-amber-900/50"
+                                                >
+                                                    + Adicionar
+                                                </Button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            );
+                        })()}
 
                         {/* Total Final */}
                         <div className="bg-white dark:bg-zinc-800 p-4 rounded-lg border-2" style={{ borderColor: primaryColor }}>

@@ -59,8 +59,24 @@ export default async function TenantLayout({ children, params }: TenantLayoutPro
     const whatsappLimpo = tenant.whatsApp ? formatWhatsAppLink(tenant.whatsApp) : "#";
 
     // Fetch Menu Items
-    const menuItemsRaw = await ClienteMenu.find({ tenantId: tenantRaw._id, ativo: true }).sort({ createdAt: 1 }).lean();
+    const menuItemsRaw = await ClienteMenu.find({ tenantId: tenantRaw._id, ativo: true }).sort({ ordem: 1, createdAt: 1 }).lean();
     const menuItems = JSON.parse(JSON.stringify(menuItemsRaw));
+
+    // Auto-inject missing core features to avoid regression if tenant didn't create them manually. 
+    // If they create them manually (or via Admin Panel), they control the name and order.
+    const hasCalculadora = menuItems.some((item: any) => typeof item.url === 'string' && item.url.includes('/calculadora'));
+    const hasCardapio = menuItems.some((item: any) => typeof item.url === 'string' && item.url.includes('/cardapio'));
+
+    if (!hasCalculadora) {
+        menuItems.unshift({ _id: 'fixed-calculadora', nome: 'Calculadora', url: '/calculadora', ativo: true, ordem: -100 });
+    }
+    if (!hasCardapio) {
+        // Insert right after calculadora if it was prepended
+        menuItems.splice(hasCalculadora ? 0 : 1, 0, { _id: 'fixed-cardapio', nome: 'Cardápio', url: '/cardapio', ativo: true, ordem: -90 });
+    }
+    
+    // Sort array in memory just in case injected items need reordering against DB items with negative ordem
+    menuItems.sort((a: any, b: any) => (a.ordem || 0) - (b.ordem || 0));
 
     return (
         <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950 transition-colors duration-500">

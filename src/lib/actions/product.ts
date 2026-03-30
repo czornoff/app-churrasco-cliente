@@ -19,6 +19,8 @@ interface ProductItem {
     tipoSuprimento?: string;
     subCategoriaBebida?: 'alcoolica' | 'nao-alcoolica';
     ativo?: boolean;
+    indicado?: boolean;
+    favorito?: boolean;
 }
 
 interface CardapioDocument {
@@ -43,6 +45,8 @@ interface ProdutoFormatado {
     qtdePorAdulto?: number;
     tipoSuprimento?: string;
     subCategoriaBebida?: 'alcoolica' | 'nao-alcoolica';
+    indicado?: boolean;
+    favorito?: boolean;
 }
 
 export async function saveProductAction(prevState: any, formData: FormData) {
@@ -78,7 +82,9 @@ export async function saveProductAction(prevState: any, formData: FormData) {
         nome,
         preco: Number(formData.get("preco")) || 0,
         imageUrl,
-        ativo: formData.get("ativo") === "on"
+        ativo: formData.get("ativo") === "on",
+        indicado: formData.get("indicado") === "on",
+        favorito: formData.get("favorito") === "on"
     };
 
     if (category === 'carnes' || category === 'acompanhamentos' || category === 'outros' || category === 'sobremesas') {
@@ -196,6 +202,9 @@ export async function getCardapioByTenant(tenantId: string) {
                             nome: produto.nome,
                             preco: produto.preco || 0,
                             categoria: categoria,
+                            indicado: produto.indicado,
+                            favorito: produto.favorito,
+                            imageUrl: produto.imageUrl,
                         };
 
                         // Adicionar campos específicos da categoria

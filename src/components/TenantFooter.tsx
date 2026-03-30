@@ -61,27 +61,24 @@ export function TenantFooter({ tenant, menuItems = [] }: TenantFooterProps) {
                         Links Úteis
                     </h3>
                     <nav className="space-y-2">
-                        {/* Menus fixos */}
-                        <Link href={`/${tenant.slug}/calculadora`} className="block text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors duration-200">
-                            Calculadora
-                        </Link>
-                        <Link href={`/${tenant.slug}/cardapio`} className="block text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors duration-200">
-                            Cardápio
-                        </Link>
-
-                        {/* Menus dinâmicos */}
                         {mainMenuItems.length > 0 && (
-                            mainMenuItems.map((item) => (
-                                <Link
-                                    key={item._id}
-                                    href={item.url}
-                                    target={item.url.startsWith('http') ? '_blank' : undefined}
-                                    rel={item.url.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                    className="block text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors duration-200"
-                                >
-                                    {item.nome}
-                                </Link>
-                            ))
+                            mainMenuItems.map((item) => {
+                                const isInternal = item.url.startsWith('/') || !item.url.startsWith('http');
+                                const href = isInternal
+                                    ? `/${tenant.slug}${item.url.startsWith('/') ? item.url : '/' + item.url}`
+                                    : item.url;
+                                return (
+                                    <Link
+                                        key={item._id}
+                                        href={href}
+                                        target={!isInternal ? '_blank' : undefined}
+                                        rel={!isInternal ? 'noopener noreferrer' : undefined}
+                                        className="block text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors duration-200"
+                                    >
+                                        {item.nome}
+                                    </Link>
+                                );
+                            })
                         )}
                     </nav>
                 </div>

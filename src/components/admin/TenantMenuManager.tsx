@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Edit, Trash2, Plus, ExternalLink, ChevronLeft } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Edit, Trash2, Plus, ExternalLink, ChevronLeft, GripVertical, Save, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -24,8 +24,10 @@ interface IMenu {
     _id: string;
     nome: string;
     url: string;
+    ordem: number;
     ativo: boolean;
-    createdAt: string;
+    isDefault?: boolean;
+    createdAt?: string;
 }
 
 interface TenantMenuManagerProps {
@@ -35,8 +37,10 @@ interface TenantMenuManagerProps {
 export function TenantMenuManager({ tenantId }: TenantMenuManagerProps) {
     const [menus, setMenus] = useState<IMenu[]>([]);
     const [loading, setLoading] = useState(true);
+    const [isSavingOrder, setIsSavingOrder] = useState(false);
     const [view, setView] = useState<'list' | 'editor'>('list');
     const [currentMenu, setCurrentMenu] = useState<Partial<IMenu>>({});
+    const [draggedItemIndex, setDraggedItemIndex] = useState<number | null>(null);
 
     useEffect(() => {
         if (tenantId) fetchMenus();
@@ -47,12 +51,124 @@ export function TenantMenuManager({ tenantId }: TenantMenuManagerProps) {
             const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
             const res = await fetch(`${basePath}/api/admin/menu?tenantId=${tenantId}`);
             if (!res.ok) throw new Error('Failed to fetch menus');
-            const data = await res.json();
-            setMenus(data);
+            const data: IMenu[] = await res.json();
+
+            // Inject defaults if missing
+            const hasCalculadora = data.some(m => m.url === '/calculadora' || m.url.includes('/calculadora'));
+            const hasCardapio = data.some(m => m.url === '/cardapio' || m.url.includes('/cardapio'));
+
+            let finalMenus = [...data];
+
+            if (!hasCalculadora) {
+                finalMenus.push({ _id: 'def-calc', nome: 'Calculadora', url: '/calculadora', ativo: true, ordem: -100, isDefault: true });
+            }
+            if (!hasCardapio) {
+                finalMenus.push({ _id: 'def-card', nome: 'Cardápio', url: '/cardapio', ativo: true, ordem: -90, isDefault: true });
+            }
+
+            // Sort by ordem
+            finalMenus.sort((a, b) => a.ordem - b.ordem);
+            setMenus(finalMenus);
         } catch (error) {
-            toast.error('Erro ao carregar menus', error.message);
+            toast.error('Erro ao carregar menus');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleSaveOrder = async () => {
+        setIsSavingOrder(true);
+        try {
+            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+            
+            // We need to save all items that are NOT virtual IDs
+            // If they are virtual, we should probably POST them first or ignore if they aren't moved.
+            // But for simplicity, let's treat the order update carefully.
+            
+            const itemsToUpdate = [];
+            
+            for (let i = 0; i < menus.length; i++) {
+                const item = menus[i];
+                // If it's a default/virtual item and it moved, we'd need to create it.
+                // But let's assume we update the ones with real IDs.
+                if (!item._id.startsWith('def-')) {
+                    itemsToUpdate.push({ _id: item._id, ordem: i * 10 });
+                } else {
+                    // Create default items if they are being ordered
+                    const res = await fetch(`${basePath}/api/admin/menu`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            nome: item.nome,
+                            url: item.url,
+                            ativo: true,
+                            ordem: i * 10,
+                            tenantId
+                        }),
+                    });
+                    // Refresh after creation will replace the virtual ID with real one
+                }
+            }
+
+            const res = await fetch(`${basePath}/api/admin/menu`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: itemsToUpdate, tenantId }),
+            });
+
+            if (!res.ok) throw new Error('Failed to save order');
+            toast.success('Ordem salva com sucesso');
+            fetchMenus();
+        } catch (error) {
+            toast.error('Erro ao salvar ordem');
+        } finally {
+            setIsSavingOrder(false);
+        }
+    };
+
+    const handleDragStart = (index: number) => {
+        setDraggedItemIndex(index);
+    };
+
+    const handleDragOver = (e: React.DragEvent, index: number) => {
+        e.preventDefault();
+        if (draggedItemIndex === null || draggedItemIndex === index) return;
+
+        const newMenus = [...menus];
+        const draggedItem = newMenus[draggedItemIndex];
+        newMenus.splice(draggedItemIndex, 1);
+        newMenus.splice(index, 0, draggedItem);
+        
+        setDraggedItemIndex(index);
+        setMenus(newMenus);
+    };
+
+    const handleDragEnd = () => {
+        setDraggedItemIndex(null);
+    };
+
+    const handleSave = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            const method = currentMenu._id && !currentMenu._id.startsWith('def-') ? 'PUT' : 'POST';
+            const body = { ...currentMenu, tenantId };
+            delete body._id; // Remove virtual ID if it exists
+
+            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+            const res = await fetch(`${basePath}/api/admin/menu${currentMenu._id && !currentMenu._id.startsWith('def-') ? '' : ''}`, {
+                method: currentMenu._id && !currentMenu._id.startsWith('def-') ? 'PUT' : 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(currentMenu._id && !currentMenu._id.startsWith('def-') ? { ...currentMenu, tenantId } : body),
+            });
+
+            if (!res.ok) throw new Error('Failed to save');
+
+            toast.success('Menu salvo com sucesso');
+            setView('list');
+            setCurrentMenu({});
+            fetchMenus();
+        } catch (error: any) {
+            toast.error('Erro ao salvar menu');
         }
     };
 
@@ -63,64 +179,27 @@ export function TenantMenuManager({ tenantId }: TenantMenuManagerProps) {
                 method: 'DELETE',
             });
             if (!res.ok) throw new Error('Failed to delete');
-            toast.success('Item excluído com sucesso');
+            toast.success('Item excluído');
             fetchMenus();
         } catch (error) {
-            toast.error('Erro ao excluir item', error.message);
+            toast.error('Erro ao excluir item');
         }
     };
-
-    const handleSave = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            const method = currentMenu._id ? 'PUT' : 'POST';
-            const body = { ...currentMenu, tenantId };
-
-            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-            const res = await fetch(`${basePath}/api/admin/menu`, {
-                method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body),
-            });
-
-            if (!res.ok) throw new Error('Failed to save');
-
-            toast.success(currentMenu._id ? 'Menu atualizado' : 'Menu criado');
-            setView('list');
-            setCurrentMenu({});
-            fetchMenus();
-        } catch (error: any) {
-            toast.error('Erro ao salvar menu', error.message);
-        }
-    };
-
-    const openEdit = (menu: IMenu) => {
-        setCurrentMenu(menu);
-        setView('editor');
-    };
-
-    const openCreate = () => {
-        setCurrentMenu({ ativo: true });
-        setView('editor');
-    }
 
     if (view === 'editor') {
         return (
             <div className="space-y-6 animate-in slide-in-from-right duration-300">
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center justify-between">
                     <h3 className="text-xl font-bold text-zinc-800 dark:text-zinc-200">
-                        {currentMenu._id ? 'Editar Menu' : 'Novo Menu'}
+                        {currentMenu._id && !currentMenu._id.startsWith('def-') ? 'Editar Menu' : 'Novo Menu'}
                     </h3>
-                    <Button variant="ghost" size="icon" onClick={() => setView('list')} className="bg-zinc-100 dark:bg-zinc-800 hover:dark:bg-zinc-700 hover:bg-zinc-100 rounded-lg border border-zinc-200 dark:border-zinc-800 transition-all">
+                    <Button variant="ghost" size="icon" onClick={() => setView('list')}>
                         <ChevronLeft />
                     </Button>
                 </div>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Configurações do Menu</CardTitle>
-                    </CardHeader>
-                    <CardContent>
+                <Card className="border-zinc-200 dark:border-zinc-800 shadow-xl">
+                    <CardContent className="p-6">
                         <form onSubmit={handleSave} className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="nome">Nome do Item</Label>
@@ -130,6 +209,7 @@ export function TenantMenuManager({ tenantId }: TenantMenuManagerProps) {
                                     onChange={e => setCurrentMenu({ ...currentMenu, nome: e.target.value })}
                                     placeholder="Ex: Instagram"
                                     required
+                                    disabled={currentMenu.isDefault}
                                 />
                             </div>
                             <div className="space-y-2">
@@ -140,6 +220,16 @@ export function TenantMenuManager({ tenantId }: TenantMenuManagerProps) {
                                     onChange={e => setCurrentMenu({ ...currentMenu, url: e.target.value })}
                                     placeholder="https://..."
                                     required
+                                    disabled={currentMenu.isDefault}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="ordem">Ordem (Manual)</Label>
+                                <Input
+                                    id="ordem"
+                                    type="number"
+                                    value={currentMenu.ordem || 0}
+                                    onChange={e => setCurrentMenu({ ...currentMenu, ordem: Number(e.target.value) })}
                                 />
                             </div>
                             <div className="flex items-center gap-2">
@@ -151,11 +241,9 @@ export function TenantMenuManager({ tenantId }: TenantMenuManagerProps) {
                                 <Label htmlFor="ativo">Ativo</Label>
                             </div>
                             <div className="flex gap-2 justify-end pt-4">
-                                <Button type="button" variant="outline" onClick={() => setView('list')}>
-                                    Cancelar
-                                </Button>
-                                <Button type="submit" className="bg-orange-600 hover:bg-orange-700 text-white font-bold">
-                                    Salvar Alterações
+                                <Button type="button" variant="outline" onClick={() => setView('list')}>Cancelar</Button>
+                                <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold">
+                                    Salvar
                                 </Button>
                             </div>
                         </form>
@@ -169,100 +257,98 @@ export function TenantMenuManager({ tenantId }: TenantMenuManagerProps) {
         <div className="space-y-6 animate-in fade-in duration-300">
             <div className="flex items-center justify-between">
                 <div>
-                    <h3 className="text-lg font-medium text-zinc-800 dark:text-zinc-200">Itens do Menu</h3>
-                    <p className="text-zinc-500 dark:text-zinc-400 text-sm">
-                        Gerencie os links que aparecem no menu do aplicativo.
-                    </p>
+                    <h3 className="text-xl font-black text-zinc-900 dark:text-white uppercase tracking-tighter">Menu de Navegação</h3>
+                    <p className="text-zinc-500 text-sm">Arraste os itens para reordenar a exibição no cabeçalho e rodapé.</p>
                 </div>
-                <Button onClick={openCreate} className="bg-orange-600 hover:bg-orange-700 text-white font-bold">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Novo Item
-                </Button>
+                <div className="flex gap-2">
+                    <Button 
+                        onClick={handleSaveOrder} 
+                        variant="outline" 
+                        className="border-emerald-600 text-emerald-600 hover:bg-emerald-50"
+                        disabled={isSavingOrder}
+                    >
+                        <Save className="mr-2 h-4 w-4" />
+                        Salvar Ordem
+                    </Button>
+                    <Button onClick={() => { setCurrentMenu({ ativo: true, ordem: menus.length * 10 }); setView('editor'); }} className="bg-zinc-900 text-white font-bold">
+                        <Plus className="mr-2 h-4 w-4" />
+                        Novo Item
+                    </Button>
+                </div>
             </div>
 
             {loading ? (
-                <div className="p-8 text-center text-zinc-500">Carregando...</div>
-            ) : menus.length === 0 ? (
-                <Card className="border-zinc-200 dark:border-zinc-800">
-                    <CardContent className="p-12 text-center flex flex-col items-center gap-4">
-                        <div className="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center">
-                            <Plus className="text-orange-600 dark:text-orange-400" />
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">Nenhum item no menu</h3>
-                            <p className="text-zinc-500 text-sm mt-1">Comece adicionando links para páginas ou sites externos.</p>
-                        </div>
-                    </CardContent>
-                </Card>
+                <div className="p-12 text-center text-zinc-500 font-medium">Carregando estrutura...</div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {menus.map((menu) => (
-                        <Card key={menu._id} className="group hover:border-orange-500/50 transition-all duration-300 shadow-sm hover:shadow-md p-2">
-                            <CardContent className="flex flex-col h-full justify-between gap-4 px-2">
-                                <div className="space-y-1">
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex flex-col gap-1">
-                                            <span className="font-bold text-zinc-900 dark:text-zinc-100 text-base leading-tight">
-                                                {menu.nome}
+                <div className="space-y-2">
+                    {menus.map((menu, index) => (
+                        <div
+                            key={menu._id}
+                            draggable
+                            onDragStart={() => handleDragStart(index)}
+                            onDragOver={(e) => handleDragOver(e, index)}
+                            onDragEnd={handleDragEnd}
+                            className={`flex items-center justify-between p-4 bg-white dark:bg-zinc-900 border rounded-xl transition-all duration-200 group ${
+                                draggedItemIndex === index ? 'opacity-50 scale-95 border-emerald-500 border-dashed' : 'border-zinc-100 dark:border-zinc-800 hover:shadow-md'
+                            }`}
+                        >
+                            <div className="flex items-center gap-4 flex-1">
+                                <div className="cursor-grab active:cursor-grabbing text-zinc-400 group-hover:text-zinc-600">
+                                    <GripVertical size={20} />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+                                        {menu.nome}
+                                        {menu._id.startsWith('def-') && (
+                                            <span className="text-[9px] bg-zinc-100 dark:bg-zinc-800 text-zinc-500 px-1.5 py-0.5 rounded uppercase font-black tracking-widest flex items-center gap-1">
+                                                <Lock size={10} /> Padrão
                                             </span>
-                                            {!menu.ativo && (
-                                                <span className="w-fit text-[9px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
-                                                    Inativo
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center gap-1.5 text-xs text-zinc-500 font-mono break-all bg-zinc-100 dark:bg-zinc-900 p-2 rounded border border-zinc-200 dark:border-zinc-800">
-                                        <ExternalLink size={12} className="shrink-0" />
-                                        <span className="truncate">{menu.url}</span>
-                                    </div>
+                                        )}
+                                    </span>
+                                    <span className="text-xs text-zinc-500 font-mono flex items-center gap-1">
+                                        <ExternalLink size={10} /> {menu.url}
+                                    </span>
                                 </div>
+                            </div>
 
-                                <div className="flex items-center justify-end gap-2 pt-2 border-t border-zinc-100 dark:border-zinc-800">
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="h-8 px-2 text-zinc-500 hover:text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-950/30"
-                                        onClick={() => openEdit(menu)}
-                                    >
-                                        <Edit size={14} className="mr-1" />
-                                        <span className="text-xs font-semibold">Editar</span>
-                                    </Button>
-
-                                    <AlertDialog>
-                                        <AlertDialogTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="h-8 px-2 text-zinc-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
-                                            >
-                                                <Trash2 size={14} className="mr-1" />
-                                                <span className="text-xs font-semibold">Excluir</span>
-                                            </Button>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                    Esta ação não pode ser desfeita. Isso excluirá permanentemente o item de menu
-                                                    <span className="font-bold text-zinc-900"> {menu.nome}</span>.
-                                                </AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                                <AlertDialogAction
-                                                    onClick={() => handleDelete(menu._id)}
-                                                    className="bg-red-600 hover:bg-red-700"
+                            <div className="flex items-center gap-2">
+                                {!menu._id.startsWith('def-') ? (
+                                    <>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-9 w-9 text-zinc-400 hover:text-emerald-600 hover:bg-emerald-50"
+                                            onClick={() => { setCurrentMenu(menu); setView('editor'); }}
+                                        >
+                                            <Edit size={16} />
+                                        </Button>
+                                        <AlertDialog>
+                                            <AlertDialogTrigger asChild>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-9 w-9 text-zinc-400 hover:text-red-600 hover:bg-red-50"
                                                 >
-                                                    Sim, excluir item
-                                                </AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
-                                </div>
-                            </CardContent>
-                        </Card>
+                                                    <Trash2 size={16} />
+                                                </Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Excluir item?</AlertDialogTitle>
+                                                    <AlertDialogDescription>Remover permanentemente o item {menu.nome}.</AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                    <AlertDialogAction onClick={() => handleDelete(menu._id)} className="bg-red-600">Sim, excluir</AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
+                                    </>
+                                ) : (
+                                    <span className="text-xs text-zinc-400 italic px-3">Específico do App</span>
+                                )}
+                            </div>
+                        </div>
                     ))}
                 </div>
             )}

@@ -52,20 +52,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
 
     const isInternalLink = (url: string) => url.startsWith('/') || !url.startsWith('http');
 
-    // Hardcoded items
-    const fixedItems = [
-        { _id: 'fixed-calculadora', nome: 'Calculadora', url: '/calculadora', ativo: true },
-        { _id: 'fixed-cardapio', nome: 'Cardápio', url: '/cardapio', ativo: true },
-    ];
-
-    // Merge logic: Add fixed items unless they conflict (optional, but requested to be fixed)
-    // Actually, user said "calculadora e cardápio sempre devem estar visíveis... então não entram na configuração nova, devem ser fixas"
-    // So we prepend them. We also filter out any dynamic menu item that tries to replicate them by name to avoid duplicates.
-    const filteredDynamicItems = menuItems.filter(item =>
-        !['calculadora', 'cardápio', 'cardapio'].includes(item.nome.toLowerCase())
-    );
-
-    const allMenuItems = [...fixedItems, ...filteredDynamicItems];
+    const allMenuItems = menuItems;
 
     return (
         <>

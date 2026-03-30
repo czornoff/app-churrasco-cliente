@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { saveProductAction } from "@/lib/actions/product";
-import { Plus, ChevronLeft, Package, Trash2 } from "lucide-react";
+import { Plus, ChevronLeft, Package, Trash2, Star } from "lucide-react";
 import { toast } from "sonner";
 
 import { Switch } from "@/components/ui/switch"
@@ -29,6 +29,8 @@ interface ProductFormData {
     subCategoriaBebida?: 'alcoolica' | 'nao-alcoolica';
     subcategoria?: string;
     ativo: boolean;
+    indicado?: boolean;
+    favorito?: boolean;
 }
 
 interface ProductFormProps {
@@ -48,6 +50,8 @@ export function ProductForm({ tenantId, initialData, onBack, onSuccess }: Produc
     )
     const [nome, setNome] = useState(initialData?.nome || "");
     const [ativo, setAtivo] = useState(initialData?.ativo !== undefined ? initialData.ativo : true);
+    const [indicado, setIndicado] = useState(initialData?.indicado || false);
+    const [favorito, setFavorito] = useState(initialData?.favorito || false);
 
     useEffect(() => {
         if (state?.success) {
@@ -162,6 +166,8 @@ export function ProductForm({ tenantId, initialData, onBack, onSuccess }: Produc
                 <input type="hidden" name="tenantId" value={tenantId} />
                 <input type="hidden" name="category" value={category} />
                 <input type="hidden" name="ativo" value={ativo ? "on" : "off"} />
+                <input type="hidden" name="indicado" value={indicado ? "on" : "off"} />
+                <input type="hidden" name="favorito" value={favorito ? "on" : "off"} />
                 {tipoSuprimento && <input type="hidden" name="tipoSuprimento" value={tipoSuprimento} />}
 
                 {category === 'bebidas' ? (
@@ -254,15 +260,42 @@ export function ProductForm({ tenantId, initialData, onBack, onSuccess }: Produc
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                    <div className="space-y-2">
-                        <Switch
-                            id="ativo"
-                            checked={ativo}
-                            onCheckedChange={setAtivo}
-                        />
-                        <Label htmlFor="ativo" className="font-medium cursor-pointer">Produto Ativo</Label>
-                        <p className="text-xs text-zinc-400 dark:text-zinc-500 ml-2 italic hidden md:block">
-                            (Inativos não aparecem para clientes)
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-6">
+                            <div className="flex items-center gap-2">
+                                <Switch
+                                    id="ativo"
+                                    checked={ativo}
+                                    onCheckedChange={setAtivo}
+                                />
+                                <Label htmlFor="ativo" className="font-medium cursor-pointer">Ativo</Label>
+                            </div>
+
+                            <div className="flex items-center gap-4 border-l pl-6 border-zinc-100 dark:border-zinc-800">
+                                <button
+                                    type="button"
+                                    onClick={() => setIndicado(!indicado)}
+                                    className="flex items-center gap-1.5 group transition-all"
+                                    title="Destaque na Página Inicial"
+                                >
+                                    <Star className={`w-5 h-5 transition-all ${indicado ? 'fill-blue-500 text-blue-500 scale-110' : 'text-zinc-300 group-hover:text-blue-400'}`} />
+                                    <span className={`text-[10px] font-bold uppercase tracking-wider ${indicado ? 'text-blue-500' : 'text-zinc-400'}`}>Indicado</span>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => setFavorito(!favorito)}
+                                    className="flex items-center gap-1.5 group transition-all"
+                                    title="Sugestão no Cálculo"
+                                >
+                                    <Star className={`w-5 h-5 transition-all ${favorito ? 'fill-yellow-400 text-yellow-400 scale-110' : 'text-zinc-300 group-hover:text-yellow-300'}`} />
+                                    <span className={`text-[10px] font-bold uppercase tracking-wider ${favorito ? 'text-yellow-600 dark:text-yellow-400' : 'text-zinc-400'}`}>Favorito</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <p className="text-xs text-zinc-400 dark:text-zinc-500 italic hidden md:block">
+                            (Produtos inativos não aparecem para clientes. Indicados aparecem na home e Favoritos são sugeridos no cálculo.)
                         </p>
                     </div>
 
