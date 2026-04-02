@@ -26,7 +26,7 @@ export function SidebarContent({ onItemClick }: { onItemClick?: () => void }) {
         // Regras de visibilidade por role
         if (role === 'TENANT_OWNER') {
             // Tenant Owner não vê Dashboard (é redirecionado) mas vê Usuários filtrados
-            const allowedForOwner = ["/admin/tenants", "/admin/users", "/admin/calculations", "/admin/perfil"];
+            const allowedForOwner = ["/admin", "/admin/tenants", "/admin/users", "/admin/calculations", "/admin/perfil"];
             return allowedForOwner.includes(item.href);
         }
 

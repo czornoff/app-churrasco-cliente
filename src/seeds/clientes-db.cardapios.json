@@ -167,6 +167,8 @@
       "pesoRelativo": 0,
       "base": 1,
       "fator": 1,
+      "favorito": false,
+      "indicado": true,
       "_id": {
         "$oid": "69ab139fd19ad4982eb3713b"
       },
@@ -193,6 +195,8 @@
       "pesoRelativo": 0,
       "base": 1,
       "fator": 1,
+      "favorito": true,
+      "indicado": true,
       "_id": {
         "$oid": "69aa238605b42a8c0ac45779"
       },
@@ -217,6 +221,8 @@
       "pesoRelativo": 0,
       "base": 1,
       "fator": 1,
+      "favorito": true,
+      "indicado": true,
       "_id": {
         "$oid": "69ab11a5d19ad4982eb3705d"
       },
@@ -289,6 +295,8 @@
       "pesoRelativo": 0,
       "base": 1,
       "fator": 1,
+      "favorito": false,
+      "indicado": true,
       "_id": {
         "$oid": "69ab1251d19ad4982eb37088"
       },
@@ -528,6 +536,8 @@
       "pesoRelativo": 0,
       "base": 1,
       "fator": 1,
+      "favorito": false,
+      "indicado": true,
       "tipoSuprimento": "CARVAO",
       "_id": {
         "$oid": "69ab12b9d19ad4982eb370a9"
