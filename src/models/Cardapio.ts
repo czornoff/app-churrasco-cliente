@@ -21,6 +21,7 @@ export interface IItem {
     tipoSuprimento?: string; // Exemplo: 'CARVAO', 'ACENDEDOR', 'COPO', 'VELA', 'GUARDANAPO', 'TALHERES', 'PRATO', etc.
     indicado?: boolean;
     favorito?: boolean;
+    categoryId?: mongoose.Types.ObjectId | string; // ID da categoria dinâmica
 }
 
 const ItemSchema = new Schema<IItem>(
@@ -44,6 +45,7 @@ const ItemSchema = new Schema<IItem>(
         tipoSuprimento: { type: String },
         indicado: { type: Boolean, default: false },
         favorito: { type: Boolean, default: false },
+        categoryId: { type: Schema.Types.ObjectId, ref: 'Category' },
     },
     { timestamps: true }
 );

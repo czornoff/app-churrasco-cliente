@@ -12,7 +12,7 @@ export function MaskedInput({
   defaultValue?: string, 
   name: string, 
   type?: string,
-  maskType: 'whatsapp' | 'instagram' | 'email'
+  maskType: 'whatsapp' | 'instagram' | 'email' | 'facebook' | 'twitter'
 }) {
   const [value, setValue] = useState(defaultValue || "")
 
@@ -34,6 +34,18 @@ export function MaskedInput({
       return insta.toLowerCase()
     }
 
+    if (maskType === 'facebook') {
+      let fb = val.replace(/\s/g, "")
+      if (fb && !fb.startsWith('https://facebook.com/')) fb = 'https://facebook.com/' + fb
+      return fb.toLowerCase()
+    }
+
+    if (maskType === 'twitter') {
+      let tw = val.replace(/\s/g, "")
+      if (tw && !tw.startsWith('https://x.com/')) tw = 'https://x.com/' + tw
+      return tw.toLowerCase()
+    }
+
     return val // Email não costuma usar máscara, apenas validação
   }
 
@@ -45,7 +57,9 @@ export function MaskedInput({
       onChange={(e) => setValue(formatValue(e.target.value))}
       placeholder={
         maskType === 'whatsapp' ? '(00) 00000-0000' : 
-        maskType === 'instagram' ? 'https://instagram.com/' : 'exemplo@email.com'
+        maskType === 'instagram' ? 'https://instagram.com/' : 
+        maskType === 'facebook' ? 'https://facebook.com/' :
+        maskType === 'twitter' ? 'https://x.com/ (Twitter)' : 'exemplo@email.com'
       }
     />
   )

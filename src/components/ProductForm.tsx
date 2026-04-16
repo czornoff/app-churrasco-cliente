@@ -9,10 +9,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { saveProductAction } from "@/lib/actions/product";
 import { Plus, ChevronLeft, Package, Trash2, Star } from "lucide-react";
 import { toast } from "sonner";
+import { getCategoriesAction } from "@/lib/actions/category";
 
 import { Switch } from "@/components/ui/switch"
 
-type Categoria = "carnes" | "bebidas" | "acompanhamentos" | "outros" | "sobremesas" | "suprimentos";
+type Categoria = "carnes" | "bebidas" | "acompanhamentos" | "outros" | "sobremesas" | "suprimentos" | string;
 
 interface ProductFormData {
     _id?: string;
@@ -31,6 +32,7 @@ interface ProductFormData {
     ativo: boolean;
     indicado?: boolean;
     favorito?: boolean;
+    categoryId?: string;
 }
 
 interface ProductFormProps {
@@ -52,6 +54,24 @@ export function ProductForm({ tenantId, initialData, onBack, onSuccess }: Produc
     const [ativo, setAtivo] = useState(initialData?.ativo !== undefined ? initialData.ativo : true);
     const [indicado, setIndicado] = useState(initialData?.indicado || false);
     const [favorito, setFavorito] = useState(initialData?.favorito || false);
+    const [categoryId, setCategoryId] = useState(initialData?.categoryId || "");
+    const [availableCategories, setAvailableCategories] = useState<any[]>([]);
+
+    useEffect(() => {
+        const loadCategories = async () => {
+            const data = await getCategoriesAction(tenantId);
+            setAvailableCategories(data);
+            
+            // Se estiver editando e tiver categoryId, garantir que o tipo base está correto
+            if (initialData?.categoryId) {
+                const currentCat = data.find((c: any) => c._id === initialData.categoryId);
+                if (currentCat) {
+                    setCategory(currentCat.type);
+                }
+            }
+        };
+        loadCategories();
+    }, [tenantId, initialData]);
 
     useEffect(() => {
         if (state?.success) {
@@ -168,6 +188,7 @@ export function ProductForm({ tenantId, initialData, onBack, onSuccess }: Produc
                 <input type="hidden" name="ativo" value={ativo ? "on" : "off"} />
                 <input type="hidden" name="indicado" value={indicado ? "on" : "off"} />
                 <input type="hidden" name="favorito" value={favorito ? "on" : "off"} />
+                <input type="hidden" name="categoryId" value={categoryId} />
                 {tipoSuprimento && <input type="hidden" name="tipoSuprimento" value={tipoSuprimento} />}
 
                 {category === 'bebidas' ? (
@@ -202,23 +223,41 @@ export function ProductForm({ tenantId, initialData, onBack, onSuccess }: Produc
                             <Label htmlFor="category">Categoria</Label>
                             <Select
                                 name="category"
-                                value={category}
+                                value={categoryId || category}
                                 onValueChange={(v) => {
-                                    setCategory(v as Categoria)
-                                    if (v !== 'suprimentos') setTipoSuprimento(null)
-                                    if (v !== 'bebidas') setSubCategoriaBebida('nao-alcoolica')
+                                    // Verificar se é uma categoria dinâmica
+                                    const dynCat = availableCategories.find(c => c._id === v);
+                                    if (dynCat) {
+                                        setCategoryId(dynCat._id);
+                                        setCategory(dynCat.type);
+                                        if (dynCat.type !== 'suprimentos') setTipoSuprimento(null);
+                                        if (dynCat.type !== 'bebidas') setSubCategoriaBebida('nao-alcoolica');
+                                    } else {
+                                        setCategoryId("");
+                                        setCategory(v as Categoria);
+                                        if (v !== 'suprimentos') setTipoSuprimento(null);
+                                        if (v !== 'bebidas') setSubCategoriaBebida('nao-alcoolica');
+                                    }
                                 }}
                             >
                                 <SelectTrigger id="category">
                                     <SelectValue placeholder="Selecione" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="carnes">CARNE</SelectItem>
-                                    <SelectItem value="bebidas">BEBIDA</SelectItem>
-                                    <SelectItem value="acompanhamentos">ACOMPANHAMENTO</SelectItem>
-                                    <SelectItem value="outros">OUTRO</SelectItem>
-                                    <SelectItem value="sobremesas">SOBREMESA</SelectItem>
-                                    <SelectItem value="suprimentos">SUPRIMENTO</SelectItem>
+                                    {availableCategories.length > 0 ? (
+                                        availableCategories.map(cat => (
+                                            <SelectItem key={cat._id} value={cat._id}>{cat.name}</SelectItem>
+                                        ))
+                                    ) : (
+                                        <>
+                                            <SelectItem value="carnes">CARNE</SelectItem>
+                                            <SelectItem value="bebidas">BEBIDA</SelectItem>
+                                            <SelectItem value="acompanhamentos">ACOMPANHAMENTO</SelectItem>
+                                            <SelectItem value="outros">OUTRO</SelectItem>
+                                            <SelectItem value="sobremesas">SOBREMESA</SelectItem>
+                                            <SelectItem value="suprimentos">SUPRIMENTO</SelectItem>
+                                        </>
+                                    )}
                                 </SelectContent>
                             </Select>
                         </div>

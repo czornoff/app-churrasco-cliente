@@ -11,6 +11,8 @@ export interface ITenantDocument extends Document {
     email: string;
     whatsApp: string;
     instagram: string;
+    facebook?: string;
+    twitter?: string;
     address?: string;
     versao: string;
     limiteConsulta: number;
@@ -39,6 +41,8 @@ const TenantSchema = new Schema<ITenantDocument>({
     email: { type: String, default: 'contato@email.com' },
     whatsApp: { type: String, default: '11900000000' },
     instagram: { type: String, default: 'https://instagram.com/' },
+    facebook: { type: String, default: '' },
+    twitter: { type: String, default: '' },
     address: { type: String, default: '' },
     versao: { type: String, default: '1.0.1' },
     limiteConsulta: { type: Number, default: 5 },
@@ -100,6 +104,32 @@ const CalculationSchema = new Schema<ICalculationDocument>({
     totalPrice: Number
 }, { timestamps: true });
 
+// 4. CATEGORY (Categorias Dinâmicas)
+export interface ICategoryDocument extends Document {
+    tenantId: Types.ObjectId;
+    name: string;
+    type: 'carnes' | 'bebidas' | 'acompanhamentos' | 'outros' | 'sobremesas' | 'suprimentos';
+    emoji?: string;
+    order: number;
+    active: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const CategorySchema = new Schema<ICategoryDocument>({
+    tenantId: { type: Schema.Types.ObjectId, ref: 'Tenant', required: true },
+    name: { type: String, required: true },
+    type: { 
+        type: String, 
+        enum: ['carnes', 'bebidas', 'acompanhamentos', 'outros', 'sobremesas', 'suprimentos'],
+        required: true 
+    },
+    emoji: { type: String, default: '' },
+    order: { type: Number, default: 0 },
+    active: { type: Boolean, default: true },
+}, { timestamps: true });
+
 export const Tenant = (models.Tenant as Model<ITenantDocument>) || model<ITenantDocument>('Tenant', TenantSchema);
 export const Product = (models.Product as Model<IProductDocument>) || model<IProductDocument>('Product', ProductSchema);
 export const Calculation = (models.Calculation as Model<ICalculationDocument>) || model<ICalculationDocument>('Calculation', CalculationSchema);
+if (models.Category) { delete (models as any).Category; }; export const Category = model<ICategoryDocument>('Category', CategorySchema);

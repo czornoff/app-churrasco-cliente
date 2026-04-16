@@ -2,7 +2,7 @@
 
 import { ITenant } from '@/interfaces/tenant';
 import { IClienteMenu } from '@/interfaces/menu';
-import { Mail, Instagram } from 'lucide-react';
+import { Mail, Instagram, Facebook, X } from 'lucide-react';
 import Link from 'next/link';
 
 interface TenantFooterProps {
@@ -17,9 +17,16 @@ export function TenantFooter({ tenant, menuItems = [] }: TenantFooterProps) {
     // Separar menus por categoria (usando idPai)
     const mainMenuItems = menuItems.filter(item => item.idPai === 0 || !item.idPai);
 
-    // Limpar URLs de Instagram
     const instagramUrl = tenant.instagram ?
         (tenant.instagram.startsWith('http') ? tenant.instagram : `https://instagram.com/${tenant.instagram}`)
+        : '';
+
+    const facebookUrl = tenant.facebook ?
+        (tenant.facebook.startsWith('http') ? tenant.facebook : `https://facebook.com/${tenant.facebook}`)
+        : '';
+
+    const twitterUrl = tenant.twitter ?
+        (tenant.twitter.startsWith('http') ? tenant.twitter : `https://x.com/${tenant.twitter}`)
         : '';
 
     return (
@@ -110,6 +117,30 @@ export function TenantFooter({ tenant, menuItems = [] }: TenantFooterProps) {
                             >
                                 <Instagram size={16} className="transition-transform group-hover:scale-110" />
                                 <span>Instagram</span>
+                            </a>
+                        )}
+                        {facebookUrl && (
+                            <a
+                                href={facebookUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors duration-200 group"
+                            >
+                                <Facebook size={16} className="transition-transform group-hover:scale-110" />
+                                <span>Facebook</span>
+                            </a>
+                        )}
+                        {twitterUrl && (
+                            <a
+                                href={twitterUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors duration-200 group"
+                            >
+                                <X size={16} className="transition-transform group-hover:scale-110" />
+                                <span className="flex items-baseline gap-1">
+                                    X <span className="text-[10px] opacity-70">(Twitter)</span>
+                                </span>
                             </a>
                         )}
                     </div>

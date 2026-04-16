@@ -77,6 +77,8 @@ export async function updateTenantAction(prevState: ActionState, formData: FormD
         email: formData.get('email')?.toString(),
         whatsApp: formData.get('whatsApp')?.toString(),
         instagram: formData.get('instagram')?.toString(),
+        facebook: formData.get('facebook')?.toString(),
+        twitter: formData.get('twitter')?.toString(),
         address: formData.get('address')?.toString(),
         logoUrl: (() => {
             const currentLogo = formData.get('logoUrl')?.toString().trim() || "";

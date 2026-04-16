@@ -15,9 +15,9 @@ export const tenantUpdateSchema = z.object({
         .min(10, "WhatsApp incompleto")
         .max(15, "WhatsApp muito longo")
         .optional().or(z.literal("")),
-    instagram: z.string()
-        .url("URL do Instagram inválida")
-        .optional().or(z.literal("")),
+    instagram: z.string().optional().or(z.literal("")),
+    facebook: z.string().optional().or(z.literal("")),
+    twitter: z.string().optional().or(z.literal("")),
     address: z.string().optional(),
     logoUrl: z.string().url("URL da logo inválida").optional().or(z.literal("")),
     colorPrimary: z.string().regex(/^#[0-9A-Fa-f]{6}$/, "Cor inválida (formato #RRGGBB)").optional(),

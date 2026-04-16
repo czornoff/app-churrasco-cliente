@@ -19,6 +19,7 @@ import { CloudinaryUpload } from "@/components/CldUploadWidget"
 import { toast } from "sonner";
 import { TenantMenuManager } from "@/components/admin/TenantMenuManager";
 import { TenantPageManager } from "@/components/admin/TenantPageManager";
+import { CategoryManager } from "@/components/admin/CategoryManager";
 import { Textarea } from "@/components/ui/textarea";
 import { LocationPreview } from "@/components/LocationPreview";
 
@@ -87,10 +88,11 @@ export default function EditTenantForm(
                 className="w-full"
             >
                 <div className="pt-1 bg-zinc-50 dark:bg-zinc-800 rounded-md">
-                    <TabsList className="flex flex-wrap w-full justify-start md:grid md:grid-cols-6 
+                    <TabsList className="flex flex-wrap w-full justify-start md:grid md:grid-cols-7 
                         mb-8 md:mb-0">
                         <TabsTrigger value="geral"><Globe className="w-3 h-3 mr-1 pb-1" /> Geral</TabsTrigger>
                         <TabsTrigger value="contato"><Palette className="w-3 h-3 mr-1 pb-1" /> Contato</TabsTrigger>
+                        <TabsTrigger value="categorias"><List className="w-3 h-3 mr-1 pb-1" /> Categorias</TabsTrigger>
                         <TabsTrigger value="cardapio"><ScanBarcode className="w-3 h-3 mr-1 pb-1" /> Produtos</TabsTrigger>
                         <TabsTrigger value="menus"><List className="w-3 h-3 mr-1 pb-1" /> Menu App</TabsTrigger>
                         <TabsTrigger value="paginas"><FileText className="w-3 h-3 mr-1 pb-1" /> Páginas</TabsTrigger>
@@ -99,6 +101,14 @@ export default function EditTenantForm(
                         )}
                     </TabsList>
                 </div>
+            
+                <TabsContent value="categorias" forceMount className="data-[state=inactive]:hidden pt-4">
+                    <Card className="border-none shadow-none">
+                        <CardContent>
+                            <CategoryManager tenantId={id} />
+                        </CardContent>
+                    </Card>
+                </TabsContent>
 
                 <TabsContent value="cardapio" forceMount className="data-[state=inactive]:hidden pt-4">
                     <Card className="border-none shadow-none">
@@ -227,6 +237,18 @@ export default function EditTenantForm(
                                     <MaskedInput name="instagram" defaultValue={(state?.formData?.instagram as string) || tenant.instagram} maskType="instagram" />
                                     {state?.errors?.instagram && <p className="text-xs text-red-500 font-medium">{state.errors.instagram[0]}</p>}
                                 </div>
+                                <div className="space-y-2">
+                                    <Label>Facebook</Label>
+                                    <MaskedInput name="facebook" defaultValue={(state?.formData?.facebook as string) || tenant.facebook} maskType="facebook" />
+                                    {state?.errors?.facebook && <p className="text-xs text-red-500 font-medium">{state.errors.facebook[0]}</p>}
+                                </div>
+                                <div className="space-y-2">
+                                    <Label className="flex items-center gap-1">
+                                        X <span className="text-[10px] font-normal text-zinc-400">(Twitter)</span>
+                                    </Label>
+                                    <MaskedInput name="twitter" defaultValue={(state?.formData?.twitter as string) || tenant.twitter} maskType="twitter" />
+                                    {state?.errors?.twitter && <p className="text-xs text-red-500 font-medium">{state.errors.twitter[0]}</p>}
+                                </div>
                                 <div className="space-y-2 md:col-span-2">
                                     <Label>E-mail de Contato</Label>
                                     <MaskedInput name="email" type="email" defaultValue={(state?.formData?.email as string) || tenant.email} maskType="email" />
@@ -293,7 +315,7 @@ export default function EditTenantForm(
                             </Card>
                         </TabsContent>
                     )}
-                    {activeTab !== "cardapio" && activeTab !== "menus" && activeTab !== "paginas" ? (
+                    {activeTab !== "cardapio" && activeTab !== "menus" && activeTab !== "paginas" && activeTab !== "categorias" ? (
 
                         /* Botão Salvar (Aparece em todas as outras abas) */
                         <div className="mt-8 flex flex-col items-end gap-2">

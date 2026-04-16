@@ -23,6 +23,8 @@ interface Produto {
     qtdePorAdulto?: number;
     tipoSuprimento?: string;
     categoria?: string;
+    categoriaEmoji?: string;
+    baseType?: string;
     imageUrl?: string;
     subCategoriaBebida?: 'alcoolica' | 'nao-alcoolica';
 }
@@ -49,6 +51,7 @@ interface ResultadoCalculo {
         tamanhoEmbalagem: number;
         totalPreco: number;
         categoria?: string;
+        categoriaEmoji?: string;
         subCategoriaBebida?: 'alcoolica' | 'nao-alcoolica';
         unidade: string;
     }>;
@@ -129,8 +132,46 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
         }
     };
 
+    // Agrupar resultados por categoria para exibição
+    const resultsByCategoryMap = resultado?.produtosCalculo.reduce((acc: any, item: any) => {
+        const cat = item.categoria || 'Outros';
+        if (!acc[cat]) acc[cat] = [];
+        acc[cat].push(item);
+        return acc;
+    }, {}) || {};
+
+    const baseTypeOrder = ['carnes', 'bebidas', 'acompanhamentos', 'outros', 'sobremesas', 'suprimentos'];
+
+    const resultsByCategory = Object.entries(resultsByCategoryMap)
+        .sort(([nameA, itemsA], [nameB, itemsB]) => {
+            const typeA = (itemsA as any[])[0]?.baseType?.toLowerCase() || '';
+            const typeB = (itemsB as any[])[0]?.baseType?.toLowerCase() || '';
+            const orderA = baseTypeOrder.indexOf(typeA);
+            const orderB = baseTypeOrder.indexOf(typeB);
+            
+            if (orderA !== orderB) return (orderA === -1 ? 99 : orderA) - (orderB === -1 ? 99 : orderB);
+            return nameA.localeCompare(nameB);
+        });
+
+    const categoryIcons: Record<string, string> = {
+        'carnes': '🥩',
+        'bebidas': '🍻',
+        'acompanhamentos': '🥗',
+        'outros': '🧀',
+        'sobremesas': '🍰',
+        'suprimentos': '🍴'
+    };
+
+    const getIconForCategory = (catName: string, items: any[]) => {
+        // Tenta usar o ícone vindo do produto (que vem da categoria)
+        if (items[0]?.categoriaEmoji) return items[0].categoriaEmoji;
+        
+        const baseType = items[0]?.baseType;
+        return categoryIcons[baseType] || '📍';
+    };
+
     // Agrupar produtos por categoria
-    const produtosPorCategoria = produtos.reduce((acc, produto) => {
+    const produtosPorCategoriaMap = produtos.reduce((acc, produto) => {
         const categoria = produto.categoria || 'Outros';
         if (!acc[categoria]) {
             acc[categoria] = [];
@@ -138,6 +179,18 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
         acc[categoria].push(produto);
         return acc;
     }, {} as Record<string, Produto[]>);
+
+    // Ordenar as categorias pelo tipo base predominante
+    const produtosPorCategoria = Object.entries(produtosPorCategoriaMap)
+        .sort(([nameA, itemsA], [nameB, itemsB]) => {
+            const typeA = itemsA[0]?.baseType?.toLowerCase() || '';
+            const typeB = itemsB[0]?.baseType?.toLowerCase() || '';
+            const orderA = baseTypeOrder.indexOf(typeA);
+            const orderB = baseTypeOrder.indexOf(typeB);
+            
+            if (orderA !== orderB) return (orderA === -1 ? 99 : orderA) - (orderB === -1 ? 99 : orderB);
+            return nameA.localeCompare(nameB);
+        });
 
     const handleInputChange = (field: keyof CalculadoraFormData, value: number) => {
         setFormData(prev => ({
@@ -205,17 +258,19 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
             const produto = produtos.find(p => p._id === produtoId);
             if (!produto) return;
 
-            const categoria = produto.categoria?.toLowerCase() || '';
-            if (!produtosPorCategoriaMap[categoria]) {
-                produtosPorCategoriaMap[categoria] = [];
-                totalPorCategoria[categoria] = 0;
-            }
-            produtosPorCategoriaMap[categoria].push(produto);
+            const baseType = produto.baseType?.toLowerCase() || produto.categoria?.toLowerCase() || '';
+            const displayCat = produto.categoria || 'Outros';
 
-            // Somar os valores por adulto de cada categoria (fatores internos de distribuição)
-            if (['carnes', 'acompanhamentos', 'outros', 'sobremesas'].includes(categoria)) {
-                totalPorCategoria[categoria] += produto.gramasPorAdulto ?? 0;
-            } else if (categoria === 'bebidas') {
+            if (!produtosPorCategoriaMap[displayCat]) {
+                produtosPorCategoriaMap[displayCat] = [];
+            }
+            produtosPorCategoriaMap[displayCat].push(produto);
+
+            // Somar os valores por adulto de cada categoria (fatores internos de distribuição) - usar baseType para lógica
+            if (['carnes', 'acompanhamentos', 'outros', 'sobremesas'].includes(baseType)) {
+                if (!totalPorCategoria[baseType]) totalPorCategoria[baseType] = 0;
+                totalPorCategoria[baseType] += produto.gramasPorAdulto ?? 0;
+            } else if (baseType === 'bebidas') {
                 const subCategoria = produto.subCategoriaBebida || 'nao-alcoolica';
                 if (!produtosPorSubcategoriaBebida[subCategoria]) {
                     produtosPorSubcategoriaBebida[subCategoria] = [];
@@ -241,15 +296,16 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
 
                 let quantidadeNecessaria = 0;
                 let quantidadeEmbalagens = 0;
-                const categoria = produto.categoria?.toLowerCase() || '';
+                const baseType = produto.baseType?.toLowerCase() || produto.categoria?.toLowerCase() || '';
+                const displayCat = produto.categoria || 'Outros';
 
-                // Calcular quantidade baseado na categoria com proporções dinâmicas
-                if (categoria === 'carnes') {
+                // Calcular quantidade baseado no tipo base com proporções dinâmicas
+                if (baseType === 'carnes') {
                     const totalCarnesBase = pessoasEquivalentes * config.carne * multiplicadorCarnes;
                     const totalDesteProduto = totalPorCategoria['carnes'] || 0;
                     const fator = totalDesteProduto > 0 ? (produto.gramasPorAdulto ?? 0) / totalDesteProduto : 0;
                     quantidadeNecessaria = totalCarnesBase * fator;
-                } else if (categoria === 'acompanhamentos' || categoria === 'outros') {
+                } else if (baseType === 'acompanhamentos' || baseType === 'outros') {
                     const baseConsumo = config.acompanhamento;
                     const totalDesteGrupo = (totalPorCategoria['acompanhamentos'] || 0) + (totalPorCategoria['outros'] || 0);
 
@@ -262,12 +318,12 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                         const fator = totalDesteGrupo > 0 ? (produto.gramasPorAdulto ?? 0) / totalDesteGrupo : 0;
                         quantidadeNecessaria = totalConsumoBase * fator;
                     }
-                } else if (categoria === 'sobremesas') {
+                } else if (baseType === 'sobremesas') {
                     const baseConsumo = config.sobremesa;
                     const totalSelecionados = totalPorCategoria['sobremesas'] || 0;
                     const fator = totalSelecionados > 0 ? (produto.gramasPorAdulto ?? 0) / totalSelecionados : 0;
                     quantidadeNecessaria = pessoasEquivalentes * baseConsumo * fator;
-                } else if (categoria === 'bebidas') {
+                } else if (baseType === 'bebidas') {
                     const subCategoria = produto.subCategoriaBebida || 'nao-alcoolica';
                     const mlPorAdulto = produto.mlPorAdulto ?? 0;
                     const baseBebida = config.bebida;
@@ -296,7 +352,7 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                         const fator = totalSelecionados > 0 ? mlPorAdulto / totalSelecionados : 0;
                         quantidadeNecessaria = mlTotalConsumido * fator;
                     }
-                } else if (categoria === 'suprimentos') {
+                } else if (baseType === 'suprimentos') {
                     if (produto.tipoSuprimento === 'CARVAO') {
                         const totalCarnesG = pessoasEquivalentes * config.carne * multiplicadorCarnes;
                         // Regra base: 1kg de carvão por 1kg de carne a cada 4 horas
@@ -312,11 +368,11 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                 }
 
                 // Arredondar embalagens
-                const divisorEmbalagem = (categoria === 'bebidas') ? (produto.mlEmbalagem || 1) : (produto.gramasEmbalagem || 1);
+                const divisorEmbalagem = (baseType === 'bebidas') ? (produto.mlEmbalagem || 1) : (produto.gramasEmbalagem || 1);
                 quantidadeEmbalagens = Math.ceil(quantidadeNecessaria / divisorEmbalagem);
 
                 const totalPreco = quantidadeEmbalagens * produto.preco;
-                const unidade = categoria === 'bebidas' ? 'ml' : (categoria === 'suprimentos' && produto.tipoSuprimento !== 'CARVAO') ? '' : 'g';
+                const unidade = baseType === 'bebidas' ? 'ml' : (baseType === 'suprimentos' && produto.tipoSuprimento !== 'CARVAO') ? '' : 'g';
 
                 return {
                     produtoId: produto._id,
@@ -324,9 +380,11 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                     preco: produto.preco,
                     quantidade: Math.round(quantidadeNecessaria * 100) / 100,
                     quantidadeEmbalagem: quantidadeEmbalagens,
-                    tamanhoEmbalagem: (categoria === 'bebidas') ? (produto.mlEmbalagem || 0) : (produto.gramasEmbalagem || 0),
+                    tamanhoEmbalagem: (baseType === 'bebidas') ? (produto.mlEmbalagem || 0) : (produto.gramasEmbalagem || 0),
                     totalPreco: Math.round(totalPreco * 100) / 100,
-                    categoria: categoria,
+                    categoria: displayCat, // Usar o nome de exibição para agrupamento final
+                    categoriaEmoji: (produto as any).categoriaEmoji, // Repassar o emoji dinâmico
+                    baseType: baseType, // Guardar o tipo base para referência se necessário
                     subCategoriaBebida: produto.subCategoriaBebida,
                     unidade: unidade
                 };
@@ -340,6 +398,8 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                 tamanhoEmbalagem: number;
                 totalPreco: number;
                 categoria?: string;
+                categoriaEmoji?: string;
+                baseType?: string;
                 subCategoriaBebida?: 'alcoolica' | 'nao-alcoolica';
                 unidade: string;
             }>;
@@ -517,7 +577,7 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
-                        {Object.entries(produtosPorCategoria).map(([categoria, produtosCategoria]) => (
+                        {produtosPorCategoria.map(([categoria, produtosCategoria]) => (
                             <div key={categoria} className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden bg-zinc-100 dark:bg-zinc-700">
                                 <div 
                                     className="w-full flex items-center justify-between p-4 border-b transition-colors"
@@ -526,7 +586,10 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                                         borderColor: `${primaryColor}44` 
                                     }}
                                 >
-                                    <h4 className="font-bold text-white uppercase text-sm tracking-wider">{categoria}</h4>
+                                    <h4 className="font-bold text-white uppercase text-sm tracking-wider items-center flex gap-2">
+                                        <span className="text-lg bg-white/20 px-1.5 py-0.5 rounded shadow-sm">{getIconForCategory(categoria, produtosCategoria)}</span>
+                                        {categoria}
+                                    </h4>
                                 </div>
 
                                 {/* Conteúdo da Categoria */}
@@ -627,54 +690,52 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                         </div>
 
                         {/* Detalhes dos Produtos */}
-                        <div className="space-y-3">
-                            <h4 className="font-semibold text-zinc-900 dark:text-white">Detalhamento dos Produtos</h4>
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-sm">
-                                    <thead>
-                                        <tr className="border-b border-emerald-200 dark:border-emerald-900">
-                                            <th className="text-left p-2 text-zinc-600 dark:text-zinc-400">Produto</th>
-                                            <th className="text-right p-2 text-zinc-600 dark:text-zinc-400">Quantidade</th>
-                                            <th className="text-center p-2 text-zinc-600 dark:text-zinc-400">Embalagens</th>
-                                            <th className="text-right p-2 text-zinc-600 dark:text-zinc-400">Valor Unit.</th>
-                                            <th className="text-right p-2 text-zinc-600 dark:text-zinc-400">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {resultado.produtosCalculo.map((item) => (
-                                            <tr key={item.produtoId} className="border-b border-zinc-200 dark:border-zinc-800">
-                                                <td className="p-2 text-zinc-900 dark:text-white font-medium">
-                                                    {item.subCategoriaBebida === 'alcoolica' ? (
-                                                        <i>{item.nome}</i>
-                                                    ) : (
-                                                        item.nome
-                                                    )}
-                                                </td>
-                                                <td className="p-2 text-right text-zinc-600 dark:text-zinc-400 text-xs">
-                                                    {item.quantidade.toFixed(0)}{item.categoria === 'bebidas' ? 'ml' : item.categoria === 'suprimentos' ? '' : 'g'}
-                                                </td>
-                                                <td className="p-2 text-center text-zinc-900 dark:text-white font-medium">
-                                                    {item.quantidadeEmbalagem}
-                                                    {item.tamanhoEmbalagem > 0 && (
-                                                        <span className="text-xs text-zinc-500 font-normal ml-1">
-                                                            ({item.tamanhoEmbalagem}{item.unidade})
-                                                        </span>
-                                                    )}
-                                                </td>
-                                                <td className="p-2 text-right text-zinc-900 dark:text-white">
-                                                    R$ {item.preco.toFixed(2)}
-                                                </td>
-                                                <td className="p-2 text-right font-semibold text-zinc-900 dark:text-white">
-                                                    R$ {item.totalPreco.toFixed(2)}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div className="space-y-4">
+                            {resultsByCategory.map(([categoryName, items]) => (
+                                <div key={categoryName} className="overflow-hidden bg-zinc-50 dark:bg-zinc-900/40 rounded-xl border border-zinc-200 dark:border-zinc-800">
+                                    <div className="bg-white dark:bg-zinc-800 px-4 py-2 border-b border-zinc-200 dark:border-zinc-700 flex justify-between items-center">
+                                        <h3 className="text-sm font-bold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider flex items-center gap-2">
+                                            <span className="text-lg">{getIconForCategory(categoryName, items as any[])}</span> {categoryName}
+                                        </h3>
+                                    </div>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-sm">
+                                            <thead>
+                                                <tr className="border-b border-zinc-200 dark:border-zinc-700">
+                                                    <th className="text-left p-2 text-zinc-600 dark:text-zinc-400">Produto</th>
+                                                    <th className="text-right p-2 text-zinc-600 dark:text-zinc-400">Qtd</th>
+                                                    <th className="text-center p-2 text-zinc-600 dark:text-zinc-400">Emb.</th>
+                                                    <th className="text-right p-2 text-zinc-600 dark:text-zinc-400">Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {(items as any[]).map((item) => (
+                                                    <tr key={item.produtoId} className="border-b border-zinc-200 dark:border-zinc-800 last:border-0">
+                                                        <td className="p-2 text-zinc-900 dark:text-white font-medium">
+                                                            {item.subCategoriaBebida === 'alcoolica' ? <i>{item.nome}</i> : item.nome}
+                                                        </td>
+                                                        <td className="p-2 text-right text-zinc-600 dark:text-zinc-400 text-xs">
+                                                            {item.quantidade.toFixed(0)}{item.baseType === 'bebidas' || item.unidade === 'ml' ? 'ml' : item.baseType === 'suprimentos' ? '' : 'g'}
+                                                        </td>
+                                                        <td className="p-2 text-center text-zinc-900 dark:text-white font-medium">
+                                                            {item.quantidadeEmbalagem}
+                                                            {item.tamanhoEmbalagem > 0 && (
+                                                                <span className="text-xs text-zinc-500 font-normal ml-1">
+                                                                    ({item.tamanhoEmbalagem}{item.unidade})
+                                                                </span>
+                                                            )}
+                                                        </td>
+                                                        <td className="p-2 text-right font-semibold text-zinc-900 dark:text-white">
+                                                            R$ {item.totalPreco.toFixed(2)}
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-
-
 
                         {/* Upsell de Favoritos */}
                         {(() => {
