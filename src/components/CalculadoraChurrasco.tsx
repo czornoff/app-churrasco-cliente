@@ -587,7 +587,7 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
                                     }}
                                 >
                                     <h4 className="font-bold text-white uppercase text-sm tracking-wider items-center flex gap-2">
-                                        <span className="text-lg bg-white/20 px-1.5 py-0.5 rounded shadow-sm">{getIconForCategory(categoria, produtosCategoria)}</span>
+                                        <span className="text-lg px-1.5 py-0.5">{getIconForCategory(categoria, produtosCategoria)}</span>
                                         {categoria}
                                     </h4>
                                 </div>

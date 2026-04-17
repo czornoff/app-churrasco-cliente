@@ -28,11 +28,26 @@ export function CloudinaryUpload({
         if (!originalUrl.includes("res.cloudinary.com")) return originalUrl;
         // Estratégia de transformação em cadeia:
         // 1. c_crop,g_custom: Aplica o recorte exato feito pelo usuário no widget
-        // 2. c_fill,ar_1:1,w_500: Garante que o resultado seja 500x500 preenchendo o espaço
-        return originalUrl.replace("/upload/", "/upload/c_crop,g_custom/c_fill,ar_1:1,w_500/");
+        // 2. f_auto,q_auto: Otimização automática de formato e qualidade
+        // 3. w_800: Limita a largura para performance sem distorcer
+        return originalUrl.replace("/upload/", "/upload/c_crop,g_custom/f_auto,q_auto,w_800/");
     };
 
     const displayUrl = url || fallbackUrl;
+
+    const commonOptions = {
+        maxFiles: 1,
+        multiple: false,
+        clientAllowedFormats: ["png", "jpg", "jpeg", "webp"],
+        theme: "minimal" as const,
+        language: "pt" as const,
+        styles: {
+            zIndex: 100000
+        },
+        cropping: true,
+        // croppingAspectRatio omitido para permitir proporção livre
+        showSkipCropButton: true
+    };
 
     return (
         <div className="space-y-4">
@@ -62,19 +77,7 @@ export function CloudinaryUpload({
                                         setUrl(getTransformedUrl(result.info.secure_url));
                                     }
                                 }}
-                                options={{
-                                    maxFiles: 1,
-                                    multiple: false,
-                                    clientAllowedFormats: ["png", "jpg", "jpeg", "webp"],
-                                    theme: "minimal",
-                                    language: "pt",
-                                    styles: {
-                                        zIndex: 100000
-                                    },
-                                    cropping: true,
-                                    croppingAspectRatio: 1,
-                                    showSkipCropButton: false
-                                }}
+                                options={commonOptions}
                             >
                                 {({ open }) => (
                                     <button
@@ -112,17 +115,7 @@ export function CloudinaryUpload({
                             }
                         }}
                         options={{
-                            maxFiles: 1,
-                            multiple: false,
-                            clientAllowedFormats: ["png", "jpg", "jpeg", "webp"],
-                            theme: "minimal",
-                            language: "pt",
-                            styles: {
-                                zIndex: 100000
-                            },
-                            cropping: true,
-                            croppingAspectRatio: 1,
-                            showSkipCropButton: false,
+                            ...commonOptions,
                             text: {
                                 pt: {
                                     or: "ou",
