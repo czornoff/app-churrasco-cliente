@@ -38,7 +38,7 @@ export function CloudinaryUpload({
     const commonOptions = {
         maxFiles: 1,
         multiple: false,
-        clientAllowedFormats: ["png", "jpg", "jpeg", "webp"],
+        clientAllowedFormats: ["png", "jpg", "jpeg", "webp", "avif"],
         theme: "minimal" as const,
         language: "pt" as const,
         styles: {
