@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { TenantManager } from "@/components/admin/TenantManager";
+import { GlobalBackupImport } from "@/components/admin/GlobalBackupImport";
 
 // Configurações para garantir que a página reflita os dados do banco em tempo real
 export const dynamic = 'force-dynamic'
@@ -41,6 +42,9 @@ export default async function AdminTenantsPage() {
                         </p>
                     </div>
                 </div>
+                {session?.user?.role === 'SUPERADMIN' && (
+                    <GlobalBackupImport />
+                )}
             </div>
 
             <TenantManager initialTenants={tenants} isTenantOwner={isTenantOwner} />

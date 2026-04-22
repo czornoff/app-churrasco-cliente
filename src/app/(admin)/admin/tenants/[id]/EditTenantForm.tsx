@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { TenantMenuManager } from "@/components/admin/TenantMenuManager";
 import { TenantPageManager } from "@/components/admin/TenantPageManager";
 import { CategoryManager } from "@/components/admin/CategoryManager";
+import { TenantBackupPanel } from "@/components/admin/TenantBackupPanel";
 import { Textarea } from "@/components/ui/textarea";
 import { LocationPreview } from "@/components/LocationPreview";
 
@@ -282,7 +283,7 @@ export default function EditTenantForm(
                     {session?.user?.role === 'SUPERADMIN' && (
                         <TabsContent value="config" forceMount className="data-[state=inactive]:hidden">
                             <Card>
-                                <div className="px-6">
+                                <div className="px-6 pt-6">
                                     <div>
                                         <h3 className="text-lg font-medium text-zinc-800 dark:text-zinc-200">
                                             Configurações Administrativas
@@ -301,7 +302,7 @@ export default function EditTenantForm(
                                         <Label>Versão do Sistema</Label>
                                         <Input name="versao" defaultValue={(state?.formData?.versao as string) || tenant.versao} />
                                     </div>
-                                    <div className="flex items-center space-x-2 pt-8">
+                                    <div className="flex items-center space-x-2 pt-4">
                                         <input
                                             type="checkbox"
                                             name="active"
@@ -311,6 +312,21 @@ export default function EditTenantForm(
                                         />
                                         <Label htmlFor="active" className="text-sm font-medium">Conta Ativa (Acesso liberado)</Label>
                                     </div>
+                                </CardContent>
+                            </Card>
+
+                            {/* Backup — fora do <form> para não interferir no submit */}
+                            <Card className="mt-4">
+                                <div className="px-6 pt-6">
+                                    <h3 className="text-lg font-medium text-zinc-800 dark:text-zinc-200">
+                                        Backup da Loja
+                                    </h3>
+                                    <p className="text-zinc-500 dark:text-zinc-400 text-sm">
+                                        Exporte ou importe todos os dados desta loja em um arquivo criptografado.
+                                    </p>
+                                </div>
+                                <CardContent>
+                                    <TenantBackupPanel tenantId={id} tenantSlug={tenant.slug} />
                                 </CardContent>
                             </Card>
                         </TabsContent>
