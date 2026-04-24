@@ -34,7 +34,8 @@ export function GlobalBackupImport() {
         try {
             const text = await file.text();
 
-            const res = await fetch(`/api/admin/backup/import`, {
+            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+            const res = await fetch(`${basePath}/api/admin/backup/import`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain' },
                 body: text,

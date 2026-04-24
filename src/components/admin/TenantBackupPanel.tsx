@@ -47,7 +47,8 @@ export function TenantBackupPanel({ tenantId, tenantSlug }: TenantBackupPanelPro
     const handleExport = async () => {
         setIsExporting(true);
         try {
-            const res = await fetch(`/api/admin/tenants/${tenantId}/backup`);
+            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+            const res = await fetch(`${basePath}/api/admin/tenants/${tenantId}/backup`);
 
             if (!res.ok) {
                 const err = await res.json();
@@ -104,7 +105,8 @@ export function TenantBackupPanel({ tenantId, tenantSlug }: TenantBackupPanelPro
         try {
             const text = await file.text();
 
-            const res = await fetch(`/api/admin/tenants/${tenantId}/backup`, {
+            const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+            const res = await fetch(`${basePath}/api/admin/tenants/${tenantId}/backup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain' },
                 body: text,
