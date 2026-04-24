@@ -6,7 +6,7 @@ import { Tenant, Calculation, Category } from '@/models/Schemas';
 import { ClienteMenu } from '@/models/ClienteMenu';
 import { ClientePagina } from '@/models/ClientePagina';
 import { Cardapio } from '@/models/Cardapio';
-import CryptoJS from 'crypto-js';
+import * as CryptoJS from 'crypto-js';
 
 const BACKUP_SECRET = process.env.BACKUP_SECRET || 'mandebem-backup-secret-key-2024';
 

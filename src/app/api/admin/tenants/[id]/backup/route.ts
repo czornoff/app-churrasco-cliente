@@ -8,7 +8,7 @@ import { ClientePagina } from '@/models/ClientePagina';
 import { Cardapio } from '@/models/Cardapio';
 import { User } from '@/models/User';
 import { WhatsAppLog } from '@/models/WhatsAppLog';
-import CryptoJS from 'crypto-js';
+import * as CryptoJS from 'crypto-js';
 
 const BACKUP_SECRET = process.env.BACKUP_SECRET || 'mandebem-backup-secret-key-2024';
 const BACKUP_VERSION = '1.0';
