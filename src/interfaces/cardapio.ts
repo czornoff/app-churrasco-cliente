@@ -11,4 +11,6 @@ export interface ICardapio {
     tenantId: string;
     createdAt?: Date;
     updatedAt?: Date;
+    descricao?: string;
+    porcentagemGeral?: number;
 }

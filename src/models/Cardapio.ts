@@ -22,6 +22,7 @@ export interface IItem {
     indicado?: boolean;
     favorito?: boolean;
     categoryId?: mongoose.Types.ObjectId | string; // ID da categoria dinâmica
+    porcentagemGeral?: number; // Se preenchido, usa essa porcentagem para o cálculo no peso total
 }
 
 const ItemSchema = new Schema<IItem>(
@@ -46,6 +47,7 @@ const ItemSchema = new Schema<IItem>(
         indicado: { type: Boolean, default: false },
         favorito: { type: Boolean, default: false },
         categoryId: { type: Schema.Types.ObjectId, ref: 'Category' },
+        porcentagemGeral: { type: Number },
     },
     { timestamps: true }
 );
@@ -106,4 +108,7 @@ const CardapioSchema = new Schema<ICardapio>(
     { timestamps: true }
 );
 
-export const Cardapio = (models.Cardapio as Model<ICardapio>) || model<ICardapio>('Cardapio', CardapioSchema);
+if (models.Cardapio) {
+    delete (models as any).Cardapio;
+}
+export const Cardapio = model<ICardapio>('Cardapio', CardapioSchema);

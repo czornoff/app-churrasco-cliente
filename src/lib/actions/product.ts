@@ -23,6 +23,8 @@ interface ProductItem {
     indicado?: boolean;
     favorito?: boolean;
     categoryId?: string;
+    descricao?: string;
+    porcentagemGeral?: number;
 }
 
 interface CardapioDocument {
@@ -52,6 +54,8 @@ interface ProdutoFormatado {
     favorito?: boolean;
     categoryId?: string;
     baseType?: string;
+    descricao?: string;
+    porcentagemGeral?: number;
 }
 
 export async function saveProductAction(prevState: any, formData: FormData) {
@@ -98,7 +102,9 @@ export async function saveProductAction(prevState: any, formData: FormData) {
         ativo: formData.get("ativo") === "on",
         indicado: formData.get("indicado") === "on",
         favorito: formData.get("favorito") === "on",
-        categoryId: categoryId || undefined
+        categoryId: categoryId || undefined,
+        descricao: (formData.get("descricao") as string) || "",
+        porcentagemGeral: formData.get("porcentagemGeral") ? Number(formData.get("porcentagemGeral")) : 0
     };
 
     if (category === 'carnes' || category === 'acompanhamentos' || category === 'outros' || category === 'sobremesas') {
@@ -240,6 +246,8 @@ export async function getCardapioByTenant(tenantId: string) {
                             indicado: produto.indicado,
                             favorito: produto.favorito,
                             imageUrl: produto.imageUrl,
+                            descricao: produto.descricao,
+                            porcentagemGeral: produto.porcentagemGeral,
                         };
 
                         // Adicionar campos específicos da categoria base

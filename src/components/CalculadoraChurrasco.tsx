@@ -27,6 +27,7 @@ interface Produto {
     baseType?: string;
     imageUrl?: string;
     subCategoriaBebida?: 'alcoolica' | 'nao-alcoolica';
+    porcentagemGeral?: number;
 }
 
 interface CalculadoraFormData {
@@ -250,9 +251,15 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
         const produtosPorCategoriaMap: Record<string, Produto[]> = {};
         const totalPorCategoria: Record<string, number> = {};
 
+        // Adicionar estruturas para produtos fixados e normais
+        const produtosFixosPorCategoria: Record<string, Produto[]> = {};
+        const produtosNormaisPorCategoria: Record<string, Produto[]> = {};
+
         // Para bebidas, vamos separar por subcategoria
         const produtosPorSubcategoriaBebida: Record<string, Produto[]> = {};
         const totalPorSubcategoriaBebida: Record<string, number> = {};
+        const fixosPorSubcategoriaBebida: Record<string, Produto[]> = {};
+        const normaisPorSubcategoriaBebida: Record<string, Produto[]> = {};
 
         formData.produtosSelecionados.forEach(produtoId => {
             const produto = produtos.find(p => p._id === produtoId);
@@ -266,18 +273,37 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
             }
             produtosPorCategoriaMap[displayCat].push(produto);
 
+            const isFixo = typeof produto.porcentagemGeral === 'number' && produto.porcentagemGeral > 0;
+
             // Somar os valores por adulto de cada categoria (fatores internos de distribuição) - usar baseType para lógica
             if (['carnes', 'acompanhamentos', 'outros', 'sobremesas'].includes(baseType)) {
-                if (!totalPorCategoria[baseType]) totalPorCategoria[baseType] = 0;
-                totalPorCategoria[baseType] += produto.gramasPorAdulto ?? 0;
+                if (isFixo) {
+                    if (!produtosFixosPorCategoria[baseType]) produtosFixosPorCategoria[baseType] = [];
+                    produtosFixosPorCategoria[baseType].push(produto);
+                } else {
+                    if (!produtosNormaisPorCategoria[baseType]) produtosNormaisPorCategoria[baseType] = [];
+                    produtosNormaisPorCategoria[baseType].push(produto);
+                    
+                    if (!totalPorCategoria[baseType]) totalPorCategoria[baseType] = 0;
+                    totalPorCategoria[baseType] += produto.gramasPorAdulto ?? 0;
+                }
             } else if (baseType === 'bebidas') {
                 const subCategoria = produto.subCategoriaBebida || 'nao-alcoolica';
                 if (!produtosPorSubcategoriaBebida[subCategoria]) {
                     produtosPorSubcategoriaBebida[subCategoria] = [];
-                    totalPorSubcategoriaBebida[subCategoria] = 0;
                 }
                 produtosPorSubcategoriaBebida[subCategoria].push(produto);
-                totalPorSubcategoriaBebida[subCategoria] += produto.mlPorAdulto ?? 0;
+                
+                if (isFixo) {
+                    if (!fixosPorSubcategoriaBebida[subCategoria]) fixosPorSubcategoriaBebida[subCategoria] = [];
+                    fixosPorSubcategoriaBebida[subCategoria].push(produto);
+                } else {
+                    if (!normaisPorSubcategoriaBebida[subCategoria]) normaisPorSubcategoriaBebida[subCategoria] = [];
+                    normaisPorSubcategoriaBebida[subCategoria].push(produto);
+                    
+                    if (!totalPorSubcategoriaBebida[subCategoria]) totalPorSubcategoriaBebida[subCategoria] = 0;
+                    totalPorSubcategoriaBebida[subCategoria] += produto.mlPorAdulto ?? 0;
+                }
             }
         });
 
@@ -301,56 +327,128 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
 
                 // Calcular quantidade baseado no tipo base com proporções dinâmicas
                 if (baseType === 'carnes') {
-                    const totalCarnesBase = pessoasEquivalentes * config.carne * multiplicadorCarnes;
-                    const totalDesteProduto = totalPorCategoria['carnes'] || 0;
-                    const fator = totalDesteProduto > 0 ? (produto.gramasPorAdulto ?? 0) / totalDesteProduto : 0;
-                    quantidadeNecessaria = totalCarnesBase * fator;
+                    const totalGeral = pessoasEquivalentes * config.carne * multiplicadorCarnes;
+                    
+                    const fixos = produtosFixosPorCategoria[baseType] || [];
+                    let pesoRestante = totalGeral;
+                    const isFixo = typeof produto.porcentagemGeral === 'number' && produto.porcentagemGeral > 0;
+
+                    if (fixos.length > 0) {
+                        const somaPorcentagens = fixos.reduce((sum, p) => sum + (p.porcentagemGeral || 0), 0);
+                        let mediaPorcentagem = Math.min(somaPorcentagens / fixos.length, 100);
+                        const pesoReservadoFixos = totalGeral * (mediaPorcentagem / 100);
+                        pesoRestante = totalGeral - pesoReservadoFixos;
+                        
+                        if (isFixo) {
+                            const fracaoEntreFixos = (produto.porcentagemGeral || 0) / somaPorcentagens;
+                            quantidadeNecessaria = pesoReservadoFixos * fracaoEntreFixos;
+                        }
+                    }
+                    
+                    if (!isFixo) {
+                        const totalDesteProduto = totalPorCategoria[baseType] || 0;
+                        const fator = totalDesteProduto > 0 ? (produto.gramasPorAdulto ?? 0) / totalDesteProduto : 0;
+                        quantidadeNecessaria = pesoRestante * fator;
+                    }
                 } else if (baseType === 'acompanhamentos' || baseType === 'outros') {
                     const baseConsumo = config.acompanhamento;
-                    const totalDesteGrupo = (totalPorCategoria['acompanhamentos'] || 0) + (totalPorCategoria['outros'] || 0);
+                    const totalConsumoGeral = pessoasEquivalentes * baseConsumo;
+                    const totalGramasAbsoluto = ((totalPorCategoria['acompanhamentos'] || 0) + (totalPorCategoria['outros'] || 0));
 
-                    if (totalDesteGrupo < baseConsumo) {
-                        // Se a soma é menor que a base, usar valor individual
-                        quantidadeNecessaria = pessoasEquivalentes * (produto.gramasPorAdulto ?? 0);
-                    } else {
-                        // Se a soma atinge a base, aplicar fator proporcional
-                        const totalConsumoBase = pessoasEquivalentes * baseConsumo;
-                        const fator = totalDesteGrupo > 0 ? (produto.gramasPorAdulto ?? 0) / totalDesteGrupo : 0;
-                        quantidadeNecessaria = totalConsumoBase * fator;
+                    const fixos = [...(produtosFixosPorCategoria['acompanhamentos'] || []), ...(produtosFixosPorCategoria['outros'] || [])];
+                    let pesoRestante = totalConsumoGeral;
+                    const isFixo = typeof produto.porcentagemGeral === 'number' && produto.porcentagemGeral > 0;
+                    
+                    if (fixos.length > 0) {
+                        const somaPorcentagens = fixos.reduce((sum, p) => sum + (p.porcentagemGeral || 0), 0);
+                        let mediaPorcentagem = Math.min(somaPorcentagens / fixos.length, 100);
+                        const pesoReservadoFixos = totalConsumoGeral * (mediaPorcentagem / 100);
+                        pesoRestante = totalConsumoGeral - pesoReservadoFixos;
+                        
+                        if (isFixo) {
+                            const fracaoEntreFixos = (produto.porcentagemGeral || 0) / somaPorcentagens;
+                            quantidadeNecessaria = pesoReservadoFixos * fracaoEntreFixos;
+                        }
+                    }
+
+                    if (!isFixo) {
+                        if (totalGramasAbsoluto < baseConsumo) {
+                            const normalDesteProduto = produto.gramasPorAdulto ?? 0;
+                            const qtyIfAbsoluto = pessoasEquivalentes * normalDesteProduto;
+                            quantidadeNecessaria = Math.min(qtyIfAbsoluto, pesoRestante * (normalDesteProduto / (totalGramasAbsoluto || 1)));
+                        } else {
+                            const fator = totalGramasAbsoluto > 0 ? (produto.gramasPorAdulto ?? 0) / totalGramasAbsoluto : 0;
+                            quantidadeNecessaria = pesoRestante * fator;
+                        }
                     }
                 } else if (baseType === 'sobremesas') {
                     const baseConsumo = config.sobremesa;
-                    const totalSelecionados = totalPorCategoria['sobremesas'] || 0;
-                    const fator = totalSelecionados > 0 ? (produto.gramasPorAdulto ?? 0) / totalSelecionados : 0;
-                    quantidadeNecessaria = pessoasEquivalentes * baseConsumo * fator;
+                    const totalGeral = pessoasEquivalentes * baseConsumo;
+                    const fixos = produtosFixosPorCategoria[baseType] || [];
+                    let pesoRestante = totalGeral;
+                    const isFixo = typeof produto.porcentagemGeral === 'number' && produto.porcentagemGeral > 0;
+
+                    if (fixos.length > 0) {
+                        const somaPorcentagens = fixos.reduce((sum, p) => sum + (p.porcentagemGeral || 0), 0);
+                        let mediaPorcentagem = Math.min(somaPorcentagens / fixos.length, 100);
+                        const pesoReservadoFixos = totalGeral * (mediaPorcentagem / 100);
+                        pesoRestante = totalGeral - pesoReservadoFixos;
+                        
+                        if (isFixo) {
+                            const fracaoEntreFixos = (produto.porcentagemGeral || 0) / somaPorcentagens;
+                            quantidadeNecessaria = pesoReservadoFixos * fracaoEntreFixos;
+                        }
+                    }
+                    
+                    if (!isFixo) {
+                        const totalSelecionados = totalPorCategoria[baseType] || 0;
+                        const fator = totalSelecionados > 0 ? (produto.gramasPorAdulto ?? 0) / totalSelecionados : 0;
+                        quantidadeNecessaria = pesoRestante * fator;
+                    }
                 } else if (baseType === 'bebidas') {
                     const subCategoria = produto.subCategoriaBebida || 'nao-alcoolica';
                     const mlPorAdulto = produto.mlPorAdulto ?? 0;
                     const baseBebida = config.bebida;
-
+                    
+                    let eqBebida = 0;
                     if (subCategoria === 'alcoolica') {
-                        const totalSelecionados = totalPorSubcategoriaBebida['alcoolica'] || 0;
-                        if (totalSelecionados > 0) {
-                            const mlTotalConsumido = formData.pessoasQueBebem * baseBebida;
-                            const fator = mlPorAdulto / totalSelecionados;
-                            quantidadeNecessaria = mlTotalConsumido * fator;
-                        } else {
-                            quantidadeNecessaria = mlPorAdulto * formData.pessoasQueBebem;
-                        }
+                        eqBebida = formData.pessoasQueBebem;
                     } else {
-                        let eqBebidaNaoAlcool = totalPessoas;
-
-                        // Se houver álcool, aplicamos a regra de que quem bebe álcool também consome 10% de refri/suco
+                        eqBebida = totalPessoas;
                         if (hasAlcoolica) {
                             const pessoasQueBebemRefri = formData.pessoasQueBebem * 0.1;
                             const pessoasQueNaoBebem = totalPessoas - formData.pessoasQueBebem;
-                            eqBebidaNaoAlcool = pessoasQueNaoBebem + pessoasQueBebemRefri;
+                            eqBebida = pessoasQueNaoBebem + pessoasQueBebemRefri;
                         }
-
-                        const mlTotalConsumido = eqBebidaNaoAlcool * baseBebida;
-                        const totalSelecionados = totalPorSubcategoriaBebida['nao-alcoolica'] || 0;
-                        const fator = totalSelecionados > 0 ? mlPorAdulto / totalSelecionados : 0;
-                        quantidadeNecessaria = mlTotalConsumido * fator;
+                    }
+                    
+                    const totalGeral = eqBebida * baseBebida;
+                    
+                    const fixos = fixosPorSubcategoriaBebida[subCategoria] || [];
+                    let pesoRestante = totalGeral;
+                    const isFixo = typeof produto.porcentagemGeral === 'number' && produto.porcentagemGeral > 0;
+                    
+                    if (fixos.length > 0) {
+                        const somaPorcentagens = fixos.reduce((sum, p) => sum + (p.porcentagemGeral || 0), 0);
+                        let mediaPorcentagem = Math.min(somaPorcentagens / fixos.length, 100);
+                        const pesoReservadoFixos = totalGeral * (mediaPorcentagem / 100);
+                        pesoRestante = totalGeral - pesoReservadoFixos;
+                        
+                        if (isFixo) {
+                            const fracaoEntreFixos = (produto.porcentagemGeral || 0) / somaPorcentagens;
+                            quantidadeNecessaria = pesoReservadoFixos * fracaoEntreFixos;
+                        }
+                    }
+                    
+                    if (!isFixo) {
+                        const totalSelecionados = totalPorSubcategoriaBebida[subCategoria] || 0;
+                        
+                        if (totalSelecionados > 0) {
+                            const fator = mlPorAdulto / totalSelecionados;
+                            quantidadeNecessaria = pesoRestante * fator;
+                        } else {
+                            quantidadeNecessaria = Math.min(mlPorAdulto * eqBebida, pesoRestante);
+                        }
                     }
                 } else if (baseType === 'suprimentos') {
                     if (produto.tipoSuprimento === 'CARVAO') {

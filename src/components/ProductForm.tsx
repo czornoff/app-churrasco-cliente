@@ -33,6 +33,8 @@ interface ProductFormData {
     indicado?: boolean;
     favorito?: boolean;
     categoryId?: string;
+    descricao?: string;
+    porcentagemGeral?: number;
 }
 
 interface ProductFormProps {
@@ -220,46 +222,70 @@ export function ProductForm({ tenantId, initialData, onBack, onSuccess }: Produc
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="category">Categoria</Label>
-                            <Select
-                                name="category"
-                                value={categoryId || category}
-                                onValueChange={(v) => {
-                                    // Verificar se é uma categoria dinâmica
-                                    const dynCat = availableCategories.find(c => c._id === v);
-                                    if (dynCat) {
-                                        setCategoryId(dynCat._id);
-                                        setCategory(dynCat.type);
-                                        if (dynCat.type !== 'suprimentos') setTipoSuprimento(null);
-                                        if (dynCat.type !== 'bebidas') setSubCategoriaBebida('nao-alcoolica');
-                                    } else {
-                                        setCategoryId("");
-                                        setCategory(v as Categoria);
-                                        if (v !== 'suprimentos') setTipoSuprimento(null);
-                                        if (v !== 'bebidas') setSubCategoriaBebida('nao-alcoolica');
-                                    }
-                                }}
-                            >
-                                <SelectTrigger id="category">
-                                    <SelectValue placeholder="Selecione" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {availableCategories.length > 0 ? (
-                                        availableCategories.map(cat => (
-                                            <SelectItem key={cat._id} value={cat._id}>{cat.name}</SelectItem>
-                                        ))
-                                    ) : (
-                                        <>
-                                            <SelectItem value="carnes">CARNE</SelectItem>
-                                            <SelectItem value="bebidas">BEBIDA</SelectItem>
-                                            <SelectItem value="acompanhamentos">ACOMPANHAMENTO</SelectItem>
-                                            <SelectItem value="outros">OUTRO</SelectItem>
-                                            <SelectItem value="sobremesas">SOBREMESA</SelectItem>
-                                            <SelectItem value="suprimentos">SUPRIMENTO</SelectItem>
-                                        </>
-                                    )}
-                                </SelectContent>
-                            </Select>
+                            <Label htmlFor="descricao">Descrição (Opcional)</Label>
+                            <Input
+                                id="descricao"
+                                name="descricao"
+                                placeholder="Ex: Carne macia e suculenta, ideal para churrasco"
+                                defaultValue={initialData?.descricao}
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-6">
+
+                            <div className="space-y-2">
+                                <Label htmlFor="category">Categoria</Label>
+                                <Select
+                                    name="category"
+                                    value={categoryId || category}
+                                    onValueChange={(v) => {
+                                        // Verificar se é uma categoria dinâmica
+                                        const dynCat = availableCategories.find(c => c._id === v);
+                                        if (dynCat) {
+                                            setCategoryId(dynCat._id);
+                                            setCategory(dynCat.type);
+                                            if (dynCat.type !== 'suprimentos') setTipoSuprimento(null);
+                                            if (dynCat.type !== 'bebidas') setSubCategoriaBebida('nao-alcoolica');
+                                        } else {
+                                            setCategoryId("");
+                                            setCategory(v as Categoria);
+                                            if (v !== 'suprimentos') setTipoSuprimento(null);
+                                            if (v !== 'bebidas') setSubCategoriaBebida('nao-alcoolica');
+                                        }
+                                    }}
+                                >
+                                    <SelectTrigger id="category" className="w-full">
+                                        <SelectValue placeholder="Selecione" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {availableCategories.length > 0 ? (
+                                            availableCategories.map(cat => (
+                                                <SelectItem key={cat._id} value={cat._id}>{cat.name}</SelectItem>
+                                            ))
+                                        ) : (
+                                            <>
+                                                <SelectItem value="carnes">CARNE</SelectItem>
+                                                <SelectItem value="bebidas">BEBIDA</SelectItem>
+                                                <SelectItem value="acompanhamentos">ACOMPANHAMENTO</SelectItem>
+                                                <SelectItem value="outros">OUTRO</SelectItem>
+                                                <SelectItem value="sobremesas">SOBREMESA</SelectItem>
+                                                <SelectItem value="suprimentos">SUPRIMENTO</SelectItem>
+                                            </>
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-2 grid-cols-2">
+                                <Label htmlFor="porcentagemGeral">Porcentagem Geral (%) (Opcional)</Label>
+                                <Input
+                                    id="porcentagemGeral"
+                                    name="porcentagemGeral"
+                                    type="number"
+                                    step="0.01"
+                                    placeholder="Ex: 50"
+                                    defaultValue={initialData?.porcentagemGeral || ""}
+                                />
+                            </div>
                         </div>
 
                         {category === 'suprimentos' && (
