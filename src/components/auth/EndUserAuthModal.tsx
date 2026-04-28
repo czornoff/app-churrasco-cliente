@@ -15,12 +15,13 @@ interface EndUserAuthModalProps {
     onClose: () => void;
     tenantId: string;
     tenantName: string;
+    tenantSlug: string;
     primaryColor: string;
 }
 
 type ViewType = 'login' | 'register' | 'forgot' | 'forgot-sent';
 
-export function EndUserAuthModal({ isOpen, onClose, tenantId, tenantName, primaryColor }: EndUserAuthModalProps) {
+export function EndUserAuthModal({ isOpen, onClose, tenantId, tenantName, tenantSlug, primaryColor }: EndUserAuthModalProps) {
     const { data: session } = useSession();
     const [view, setView] = useState<ViewType>('login');
     const [isLoading, setIsLoading] = useState(false);
@@ -86,11 +87,8 @@ export function EndUserAuthModal({ isOpen, onClose, tenantId, tenantName, primar
     };
 
     const handleGoogleSignIn = async () => {
-        // Se já está logado, apenas vincula o tenant
-        if (session?.user?.email) {
-            await addTenantToUserAction(session.user.email, tenantId);
-        }
-        signIn('google', { callbackUrl: `/` });
+        // Deixamos a URL relativa. O NextAuth cuidará de adicionar o basePath (/churrasco) automaticamente
+        signIn('google', { callbackUrl: `/${tenantSlug}` });
     };
 
     return (

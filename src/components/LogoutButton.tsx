@@ -8,7 +8,7 @@ export function LogoutButton() {
     return (
         <Button
             variant="ghost"
-            onClick={() => signOut({ callbackUrl: `/admin` })}
+            onClick={() => signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/admin` })}
             className="text-red-500 hover:text-red-600"
         >
             <LogOut className="w-4 h-4" />

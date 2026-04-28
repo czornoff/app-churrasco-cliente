@@ -129,7 +129,7 @@ export const authOptions: NextAuthOptions = {
             options: {
                 httpOnly: true,
                 sameSite: "lax",
-                path: process.env.NEXT_PUBLIC_BASE_PATH || "/",
+                path: "/",
                 secure: process.env.NODE_ENV === "production",
             },
         },
@@ -137,7 +137,7 @@ export const authOptions: NextAuthOptions = {
             name: `${process.env.NODE_ENV === "production" ? "__Secure-" : ""}next-auth.callback-url`,
             options: {
                 sameSite: "lax",
-                path: process.env.NEXT_PUBLIC_BASE_PATH || "/",
+                path: "/",
                 secure: process.env.NODE_ENV === "production",
             },
         },
@@ -146,7 +146,7 @@ export const authOptions: NextAuthOptions = {
             options: {
                 httpOnly: true,
                 sameSite: "lax",
-                path: "/", // csrf precisa ficar na raiz pra verificação do provedor
+                path: "/",
                 secure: process.env.NODE_ENV === "production",
             },
         },

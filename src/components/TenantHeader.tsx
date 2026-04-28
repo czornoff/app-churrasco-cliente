@@ -206,8 +206,8 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                                         </div>
                                     </Link>
                                     <button
-                                        onClick={() => signOut({ callbackUrl: `/${tenant.slug}` })}
-                                        className="p-4 rounded-lg bg-red-50 dark:bg-red-950/20 font-black text-xs uppercase tracking-widest flex items-center justify-between text-red-600"
+                                        onClick={() => signOut({ callbackUrl: `${basePath}/${tenant.slug}` })}
+                                        className="p-4 rounded-lg bg-red-50 dark:bg-red-950/20 font-black text-xs uppercase tracking-widest flex items-center justify-between text-red-600 w-full"
                                     >
                                         Sair da Conta
                                         <LogOut size={16} />
@@ -224,6 +224,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                 onClose={() => setIsAuthModalOpen(false)}
                 tenantId={tenant._id}
                 tenantName={tenant.name}
+                tenantSlug={tenant.slug}
                 primaryColor={tenant.colorPrimary}
             />
         </>
