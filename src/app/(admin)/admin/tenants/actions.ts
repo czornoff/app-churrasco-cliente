@@ -89,12 +89,13 @@ export async function updateTenantAction(prevState: ActionState, formData: FormD
         })(),
         colorPrimary: formData.get('colorPrimary')?.toString(),
         versao: formData.get('versao')?.toString(),
-        active: formData.get('active') === 'on',
-        limiteConsulta: Number(formData.get('limiteConsulta')) || 5,
-        grCarnePessoa: Number(formData.get('grCarnePessoa')) || 400,
-        grAcompanhamentoPessoa: Number(formData.get('grAcompanhamentoPessoa')) || 250,
-        mlBebidaPessoa: Number(formData.get('mlBebidaPessoa')) || 1200,
-        grSobremesaPessoa: Number(formData.get('grSobremesaPessoa')) || 100
+        active: formData.has('active') ? formData.get('active') === 'on' : undefined,
+        limiteConsulta: formData.has('limiteConsulta') ? Number(formData.get('limiteConsulta')) : undefined,
+        grCarnePessoa: formData.has('grCarnePessoa') ? Number(formData.get('grCarnePessoa')) : undefined,
+        grAcompanhamentoPessoa: formData.has('grAcompanhamentoPessoa') ? Number(formData.get('grAcompanhamentoPessoa')) : undefined,
+        mlBebidaPessoa: formData.has('mlBebidaPessoa') ? Number(formData.get('mlBebidaPessoa')) : undefined,
+        grSobremesaPessoa: formData.has('grSobremesaPessoa') ? Number(formData.get('grSobremesaPessoa')) : undefined,
+        margemArredondamento: formData.has('margemArredondamento') ? Number(formData.get('margemArredondamento')) : undefined
     };
 
     const result = tenantUpdateSchema.safeParse(rawData);

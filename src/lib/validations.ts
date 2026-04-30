@@ -28,4 +28,5 @@ export const tenantUpdateSchema = z.object({
     grAcompanhamentoPessoa: z.number().min(0).optional(),
     mlBebidaPessoa: z.number().min(0).optional(),
     grSobremesaPessoa: z.number().min(0).optional(),
+    margemArredondamento: z.number().min(0).max(50).optional(),
 });

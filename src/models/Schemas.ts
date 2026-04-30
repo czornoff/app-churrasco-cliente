@@ -20,6 +20,7 @@ export interface ITenantDocument extends Document {
     grAcompanhamentoPessoa: number;
     mlBebidaPessoa: number;
     grSobremesaPessoa: number;
+    margemArredondamento: number;
     ownerId?: Types.ObjectId;
     active: boolean;
     createdAt: Date;
@@ -50,6 +51,7 @@ const TenantSchema = new Schema<ITenantDocument>({
     grAcompanhamentoPessoa: { type: Number, default: 250 },
     mlBebidaPessoa: { type: Number, default: 1200 },
     grSobremesaPessoa: { type: Number, default: 100 },
+    margemArredondamento: { type: Number, default: 0 },
     ownerId: { type: Schema.Types.ObjectId, ref: 'User' },
     active: { type: Boolean, default: true },
 }, { timestamps: true });
@@ -129,7 +131,7 @@ const CategorySchema = new Schema<ICategoryDocument>({
     active: { type: Boolean, default: true },
 }, { timestamps: true });
 
-export const Tenant = (models.Tenant as Model<ITenantDocument>) || model<ITenantDocument>('Tenant', TenantSchema);
+if (models.Tenant) { delete (models as any).Tenant; }; export const Tenant = model<ITenantDocument>('Tenant', TenantSchema);
 export const Product = (models.Product as Model<IProductDocument>) || model<IProductDocument>('Product', ProductSchema);
 export const Calculation = (models.Calculation as Model<ICalculationDocument>) || model<ICalculationDocument>('Calculation', CalculationSchema);
 if (models.Category) { delete (models as any).Category; }; export const Category = model<ICategoryDocument>('Category', CategorySchema);

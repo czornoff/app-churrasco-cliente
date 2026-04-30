@@ -64,14 +64,14 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                         : "py-6"
                 )}
                 style={{
-                    backgroundColor: `${tenant.colorPrimary}66`, // 66 is ~40% opacity in hex
+                    backgroundColor: `${tenant.colorPrimary}EE`, // 66 is ~40% opacity in hex
                     borderBottom: `3px solid ${tenant.colorPrimary}`
                 }}
             >
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
                     {/* Logo & Brand */}
                     <Link href={`/${tenant.slug}`} className="flex items-center gap-3 active:scale-95 transition-transform">
-                        <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-white dark:border-zinc-800 shadow-sm bg-white">
+                        <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-sm bg-white">
                             <Image
                                 unoptimized
                                 src={tenant.logoUrl}
@@ -80,13 +80,13 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                                 className="object-cover"
                             />
                         </div>
-                        <span className="font-black uppercase tracking-tighter text-xl text-zinc-600 dark:text-zinc-100">
-                            {tenant.name}
+                        <span className="font-black uppercase tracking-tighter text-xl text-zinc-100">
+                            <span className="hidden md:flex">{tenant.name}</span>
                         </span>
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <nav className="hidden md:flex items-center gap-1 bg-zinc-100/20 dark:bg-zinc-900/20 p-1 rounded-lg backdrop-blur-sm">
+                    <nav className="hidden md:flex items-center gap-1 bg-zinc-900/20 p-1 rounded-lg backdrop-blur-sm">
                         {allMenuItems.map((item) => {
                             const href = isInternalLink(item.url)
                                 ? `/${tenant.slug}${item.url.startsWith('/') ? item.url : '/' + item.url}`
@@ -98,7 +98,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
 
                             return (
                                 <Link key={item._id} href={href} target={!isInternalLink(item.url) ? "_blank" : undefined}>
-                                    <Button variant="ghost" className="rounded-lg px-4 font-bold text-xs uppercase tracking-widest transition-all text-zinc-600 dark:text-zinc-100 hover:text-zinc-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5">
+                                    <Button variant="ghost" className="rounded-lg px-4 font-bold text-xs uppercase tracking-widest transition-all text-zinc-300 hover:text-white hover:bg-white/15">
                                         <Icon size={14} className="mr-2" />
                                         {item.nome}
                                     </Button>
@@ -116,7 +116,7 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                                 style={{ backgroundColor: tenant.colorPrimary }}
                             >
                                 <LogIn size={16} className="mr-2" />
-                                Entrar
+                                <span className="hidden md:flex">Entrar</span>
                             </Button>
                         )}
 
@@ -127,10 +127,12 @@ export function TenantHeader({ tenant, menuItems = [] }: TenantHeaderProps) {
                         >
                             {
                                 isMobileMenuOpen ?
-                                    <X size={24} className="text-zinc-500" /> :
+                                    <X size={24} className="text-zinc-100" /> :
                                     <div>
-                                        <Menu size={24} className="text-zinc-500 md:hidden" />
-                                        <UserCog size={24} className="text-zinc-500 hidden md:block" />
+                                        <Menu size={24} className="text-zinc-100 md:hidden" />
+                                        {session && (
+                                            <UserCog size={24} className="text-zinc-100 hidden md:block" />
+                                        )}
                                     </div>
                             }
                         </button>

@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { MaskedInput } from "@/components/ui/masked-input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Save, Palette, Globe, ShieldCheck, ScanBarcode, Plus, List, FileText, MapPin, Edit, ChevronLeft } from "lucide-react";
+import { Save, Palette, Globe, ShieldCheck, ScanBarcode, Plus, List, FileText, MapPin, Edit, ChevronLeft, Percent } from "lucide-react";
 import { ColorPicker } from "@/components/ColorPicker";
 import { CloudinaryUpload } from "@/components/CldUploadWidget"
 import { toast } from "sonner";
@@ -311,6 +311,25 @@ export default function EditTenantForm(
                                             className="h-4 w-4 rounded border-zinc-300 text-orange-600 focus:ring-orange-500"
                                         />
                                         <Label htmlFor="active" className="text-sm font-medium">Conta Ativa (Acesso liberado)</Label>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label className="flex items-center gap-2">
+                                            <Percent className="w-4 h-4 text-zinc-500" />
+                                            Margem de Arredondamento (%)
+                                        </Label>
+                                        <select 
+                                            name="margemArredondamento" 
+                                            defaultValue={state?.formData ? (state.formData.margemArredondamento as number) : (tenant.margemArredondamento ?? 0)}
+                                            className="flex h-10 w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:ring-offset-zinc-950 dark:placeholder:text-zinc-400 dark:focus-visible:ring-zinc-300"
+                                        >
+                                            <option value="0">0% (Padrão)</option>
+                                            {[5, 10, 15, 20, 25, 30, 35, 40, 45, 50].map((value) => (
+                                                <option key={value} value={value}>{value}%</option>
+                                            ))}
+                                        </select>
+                                        <p className="text-[10px] text-zinc-400 italic">
+                                            * Define a margem de segurança para o arredondamento dos cálculos.
+                                        </p>
                                     </div>
                                 </CardContent>
                             </Card>

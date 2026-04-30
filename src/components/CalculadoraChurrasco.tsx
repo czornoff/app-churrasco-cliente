@@ -68,6 +68,7 @@ interface CalculadoraChurrascoProps {
         grAcompanhamentoPessoa?: number;
         mlBebidaPessoa?: number;
         grSobremesaPessoa?: number;
+        margemArredondamento?: number;
         whatsApp?: string;
     };
 }
@@ -467,7 +468,23 @@ export function CalculadoraChurrasco({ produtos, primaryColor, tenantId, params 
 
                 // Arredondar embalagens
                 const divisorEmbalagem = (baseType === 'bebidas') ? (produto.mlEmbalagem || 1) : (produto.gramasEmbalagem || 1);
-                quantidadeEmbalagens = Math.ceil(quantidadeNecessaria / divisorEmbalagem);
+                
+                const marginPercentage = params?.margemArredondamento || 0;
+                let basePackages = Math.floor(quantidadeNecessaria / divisorEmbalagem);
+                let remainder = quantidadeNecessaria % divisorEmbalagem;
+                const marginValue = divisorEmbalagem * (marginPercentage / 100);
+
+                if (remainder > 0 && remainder <= marginValue) {
+                    quantidadeEmbalagens = basePackages;
+                } else if (remainder > marginValue) {
+                    quantidadeEmbalagens = basePackages + 1;
+                } else {
+                    quantidadeEmbalagens = basePackages;
+                }
+
+                if (quantidadeEmbalagens === 0 && quantidadeNecessaria > 0) {
+                    quantidadeEmbalagens = 1;
+                }
 
                 const totalPreco = quantidadeEmbalagens * produto.preco;
                 const unidade = baseType === 'bebidas' ? 'ml' : (baseType === 'suprimentos' && produto.tipoSuprimento !== 'CARVAO') ? '' : 'g';

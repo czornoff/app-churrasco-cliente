@@ -18,6 +18,7 @@ export interface ITenant {
     grAcompanhamentoPessoa?: number;
     mlBebidaPessoa?: number;
     grSobremesaPessoa?: number;
+    margemArredondamento?: number;
     versao?: string;
     createdAt?: string;
     updatedAt?: string;
